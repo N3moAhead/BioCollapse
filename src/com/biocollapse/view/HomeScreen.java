@@ -9,7 +9,6 @@ import java.awt.*;
 public class HomeScreen {
     private JPanel panel;
     private JButton startSimulationButton;
-    private JButton configScreenButton;
     private JLabel versionLabel;
     private Image backgroundImage;
     private WindowController controller;
@@ -25,7 +24,7 @@ public class HomeScreen {
         startSimulationButton = new JButton("Simulation starten");
         startSimulationButton.addActionListener(e -> {
             // An dieser Stelle würde der Controller den Wechsel zum nächsten Screen steuern
-            JOptionPane.showMessageDialog(panel, "Wechsel zum ConfigScreen");
+            this.controller.showConfigScreen();
         });
         panel.add(startSimulationButton, BorderLayout.CENTER);
 
