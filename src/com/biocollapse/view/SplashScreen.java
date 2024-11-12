@@ -22,12 +22,12 @@ public class SplashScreen {
         panel = new JPanel();
         panel.setLayout(new BorderLayout());
 
-        String imageUrl = System.getProperty("user.dir") + "/src/com/biocollapse/images/logo.png";
+        String imageUrl = System.getProperty("user.dir") + "/images/logo.png";
         System.out.println("Bild: " + imageUrl);
 
         // load logo image into JPanel
         try {
-            logoImage = new ImageIcon(new File(imageUrl).getAbsolutePath()).getImage().getScaledInstance(500, 500, Image.SCALE_SMOOTH);
+            logoImage = new ImageIcon(imageUrl).getImage().getScaledInstance(500, 500, Image.SCALE_SMOOTH);
             logoLabel = new JLabel(new ImageIcon(logoImage), SwingConstants.CENTER);
         } catch (Exception e) {
             e.printStackTrace();
@@ -48,7 +48,7 @@ public class SplashScreen {
     }
 
     public void startLoadingAnimation() {
-        // Ladebalken mit einer Timer-Animation füllen
+        // Fill progressBar with timer animation
         Timer timer = new Timer();
         timer.schedule(new TimerTask() {
             int progress = 0;
@@ -59,13 +59,13 @@ public class SplashScreen {
                 progressBar.setValue(progress);
                 if (progress >= 100) {
                     timer.cancel();
-                    controller.notifyClose();
+                    controller.showHomeScreen();
                 }
             }
-        }, 0, 200);
+        }, 0, 100);
     }
 
-    // Benutzerdefinierte ProgressBarUI mit abgerundeten Ecken
+    // User defined ProgressBarUI with rounded Edges
     private static class RoundedProgressBarUI extends BasicProgressBarUI {
         @Override
         protected void paintDeterminate(Graphics g, JComponent c) {

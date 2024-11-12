@@ -12,6 +12,6 @@ public class Main {
     // Testing SplashScreen
     
     WindowController controller = new WindowController();
-    controller.startSplashScreen();
+    controller.showSplashScreen();
   }
 }

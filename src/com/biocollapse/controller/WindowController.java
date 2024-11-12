@@ -1,10 +1,13 @@
 package src.com.biocollapse.controller;
 
+import src.com.biocollapse.view.HomeScreen;
 import src.com.biocollapse.view.SplashScreen;
 import javax.swing.JFrame;
 
 public class WindowController {
     private JFrame frame;
+    private SplashScreen splash;
+    private HomeScreen homeScreen;
     
     public WindowController(){
         frame = new JFrame("Biocollapse");
@@ -13,16 +16,17 @@ public class WindowController {
         frame.setLocationRelativeTo(null);
     }
 
-    public void startSplashScreen(){
-        SplashScreen splash = new SplashScreen(this);
+    public void showSplashScreen(){
+        splash = new SplashScreen(this);
         frame.setContentPane(splash.getPanel());
         frame.setVisible(true);
 
-        splash.startLoadingAnimation();
-        
+        splash.startLoadingAnimation();   
     }
 
-    public void notifyClose(){
-        frame.dispose();
+    public void showHomeScreen(){
+        homeScreen = new HomeScreen(this);
+        frame.setContentPane(homeScreen.getPanel());
+        frame.revalidate();
     }
 }
