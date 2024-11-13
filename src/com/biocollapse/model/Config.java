@@ -15,9 +15,14 @@ public class Config {
   private int adultRatio;
   private int elderlyRatio;
 
+  private boolean lockdown;
+  private boolean isolationMandate;
+  private boolean maskMandate;
+  private boolean schoolClosure;
+
   public Config(int infectionRadius, int infectionProbability, int incubationTime, int mortalityRate, int timeToDeath,
       int immunityChance, int hospitalCapacity, int isolationProbability, int hospitalProbability,
-      int childrenRatio, int adultRatio, int elderlyRatio) {
+      int childrenRatio, int adultRatio, int elderlyRatio, boolean lockdown, boolean isolationMandate, boolean maskMandate, boolean schoolClosure) {
     this.infectionRadius = infectionRadius;
     this.infectionProbability = infectionProbability;
     this.incubationTime = incubationTime;
@@ -30,6 +35,10 @@ public class Config {
     this.childrenRatio = childrenRatio;
     this.adultRatio = adultRatio;
     this.elderlyRatio = elderlyRatio;
+    this.lockdown = lockdown;
+    this.isolationMandate = isolationMandate;
+    this.maskMandate = maskMandate;
+    this.schoolClosure = schoolClosure;
   }
 
   public int getInfectionRadius() {
@@ -126,6 +135,38 @@ public class Config {
 
   public void setElderlyRatio(int elderlyRatio) {
     this.elderlyRatio = elderlyRatio;
+  }
+
+  public boolean getLockdown(){
+    return lockdown;
+  }
+
+  public void setLockdown(boolean lockdown){
+    this.lockdown = lockdown;
+  }
+
+  public boolean getIsolationMandate(){
+    return isolationMandate;
+  }
+
+  public void setIsolationMandate(boolean isolateMandate){
+    this.isolationMandate = isolateMandate;
+  }
+
+  public boolean getMaskMandate(){
+    return maskMandate;
+  }
+
+  public void setMaskMandate(boolean maskMandate){
+    this.maskMandate = maskMandate;
+  }
+
+  public boolean getSchoolClosure(){
+    return schoolClosure;
+  }
+
+  public void setSchoolClosure(boolean schoolClosure){
+    this.schoolClosure = schoolClosure;
   }
 
   @Override

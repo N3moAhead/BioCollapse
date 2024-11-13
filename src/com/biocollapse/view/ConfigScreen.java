@@ -1,10 +1,13 @@
 package src.com.biocollapse.view;
 
 import javax.swing.*;
+import javax.swing.border.Border;
+
 import java.awt.*;
 import java.util.jar.JarEntry;
 
 import src.com.biocollapse.controller.WindowController;
+import src.com.biocollapse.model.Config;
 
 public class ConfigScreen {
     private JTabbedPane tabbedPane;
@@ -49,124 +52,101 @@ public class ConfigScreen {
         return mainPanel;
     }
 
+    private JPanel createSliderWithLabels(JSlider slider, String title, int min, int max) {
+        JPanel sliderPanel = new JPanel(new BorderLayout());
+        
+        JLabel minLabel = new JLabel(String.valueOf(min));
+        JLabel maxLabel = new JLabel(String.valueOf(max));
+        JLabel currentValueLabel = new JLabel(String.valueOf(slider.getValue()));
+
+        JPanel titleAndValue = new JPanel(new BorderLayout());
+        titleAndValue.add(new JLabel(title), BorderLayout.WEST);
+        titleAndValue.add(currentValueLabel, BorderLayout.CENTER);
+
+        
+        JPanel titleAndSlider = new JPanel(new BorderLayout());
+        titleAndSlider.add(titleAndValue, BorderLayout.NORTH);
+        titleAndSlider.add(slider, BorderLayout.CENTER);
+        
+        slider.addChangeListener(e -> currentValueLabel.setText(String.valueOf(slider.getValue())));
+    
+        // Labels und Slider in Layout anordnen
+        sliderPanel.add(minLabel, BorderLayout.WEST);
+        sliderPanel.add(titleAndSlider, BorderLayout.CENTER);
+        sliderPanel.add(maxLabel, BorderLayout.EAST);
+        
+        return sliderPanel;
+    }
+    
+
     private void initializeComponents() {
-        // Initialisiere die Panels und Sliders
+        // Initialize Panels
         tabbedPane = new JTabbedPane();
         virusPanel = new JPanel(new GridLayout(10, 1, 10, 10));
         populationPanel = new JPanel(new GridLayout(10, 1, 10, 10));
         measuresPanel = new JPanel(new GridLayout(10, 1, 10, 10));
         buttonPanel = new JPanel();
 
-        // Virusparameter Sliders
-        infectionRadiusSlider = new JSlider();
-        infectionProbabilitySlider = new JSlider();
-        incubationTimeSlider = new JSlider();
-        mortalityRateSlider = new JSlider();
-        timeToDeathSlider = new JSlider();
-        immunityChanceSlider = new JSlider();
+        // Virus Sliders
+        infectionRadiusSlider = new JSlider(1, 10, 6);
+        infectionProbabilitySlider = new JSlider(0, 100, 50);
+        incubationTimeSlider = new JSlider(0, 5, 3);
+        mortalityRateSlider = new JSlider(0, 100, 3);
+        timeToDeathSlider = new JSlider(1, 20, 14);
+        immunityChanceSlider = new JSlider(0, 100, 90);
 
-        // Population und Krankenhausslider
-        hospitalCapacitySlider = new JSlider();
-        homeIsolationProbabilitySlider = new JSlider();
-        hospitalizationProbabilitySlider = new JSlider();
-        childrenRatioSlider = new JSlider();
-        adultRatioSlider = new JSlider();
-        elderlyRatioSlider = new JSlider();
+        // Population Sliders
+        hospitalCapacitySlider = new JSlider(100, 1000, 300);
+        homeIsolationProbabilitySlider = new JSlider(0, 100, 50);
+        hospitalizationProbabilitySlider = new JSlider(0, 100, 80);
+        childrenRatioSlider = new JSlider(0, 100, 25);
+        adultRatioSlider = new JSlider(0, 100, 50);
+        elderlyRatioSlider = new JSlider(0, 100, 25);
 
-        // Maßnahmen Checkboxes
+        // Measures Checkboxes
         lockdownCheckBox = new JCheckBox("Ausgangssperre");
         isolationCheckBox = new JCheckBox("Isolation");
         maskMandateCheckBox = new JCheckBox("Maskenpflicht");
         schoolClosureCheckBox = new JCheckBox("Schulschließung");
 
-        // Buttons für Speichern und Zurück
         saveButton = new JButton("Speichern");
         backButton = new JButton("Zurück");
     }
 
-    private void setSimpleLayout() {
-        mainPanel = new JPanel(new BorderLayout());
-
-        mainPanel.add(new JLabel("Infektionsradius"));
-        mainPanel.add(infectionRadiusSlider);
-        mainPanel.add(new JLabel("Ansteckungswahrscheinlichkeit"));
-        mainPanel.add(infectionProbabilitySlider);
-        mainPanel.add(new JLabel("Inkubationszeit"));
-        mainPanel.add(incubationTimeSlider);
-        mainPanel.add(new JLabel("Mortalitätsrate"));
-        mainPanel.add(mortalityRateSlider);
-        mainPanel.add(new JLabel("Zeit bis Tod möglich"));
-        mainPanel.add(timeToDeathSlider);
-        mainPanel.add(new JLabel("Immunitätschance nach Genesung"));
-        mainPanel.add(immunityChanceSlider);
-
-        // Füge Slider und Checkboxen zu Maßnahmen-Panel hinzu
-        mainPanel.add(new JLabel("Krankenhauskapazität"));
-        mainPanel.add(hospitalCapacitySlider);
-        mainPanel.add(new JLabel("Wahrscheinlichkeit für Heimquarantäne"));
-        mainPanel.add(homeIsolationProbabilitySlider);
-        mainPanel.add(new JLabel("Wahrscheinlichkeit für Krankenhausaufenthalt"));
-        mainPanel.add(hospitalizationProbabilitySlider);
-        mainPanel.add(new JLabel("Bevölkerungsanteil Kinder"));
-        mainPanel.add(elderlyRatioSlider);
-        mainPanel.add(childrenRatioSlider);
-        mainPanel.add(new JLabel("Bevölkerungsanteil Erwachsene"));
-        mainPanel.add(adultRatioSlider);
-        mainPanel.add(new JLabel("Bevölkerungsanteil Alte"));
-
-        mainPanel.add(lockdownCheckBox);
-        mainPanel.add(isolationCheckBox);
-        mainPanel.add(maskMandateCheckBox);
-        mainPanel.add(schoolClosureCheckBox);
-    }
-
     private void setupLayout() {
+        // add everything to the Panels
         mainPanel = new JPanel(new BorderLayout());
 
-        // Füge Slider zu Virusparameter-Panel hinzu
-        virusPanel.add(new JLabel("Infektionsradius"));
-        virusPanel.add(infectionRadiusSlider);
-        virusPanel.add(new JLabel("Ansteckungswahrscheinlichkeit"));
-        virusPanel.add(infectionProbabilitySlider);
-        virusPanel.add(new JLabel("Inkubationszeit"));
-        virusPanel.add(incubationTimeSlider);
-        virusPanel.add(new JLabel("Mortalitätsrate"));
-        virusPanel.add(mortalityRateSlider);
-        virusPanel.add(new JLabel("Zeit bis Tod möglich"));
-        virusPanel.add(timeToDeathSlider);
-        virusPanel.add(new JLabel("Immunitätschance nach Genesung"));
-        virusPanel.add(immunityChanceSlider);
+        // virus sliders with captions
+        virusPanel.add(createSliderWithLabels(infectionRadiusSlider, "Infektionsradius:    ", 1, 10));
+        virusPanel.add(createSliderWithLabels(infectionProbabilitySlider, "Ansteckungswahrscheinlichkeit:    ", 0, 100));
+        virusPanel.add(createSliderWithLabels(incubationTimeSlider, "Inkubationszeit:    ", 0, 5));
+        virusPanel.add(createSliderWithLabels(mortalityRateSlider, "Mortalitätsrate:    ", 0, 100));
+        virusPanel.add(createSliderWithLabels(timeToDeathSlider, "Zeit bis Tod möglich:    ", 1, 20));
+        virusPanel.add(createSliderWithLabels(immunityChanceSlider, "Immunitätschance nach Genesung:    ", 0, 100));
 
-        // Füge Slider und Checkboxen zu Maßnahmen-Panel hinzu
-        populationPanel.add(new JLabel("Krankenhauskapazität"));
-        populationPanel.add(hospitalCapacitySlider);
-        populationPanel.add(new JLabel("Wahrscheinlichkeit für Heimquarantäne"));
-        populationPanel.add(homeIsolationProbabilitySlider);
-        populationPanel.add(new JLabel("Wahrscheinlichkeit für Krankenhausaufenthalt"));
-        populationPanel.add(hospitalizationProbabilitySlider);
-        populationPanel.add(new JLabel("Bevölkerungsanteil Kinder"));
-        populationPanel.add(childrenRatioSlider);
-        populationPanel.add(new JLabel("Bevölkerungsanteil Erwachsene"));
-        populationPanel.add(adultRatioSlider);
-        populationPanel.add(new JLabel("Bevölkerungsanteil Alte"));
-        populationPanel.add(elderlyRatioSlider);
+        // population sliders with captions
+        populationPanel.add(createSliderWithLabels(hospitalCapacitySlider, "Krankenhauskapazität:    ", 100, 1000));
+        populationPanel.add(createSliderWithLabels(homeIsolationProbabilitySlider, "Wahrscheinlichkeit für Heimquarantäne:    ", 0, 100));
+        populationPanel.add(createSliderWithLabels(hospitalizationProbabilitySlider, "Wahrscheinlichkeit für Krankenhausaufenthalt:    ", 0, 100));
+        populationPanel.add(createSliderWithLabels(childrenRatioSlider, "Bevölkerungsanteil Kinder:    ", 0, 100));
+        populationPanel.add(createSliderWithLabels(adultRatioSlider, "Bevölkerungsanteil Erwachsene:    ", 0, 100));
+        populationPanel.add(createSliderWithLabels(elderlyRatioSlider, "Bevölkerungsanteil Alte:    ", 0, 100));
+
 
         measuresPanel.add(lockdownCheckBox);
         measuresPanel.add(isolationCheckBox);
         measuresPanel.add(maskMandateCheckBox);
         measuresPanel.add(schoolClosureCheckBox);
 
-        // Tabs zur TabbedPane hinzufügen
         tabbedPane.addTab("Virusparameter", virusPanel);
         tabbedPane.addTab("Populationsdaten", populationPanel);
         tabbedPane.addTab("Maßnahmen", measuresPanel);
 
-        // Buttons zentriert anordnen
         buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 10));
         buttonPanel.add(backButton);
         buttonPanel.add(saveButton);
 
-        // Füge Komponenten zum Hauptpanel hinzu
         mainPanel.add(tabbedPane, BorderLayout.CENTER);
         mainPanel.add(buttonPanel, BorderLayout.SOUTH);
     }
@@ -177,7 +157,30 @@ public class ConfigScreen {
     }
 
     private void notifyController() {
-        // Hier könnten die aktuellen Slider- und Checkbox-Werte erfasst und an den Controller weitergeleitet werden
+        // Save Config parameters
+        int infectionRadius = infectionRadiusSlider.getValue();
+        int infectionProbability = infectionProbabilitySlider.getValue();
+        int incubationTime = incubationTimeSlider.getValue();
+        int mortalityRate = mortalityRateSlider.getValue();
+        int timeToDeath = timeToDeathSlider.getValue();
+        int immunityChance = immunityChanceSlider.getValue();
+
+        int hospitalCapacity = hospitalCapacitySlider.getValue();
+        int isolationProbability = homeIsolationProbabilitySlider.getValue();
+        int hospitalProbability = hospitalizationProbabilitySlider.getValue();
+        int childrenRatio = childrenRatioSlider.getValue();
+        int adultRatio = adultRatioSlider.getValue();
+        int elderlyRatio = elderlyRatioSlider.getValue();
+
+        boolean lockdown = lockdownCheckBox.isSelected();
+        boolean isolateMandate = isolationCheckBox.isSelected();
+        boolean maskMandate = maskMandateCheckBox.isSelected();
+        boolean schoolClosure = schoolClosureCheckBox.isSelected();
+
+        Config config = new Config(infectionRadius, infectionProbability, incubationTime, mortalityRate, timeToDeath, immunityChance, 
+        hospitalCapacity, isolationProbability, hospitalProbability, childrenRatio, adultRatio, elderlyRatio, 
+        lockdown, isolateMandate, maskMandate, schoolClosure);
+
         controller.showHomeScreen();
     }
 }
