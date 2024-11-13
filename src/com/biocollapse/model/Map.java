@@ -2,6 +2,8 @@ package src.com.biocollapse.model;
 
 import java.util.Random;
 
+import src.com.biocollapse.util.GlobalRandom;
+
 enum Block {
   Grass,
   Path,
@@ -14,16 +16,13 @@ public class Map {
   private static final int HEIGHT = 100;
   private Block[][] map;
 
-  public Map(long seed) {
-    map = new Block[HEIGHT][WIDTH];
-    initializeMap(seed);
-  }
   public Map() {
-    this((long) System.currentTimeMillis());
+    map = new Block[HEIGHT][WIDTH];
+    initializeMap();
   }
 
-  private void initializeMap(long seed) {
-    Random random = new Random(seed);
+  private void initializeMap() {
+    Random random = GlobalRandom.getInstance();
     for (int y = 0; y < HEIGHT; y++) {
       for (int x = 0; x < WIDTH; x++) {
         map[y][x] = Block.values()[random.nextInt(Block.values().length)];
