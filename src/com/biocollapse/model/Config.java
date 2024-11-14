@@ -20,9 +20,60 @@ public class Config {
   private boolean maskMandate;
   private boolean schoolClosure;
 
+  /**
+   * @param infectionRadius The radius in which an infected person can infect another person
+   * @param infectionProbability The probability of an infected person to infect another person
+   * @param incubationTime The amount of ticks it needs until the virus is deadly
+   * @param mortalityRate The probability of the virus killing a person
+   * @param timeToDeath The amount of ticks after the incubation time in which a person can die
+   * @param immunityChance The probability of getting immune after surviving an infection
+   * @param hospitalCapacity The capacity each hospital provides
+   * @param isolationProbability The probabilty for people to isolate themselves
+   * @param hospitalProbability The probability for people to go into the hospital when infected
+   * @param childrenRatio The ratio of children inside of the simulation
+   * @param adultRatio The ratio of adult people inside of the simulation
+   * @param elderlyRatio The ratio of elderly people inside of the simulation
+   * @param lockdown 
+   * @param isolationMandate
+   * @param maskMandate
+   * @param schoolClosure
+   */
   public Config(int infectionRadius, int infectionProbability, int incubationTime, int mortalityRate, int timeToDeath,
       int immunityChance, int hospitalCapacity, int isolationProbability, int hospitalProbability,
-      int childrenRatio, int adultRatio, int elderlyRatio, boolean lockdown, boolean isolationMandate, boolean maskMandate, boolean schoolClosure) {
+      int childrenRatio, int adultRatio, int elderlyRatio, boolean lockdown, boolean isolationMandate,
+      boolean maskMandate, boolean schoolClosure) {
+    setConfig(infectionRadius, infectionProbability, incubationTime, mortalityRate, timeToDeath, immunityChance,
+        hospitalCapacity, isolationProbability, hospitalProbability, childrenRatio, adultRatio, elderlyRatio, lockdown,
+        isolationMandate, maskMandate, schoolClosure);
+  }
+
+  public Config() {
+  }
+
+  /**
+   * Allows us to initialize the Config class lazily
+   * @param infectionRadius The radius in which an infected person can infect another person
+   * @param infectionProbability The probability of an infected person to infect another person
+   * @param incubationTime The amount of ticks it needs until the virus is deadly
+   * @param mortalityRate The probability of the virus killing a person
+   * @param timeToDeath The amount of ticks after the incubation time in which a person can die
+   * @param immunityChance The probability of getting immune after surviving an infection
+   * @param hospitalCapacity The capacity each hospital provides
+   * @param isolationProbability The probabilty for people to isolate themselves
+   * @param hospitalProbability The probability for people to go into the hospital when infected
+   * @param childrenRatio The ratio of children inside of the simulation
+   * @param adultRatio The ratio of adult people inside of the simulation
+   * @param elderlyRatio The ratio of elderly people inside of the simulation
+   * @param lockdown 
+   * @param isolationMandate
+   * @param maskMandate
+   * @param schoolClosure
+   */
+  public void setConfig(int infectionRadius, int infectionProbability, int incubationTime, int mortalityRate,
+      int timeToDeath,
+      int immunityChance, int hospitalCapacity, int isolationProbability, int hospitalProbability,
+      int childrenRatio, int adultRatio, int elderlyRatio, boolean lockdown, boolean isolationMandate,
+      boolean maskMandate, boolean schoolClosure) {
     this.infectionRadius = infectionRadius;
     this.infectionProbability = infectionProbability;
     this.incubationTime = incubationTime;
@@ -137,35 +188,35 @@ public class Config {
     this.elderlyRatio = elderlyRatio;
   }
 
-  public boolean getLockdown(){
+  public boolean getLockdown() {
     return lockdown;
   }
 
-  public void setLockdown(boolean lockdown){
+  public void setLockdown(boolean lockdown) {
     this.lockdown = lockdown;
   }
 
-  public boolean getIsolationMandate(){
+  public boolean getIsolationMandate() {
     return isolationMandate;
   }
 
-  public void setIsolationMandate(boolean isolateMandate){
+  public void setIsolationMandate(boolean isolateMandate) {
     this.isolationMandate = isolateMandate;
   }
 
-  public boolean getMaskMandate(){
+  public boolean getMaskMandate() {
     return maskMandate;
   }
 
-  public void setMaskMandate(boolean maskMandate){
+  public void setMaskMandate(boolean maskMandate) {
     this.maskMandate = maskMandate;
   }
 
-  public boolean getSchoolClosure(){
+  public boolean getSchoolClosure() {
     return schoolClosure;
   }
 
-  public void setSchoolClosure(boolean schoolClosure){
+  public void setSchoolClosure(boolean schoolClosure) {
     this.schoolClosure = schoolClosure;
   }
 
