@@ -1,16 +1,12 @@
 package src.com.biocollapse.view;
 
 import javax.swing.*;
-import javax.swing.border.Border;
-
 import java.awt.*;
-import java.util.jar.JarEntry;
 
 import src.com.biocollapse.controller.WindowController;
-import src.com.biocollapse.model.Config;
+import src.com.biocollapse.util.GlobalConfig;
 
-public class ConfigScreen {
-    private JTabbedPane tabbedPane;
+public class ConfigPanel extends JTabbedPane {
     private JPanel virusPanel;
     private JPanel populationPanel;
     private JPanel measuresPanel;
@@ -40,7 +36,7 @@ public class ConfigScreen {
     private WindowController controller;
     private JPanel mainPanel;
 
-    public ConfigScreen(WindowController controller){
+    public ConfigPanel(WindowController controller){
         this.controller = controller;
 
         initializeComponents();
@@ -70,7 +66,6 @@ public class ConfigScreen {
         
         slider.addChangeListener(e -> currentValueLabel.setText(String.valueOf(slider.getValue())));
     
-        // Labels und Slider in Layout anordnen
         sliderPanel.add(minLabel, BorderLayout.WEST);
         sliderPanel.add(titleAndSlider, BorderLayout.CENTER);
         sliderPanel.add(maxLabel, BorderLayout.EAST);
@@ -81,7 +76,6 @@ public class ConfigScreen {
 
     private void initializeComponents() {
         // Initialize Panels
-        tabbedPane = new JTabbedPane();
         virusPanel = new JPanel(new GridLayout(10, 1, 10, 10));
         populationPanel = new JPanel(new GridLayout(10, 1, 10, 10));
         measuresPanel = new JPanel(new GridLayout(10, 1, 10, 10));
@@ -139,15 +133,15 @@ public class ConfigScreen {
         measuresPanel.add(maskMandateCheckBox);
         measuresPanel.add(schoolClosureCheckBox);
 
-        tabbedPane.addTab("Virusparameter", virusPanel);
-        tabbedPane.addTab("Populationsdaten", populationPanel);
-        tabbedPane.addTab("Maßnahmen", measuresPanel);
+        addTab("Virusparameter", virusPanel);
+        addTab("Populationsdaten", populationPanel);
+        addTab("Maßnahmen", measuresPanel);
 
         buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 10));
         buttonPanel.add(backButton);
         buttonPanel.add(saveButton);
 
-        mainPanel.add(tabbedPane, BorderLayout.CENTER);
+        mainPanel.add(this, BorderLayout.CENTER);
         mainPanel.add(buttonPanel, BorderLayout.SOUTH);
     }
 
@@ -177,10 +171,13 @@ public class ConfigScreen {
         boolean maskMandate = maskMandateCheckBox.isSelected();
         boolean schoolClosure = schoolClosureCheckBox.isSelected();
 
-        Config config = new Config(infectionRadius, infectionProbability, incubationTime, mortalityRate, timeToDeath, immunityChance, 
+        GlobalConfig.config.setConfig(infectionRadius, infectionProbability, incubationTime, mortalityRate, timeToDeath, immunityChance, 
         hospitalCapacity, isolationProbability, hospitalProbability, childrenRatio, adultRatio, elderlyRatio, 
         lockdown, isolateMandate, maskMandate, schoolClosure);
 
-        controller.showHomeScreen();
+        System.out.println(GlobalConfig.config.toString());
+
+        // This will be replaced with the simulation start
+        JOptionPane.showMessageDialog(this, GlobalConfig.config.toString());
     }
 }

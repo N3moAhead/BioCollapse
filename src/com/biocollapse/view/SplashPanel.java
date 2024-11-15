@@ -9,41 +9,36 @@ import java.awt.*;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class SplashScreen {
-    private JPanel panel;
+public class SplashPanel extends JPanel {
     private JProgressBar progressBar;
     private JLabel logoLabel;
-    private Image logoImage;
     private WindowController controller;
 
-    public SplashScreen(WindowController controller) {
+    public SplashPanel(WindowController controller) {
         this.controller = controller;
-        panel = new JPanel();
-        panel.setLayout(new BorderLayout());
-
-        String imageUrl = System.getProperty("user.dir") + "/images/logo.png";
-        System.out.println("Bild: " + imageUrl);
+        setLayout(new BorderLayout());
 
         // load logo image into JPanel
         try {
-            logoImage = new ImageIcon(imageUrl).getImage().getScaledInstance(500, 500, Image.SCALE_SMOOTH);
+            String imageUrl = System.getProperty("user.dir") + "/images/logo.png";
+            Image logoImage = new ImageIcon(imageUrl).getImage().getScaledInstance(500, 500, Image.SCALE_SMOOTH);
             logoLabel = new JLabel(new ImageIcon(logoImage), SwingConstants.CENTER);
         } catch (Exception e) {
             e.printStackTrace();
             logoLabel = new JLabel("BioCollapse", SwingConstants.CENTER); // Fallback
         }
-        panel.add(logoLabel, BorderLayout.CENTER);
+        add(logoLabel, BorderLayout.CENTER);
 
         // Fake-Ladebalken erstellen
         progressBar = new JProgressBar(0, 100);
         progressBar.setStringPainted(true);
         progressBar.setPreferredSize(new Dimension(1920,100));
         progressBar.setUI(new RoundedProgressBarUI());
-        panel.add(progressBar, BorderLayout.SOUTH);
+        add(progressBar, BorderLayout.SOUTH);
     }
 
     public JPanel getPanel() {
-        return panel;
+        return this;
     }
 
     public void startLoadingAnimation() {
