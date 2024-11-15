@@ -1,5 +1,6 @@
 package src.com.biocollapse.model;
 
+import src.com.biocollapse.util.GlobalConfig;
 import src.com.biocollapse.util.GlobalRandom;
 
 enum GoalState {
@@ -18,12 +19,8 @@ public class Human {
   private GoalState goalState = GoalState.to_home;
   private MapPosition workPos;
   private MapPosition homePos;
-  // ! I dont know if its a good idea to store the config inside of every human
-  // ! We should change that later on! I just don't want to think about it right now.
-  private Config config;
 
-  Human(Config config, boolean infected, boolean immune, MapPosition pos, MapPosition workPos, MapPosition homePos) {
-    this.config = config;
+  Human(boolean infected, boolean immune, MapPosition pos, MapPosition workPos, MapPosition homePos) {
     this.infected = infected;
     this.immune = immune;
     this.pos = pos;
@@ -107,14 +104,6 @@ public class Human {
     this.homePos = homePos;
   }
 
-  public Config getConfig() {
-    return config;
-  }
-
-  public void setConfig(Config config) {
-    this.config = config;
-  }
-
   // A person is always travelling back and forth between home and work.
   // If the person is infected, there is a probability that the person will go to hospital. 
   // If the person arrives at home, there is a probability that
@@ -122,7 +111,7 @@ public class Human {
   public void updateHumanGoal() {
     if (infected) {
       // If the person is infected, they have a chance to change their destination to a hospital.
-      if (goalState != GoalState.to_hospital && GlobalRandom.checkProbability(config.getHospitalProbability())) {
+      if (goalState != GoalState.to_hospital && GlobalRandom.checkProbability(GlobalConfig.config.getHospitalProbability())) {
         goalState = GoalState.to_hospital;
         // TODO Implement a function to get a Hospital position
         goalPos = new MapPosition(0, 0);
@@ -135,7 +124,7 @@ public class Human {
           goalPos = homePos;
         } else {
           // If the person arrived at home there is a chance that the person will stay at home
-          if (!GlobalRandom.checkProbability(config.getIsolationProbability())) {
+          if (!GlobalRandom.checkProbability(GlobalConfig.config.getIsolationProbability())) {
             goalState = GoalState.to_work;
             goalPos = workPos;
           }
