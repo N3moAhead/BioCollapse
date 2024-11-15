@@ -6,7 +6,6 @@ import javax.swing.*;
 import javax.swing.plaf.basic.BasicProgressBarUI;
 
 import java.awt.*;
-import java.io.File;
 import java.util.Timer;
 import java.util.TimerTask;
 

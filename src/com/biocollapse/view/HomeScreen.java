@@ -10,7 +10,6 @@ public class HomeScreen {
     private JPanel panel;
     private JButton startSimulationButton;
     private JLabel versionLabel;
-    private Image backgroundImage;
     private WindowController controller;
 
     public HomeScreen(WindowController controller) {
