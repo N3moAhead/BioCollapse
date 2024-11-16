@@ -1,7 +1,5 @@
 package src.com.biocollapse.model;
 
-import java.util.Map;
-
 public class MapPosition {
   private int row;
   private int col;
