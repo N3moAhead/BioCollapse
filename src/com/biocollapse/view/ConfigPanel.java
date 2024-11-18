@@ -1,8 +1,7 @@
 package src.com.biocollapse.view;
 
-import javax.swing.*;
 import java.awt.*;
-
+import javax.swing.*;
 import src.com.biocollapse.controller.WindowController;
 import src.com.biocollapse.util.GlobalConfig;
 
@@ -179,5 +178,7 @@ public class ConfigPanel extends JTabbedPane {
 
         // This will be replaced with the simulation start
         JOptionPane.showMessageDialog(this, GlobalConfig.config.toString());
+
+        controller.showSimulationScreen();
     }
 }

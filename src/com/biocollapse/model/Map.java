@@ -1,7 +1,6 @@
 package src.com.biocollapse.model;
 
 import java.util.Random;
-
 import src.com.biocollapse.util.GlobalRandom;
 
 enum Block {
@@ -49,5 +48,13 @@ public class Map {
   public static void main(String[] args) {
     Map map = new Map();
     map.printMap();
+  }
+
+  public static int getWidth() {
+    return WIDTH;
+  }
+
+  public static int getHeight() {
+    return HEIGHT;
   }
 }

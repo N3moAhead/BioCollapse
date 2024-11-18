@@ -1,10 +1,10 @@
 package src.com.biocollapse.view;
 
-import javax.swing.*;
-
-import src.com.biocollapse.controller.WindowController;
-
 import java.awt.*;
+import javax.swing.*;
+import src.com.biocollapse.controller.WindowController;
+import static src.com.biocollapse.controller.WindowController.BIO_COLLAPSE_TITLE;
+import static src.com.biocollapse.controller.WindowController.BIO_COLLAPSE_VERSION_TEXT;
 
 public class HomePanel extends JPanel{
     private JButton startSimulationButton;
@@ -26,7 +26,7 @@ public class HomePanel extends JPanel{
             logoLabel = new JLabel(new ImageIcon(logoImage), SwingConstants.CENTER);
         } catch (Exception e) {
             e.printStackTrace();
-            logoLabel = new JLabel("BioCollapse", SwingConstants.CENTER); // Fallback
+            logoLabel = new JLabel(BIO_COLLAPSE_TITLE, SwingConstants.CENTER); // Fallback
         }
         centerPanel.add(logoLabel, BorderLayout.CENTER);
 
@@ -38,8 +38,7 @@ public class HomePanel extends JPanel{
 
         centerPanel.add(startSimulationButton, BorderLayout.SOUTH);
 
-        // TODO: make version number dynamicly
-        versionLabel = new JLabel("Version 1.0", SwingConstants.RIGHT);
+        versionLabel = new JLabel(BIO_COLLAPSE_VERSION_TEXT, SwingConstants.RIGHT);
         add(versionLabel, BorderLayout.SOUTH);
 
         add(centerPanel, BorderLayout.CENTER);
