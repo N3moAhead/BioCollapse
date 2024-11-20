@@ -1,10 +1,17 @@
 package src.com.biocollapse.view;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.util.List;
+
+import javax.swing.JFrame;
 import javax.swing.JPanel;
+
 import src.com.biocollapse.controller.WindowController;
+import src.com.biocollapse.model.Block;
+import src.com.biocollapse.model.Human;
 import src.com.biocollapse.model.LiveStatistics;
-import src.com.biocollapse.model.Map;
 
 public class SimulationPanel extends JPanel{
     private WindowController controller;
@@ -17,20 +24,25 @@ public class SimulationPanel extends JPanel{
     }
 
     private void setupLayout() {
-        setLayout(new BorderLayout());
-
+    	JPanel innerMapPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        
         map = new MapPanel();
-        add(map, BorderLayout.WEST);
+        innerMapPanel.add(map);
+        setLayout(new BorderLayout());
+        add(innerMapPanel, BorderLayout.WEST);
+        
+        
+        add(map.legendPanel(), BorderLayout.NORTH);
 
         stats = new LiveStatisticsPanel();
-        add(stats, BorderLayout.EAST);
+        add(stats);
     }
 
     /**
-     * Show the statistics once the simulation is complete.
+     * Updates the map.
      */
-    public void updateMap(Map liveMap, LiveStatistics liveStatistics) {
-        map.update(liveMap);
+    public void updateMap(Block[][] mapData, List<Human> humanData, LiveStatistics liveStatistics) {
+        map.update(mapData, humanData);
         stats.update(liveStatistics);
     }
 
@@ -40,4 +52,23 @@ public class SimulationPanel extends JPanel{
     public void simulationComplete() {
         controller.showStatisticsScreen(stats.getTimelineStats());
     }
+    
+    
+    /**
+     * Map debugging. TODO: Remove later.
+     * @param args
+     */
+    public static void main(String[] args) {
+    	MapPanel.DEBUG_MAP = true;
+    	JFrame frame = new JFrame();
+    	
+    	Dimension d = MapPanel.getMapDimension();
+    	Dimension newDim = new Dimension((int) d.getWidth()+10, (int)d.getHeight()+75);
+    	frame.setSize(newDim);
+    	frame.setMinimumSize(newDim);
+    	frame.setPreferredSize(newDim);
+    	
+    	frame.setVisible(true);
+    	frame.add(new SimulationPanel(null));
+      }
 }

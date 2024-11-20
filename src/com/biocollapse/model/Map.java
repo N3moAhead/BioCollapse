@@ -3,13 +3,6 @@ package src.com.biocollapse.model;
 import java.util.Random;
 import src.com.biocollapse.util.GlobalRandom;
 
-enum Block {
-  Grass,
-  Path,
-  House,
-  Hospital
-}
-
 public class Map {
   private static final int WIDTH = 100;
   private static final int HEIGHT = 100;
