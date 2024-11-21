@@ -2,8 +2,8 @@ package src.com.biocollapse.view;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.util.List;
+import javax.swing.BorderFactory;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import src.com.biocollapse.controller.WindowController;
@@ -11,8 +11,9 @@ import src.com.biocollapse.model.Block;
 import src.com.biocollapse.model.Human;
 import src.com.biocollapse.model.LiveStatistics;
 
-public class SimulationPanel extends JPanel{
-    private WindowController controller;
+public class SimulationPanel extends JPanel {
+
+    private final WindowController controller;
     private MapPanel map;
     private LiveStatisticsPanel stats;
 
@@ -22,18 +23,16 @@ public class SimulationPanel extends JPanel{
     }
 
     private void setupLayout() {
-    	JPanel innerMapPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        
-        map = new MapPanel();
-        innerMapPanel.add(map);
         setLayout(new BorderLayout());
+        setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 0));
+        JPanel innerMapPanel = new JPanel(new BorderLayout());
+        map = new MapPanel();
+        innerMapPanel.add(map, BorderLayout.CENTER);
+        innerMapPanel.add(map.legendPanel(), BorderLayout.NORTH);
         add(innerMapPanel, BorderLayout.WEST);
-        
-        
-        add(map.legendPanel(), BorderLayout.NORTH);
 
         stats = new LiveStatisticsPanel();
-        add(stats);
+        add(stats, BorderLayout.CENTER);
     }
 
     /**
@@ -43,13 +42,13 @@ public class SimulationPanel extends JPanel{
         map.update(humanData);
         stats.update(liveStatistics);
     }
-	
-	/**
-	* Set the map layout.
-	*/
-	public void setMap(Block[][] mapData){
-		map.setMap(mapData);
-	}
+
+    /**
+     * Set the map layout.
+     */
+    public void setMap(Block[][] mapData) {
+        map.setMap(mapData);
+    }
 
     /**
      * Call when the simulation ended to display the statistics.
@@ -57,23 +56,23 @@ public class SimulationPanel extends JPanel{
     public void simulationComplete() {
         controller.showStatisticsScreen(stats.getTimelineStats());
     }
-    
-    
+
     /**
      * Map debugging. TODO: Remove later.
+     *
      * @param args
      */
     public static void main(String[] args) {
-    	MapPanel.DEBUG_MAP = true;
-    	JFrame frame = new JFrame();
-    	
-    	Dimension d = MapPanel.getMapDimension();
-    	Dimension newDim = new Dimension((int) d.getWidth()+10, (int)d.getHeight()+75);
-    	frame.setSize(newDim);
-    	frame.setMinimumSize(newDim);
-    	frame.setPreferredSize(newDim);
-    	
-    	frame.setVisible(true);
-    	frame.add(new SimulationPanel(null));
-      }
+        MapPanel.DEBUG_MAP = true;
+        JFrame frame = new JFrame();
+        Dimension d = MapPanel.getMapDimension();
+        Dimension newDim = new Dimension((int) d.getWidth() + 260, (int) d.getHeight() + 75);
+        frame.setSize(newDim);
+        frame.setMinimumSize(newDim);
+        frame.setPreferredSize(newDim);
+        frame.setVisible(true);
+        SimulationPanel panel = new SimulationPanel(null);
+        frame.add(panel);
+        panel.stats.update(new LiveStatistics(10, 5, 6, 7));
+    }
 }

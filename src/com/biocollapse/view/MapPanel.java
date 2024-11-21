@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
+
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import src.com.biocollapse.model.Block;
@@ -17,7 +18,7 @@ import src.com.biocollapse.util.GlobalRandom;
 
 public class MapPanel extends JPanel {
 
-    private static final int CELL_SIZE = 10;
+    private static final int CELL_SIZE = 8;
     private static int width = 100;
     private static int height = 100;
     private Block[][] map;
@@ -34,12 +35,12 @@ public class MapPanel extends JPanel {
      * This panel is responsible for displaying the map.
      */
     public MapPanel() {
-        setBackground(Color.BLUE);
         initLegend();
 
         if (DEBUG_MAP) {
             setMap(doFakeMap());
             update(doFakeHumans());
+			System.out.println("DEBUG_MAP="+DEBUG_MAP);
         }
     }
 
@@ -151,7 +152,7 @@ public class MapPanel extends JPanel {
     }
 
     // ----- DEBUGGING CODE ONLY TODO: Remove ----- 
-    public static boolean DEBUG_MAP = false;
+    public static boolean DEBUG_MAP = true;
 
     public static Dimension getMapDimension() {
         return new Dimension(width * CELL_SIZE, height * CELL_SIZE);
