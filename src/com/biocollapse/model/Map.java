@@ -3,13 +3,6 @@ package src.com.biocollapse.model;
 import java.util.Random;
 import src.com.biocollapse.util.GlobalRandom;
 
-enum Block {
-  Grass,
-  Path,
-  House,
-  Hospital
-}
-
 public class Map {
   private static final int WIDTH = 100;
   private static final int HEIGHT = 100;
@@ -38,11 +31,19 @@ public class Map {
     }
   }
 
+  private boolean isValidPosition(int x, int y) {
+    return x >= 0 && x < WIDTH && y >= 0 && y < HEIGHT;
+  }
+
   public Block getBlock(int x, int y) {
-    if (x >= 0 && x < WIDTH && y >= 0 && y < HEIGHT) {
+    if (isValidPosition(x, y)) {
       return map[y][x];
     }
     throw new IndexOutOfBoundsException("Invalid map coordinates");
+  }
+
+  public Block getBlock(MapPosition pos) {
+    return getBlock(pos.getCol(), pos.getRow());
   }
 
   public static void main(String[] args) {
