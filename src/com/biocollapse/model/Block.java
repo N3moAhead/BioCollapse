@@ -4,5 +4,6 @@ public enum Block {
   Grass,
   Path,
   House,
-  Hospital
+  Hospital,
+  Workplace
 }

@@ -20,7 +20,7 @@ public class Human {
   private MapPosition workPos;
   private MapPosition homePos;
 
-  Human(boolean infected, boolean immune, MapPosition pos, MapPosition workPos, MapPosition homePos) {
+  public Human(boolean infected, boolean immune, MapPosition pos, MapPosition workPos, MapPosition homePos) {
     this.infected = infected;
     this.immune = immune;
     this.pos = pos;

@@ -4,35 +4,39 @@ import java.util.Random;
 import src.com.biocollapse.util.GlobalRandom;
 
 public class Map {
-  private static final int WIDTH = 100;
-  private static final int HEIGHT = 100;
+  public static final int MAP_WIDTH = 100;
+  public static final int MAP_HEIGHT = 100;
   private Block[][] map;
 
   public Map() {
-    map = new Block[HEIGHT][WIDTH];
+    map = new Block[MAP_HEIGHT][MAP_WIDTH];
     initializeMap();
   }
 
   private void initializeMap() {
     Random random = GlobalRandom.getInstance();
-    for (int y = 0; y < HEIGHT; y++) {
-      for (int x = 0; x < WIDTH; x++) {
+    for (int y = 0; y < MAP_HEIGHT; y++) {
+      for (int x = 0; x < MAP_WIDTH; x++) {
         map[y][x] = Block.values()[random.nextInt(Block.values().length)];
       }
     }
   }
 
   public void printMap() {
-    for (int y = 0; y < HEIGHT; y++) {
-      for (int x = 0; x < WIDTH; x++) {
+    for (int y = 0; y < MAP_HEIGHT; y++) {
+      for (int x = 0; x < MAP_WIDTH; x++) {
         System.out.print(map[y][x].name().charAt(0) + " ");
       }
       System.out.println();
     }
   }
 
+  public Block[][] getMap() {
+    return map;
+  }
+
   private boolean isValidPosition(int x, int y) {
-    return x >= 0 && x < WIDTH && y >= 0 && y < HEIGHT;
+    return x >= 0 && x < MAP_WIDTH && y >= 0 && y < MAP_HEIGHT;
   }
 
   public Block getBlock(int x, int y) {
@@ -51,11 +55,11 @@ public class Map {
     map.printMap();
   }
 
-  public static int getWidth() {
-    return WIDTH;
+  public static int getMAP_WIDTH() {
+    return MAP_WIDTH;
   }
 
-  public static int getHeight() {
-    return HEIGHT;
+  public static int getMAP_HEIGHT() {
+    return MAP_HEIGHT;
   }
 }
