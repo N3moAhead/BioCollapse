@@ -72,6 +72,10 @@ public class Human {
     this.pos = pos;
   }
 
+  public void moveIntoDirection(MovementAction direction) {
+    this.pos.moveIntoDirection(direction);
+  }
+
   public MapPosition getGoalPos() {
     return goalPos;
   }
