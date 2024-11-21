@@ -39,12 +39,19 @@ public class SimulationPanel extends JPanel{
     }
 
     /**
-     * Updates the map.
+     * Call each frame to update the human position and statistics.
      */
-    public void updateMap(Block[][] mapData, List<Human> humanData, LiveStatistics liveStatistics) {
-        map.update(mapData, humanData);
+    public void update(List<Human> humanData, LiveStatistics liveStatistics) {
+        map.update(humanData);
         stats.update(liveStatistics);
     }
+	
+	/**
+	* Set the map layout.
+	*/
+	public void setMap(Block[][] mapData){
+		map.setMap(mapData);
+	}
 
     /**
      * Call when the simulation ended to display the statistics.

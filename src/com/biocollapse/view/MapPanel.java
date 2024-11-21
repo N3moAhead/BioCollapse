@@ -20,8 +20,8 @@ import src.com.biocollapse.util.GlobalRandom;
 public class MapPanel extends JPanel {
 
 	private static final int CELL_SIZE = 10;
-	private static final int WIDTH = 50;
-	private static final int HEIGHT = 50;
+	private int width = 100;
+	private int height = 100;
 	private Block[][] map;
 	private List<Human> humanData;
 	private java.util.Map<Block, Color> legend;
@@ -36,30 +36,45 @@ public class MapPanel extends JPanel {
      * This panel is responsible for displaying the map.
      */
     public MapPanel() {
-    	Dimension d = getMapDimension();
-        setSize(d);
-        setMinimumSize(d);
-        setPreferredSize(d);
-        setMaximumSize(d);
-
-        setBackground(Color.BLUE);
+    	setBackground(Color.BLUE);
         initLegend();
         
         if (DEBUG_MAP) {
-        	update(doFakeMap(), doFakeHumans());
+			setMap(doFakeMap());
+        	update(doFakeHumans());
         }
     }
     
     /**
-     * Called every frame to display the updated map.
-     * @param map (TODO: Pass a map)
+     * Called every frame to display the updated human positions.
      */
-    public void update(Block[][] map, List<Human> humanData) {
-    	this.map = map;
+    public void update(List<Human> humanData) {
+		if (map == null){
+			throw new IllegalStateException("The map has not been initialized. Please call setMap(...) first.");
+		}
     	this.humanData = humanData;
     	repaint();
     }
-    
+	
+	/**
+	* Sets the layout of the map.
+	*/
+	public void setMap(Block[][] map){
+		this.map = map;
+		width = map.length;
+		height = map[0].length;
+	}
+	
+	/**
+	* Set the panel size.
+	*/
+	private void setDimensions(){
+		Dimension d = getMapDimension();
+		setSize(d);
+		setMinimumSize(d);
+		setPreferredSize(d);
+	}
+	
     public JPanel legendPanel() {
     	JPanel legendPanel = new JPanel();
     	for (Block b : Block.values()) {
@@ -76,7 +91,7 @@ public class MapPanel extends JPanel {
     	legend = new HashMap();
     	legend.put(Block.Grass, Color.GREEN);
     	legend.put(Block.Path, Color.GRAY);
-    	legend.put(Block.Hospital, Color.PINK);
+     	legend.put(Block.Hospital, Color.PINK);
     	legend.put(Block.House, Color.YELLOW);
     }
     
@@ -84,7 +99,7 @@ public class MapPanel extends JPanel {
     	JPanel item = new JPanel();
     	item.add(new JLabel(name));
     	item.setBackground(c);
-    	return item;
+     	return item;
     }
     
     @Override
@@ -99,8 +114,8 @@ public class MapPanel extends JPanel {
     }
     
     private void drawMap(Graphics2D g2d) {
-    	for (int y = 0; y < HEIGHT; y++) {
-		    for (int x = 0; x < WIDTH; x++) {
+    	for (int y = 0; y < height; y++) {
+		    for (int x = 0; x < width; x++) {
 		    	drawObject(map[x][y], x, y, g2d);
 		    }
 		}
@@ -141,15 +156,15 @@ public class MapPanel extends JPanel {
     public static boolean DEBUG_MAP = false;
     
     public static Dimension getMapDimension() {
-    	return new Dimension(WIDTH*CELL_SIZE, HEIGHT*CELL_SIZE);
+    	return new Dimension(width*CELL_SIZE, height*CELL_SIZE);
     }
     
     public static Block[][] doFakeMap() {
-    	Block[][] map = new Block[HEIGHT][WIDTH];
+    	Block[][] map = new Block[height][width];
     	
     	Random random = GlobalRandom.getInstance();
-        for (int y = 0; y < HEIGHT; y++) {
-          for (int x = 0; x < WIDTH; x++) {
+        for (int y = 0; y < height; y++) {
+          for (int x = 0; x < width; x++) {
             map[y][x] = Block.values()[random.nextInt(Block.values().length)];
           }
         }
@@ -160,8 +175,8 @@ public class MapPanel extends JPanel {
     	List<Human> humanData = new ArrayList<Human>();
     	
     	Random random = GlobalRandom.getInstance();
-        for (int y = 0; y < HEIGHT; y++) {
-          for (int x = 0; x < WIDTH; x++) {
+        for (int y = 0; y < height; y++) {
+          for (int x = 0; x < width; x++) {
         	  int rand = random.nextInt(5);
         	  if (!(rand>0)) {
         		  int randInfected = random.nextInt(3);
