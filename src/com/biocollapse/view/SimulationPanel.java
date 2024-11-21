@@ -4,10 +4,8 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.util.List;
-
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-
 import src.com.biocollapse.controller.WindowController;
 import src.com.biocollapse.model.Block;
 import src.com.biocollapse.model.Human;
