@@ -22,6 +22,16 @@ public class LiveStatistics {
         this.hospitalCapacityRatio = hospitalCapacityRatio;
     }
 
+    public String toJSON() {
+        return "{ \"alive\": " + alive + 
+               ", \"infected\": " + infected + 
+               ", \"healthy\": " + healthy +
+               ", \"immune\": " + immune +
+               ", \"deaths\": " + deaths +
+               ", \"hospitalCapacityRatio\": " + hospitalCapacityRatio + 
+               " }";
+    }
+
     public int getAlive() {
         return alive;
     }

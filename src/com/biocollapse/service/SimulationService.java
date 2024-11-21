@@ -5,11 +5,8 @@ import src.com.biocollapse.model.Human;
 import src.com.biocollapse.model.LiveStatistics;
 
 public class SimulationService {
-    // TODO Decide wether the SimulationController stores all Data or the service.
-    // If the controller stores all Data we could make this class static
-    private LiveStatistics currentLiveStatistics;
 
-    public LiveStatistics calculateLiveStatistics(Human[] humans, Hospital[] hospitals) {
+    public static LiveStatistics calculateLiveStatistics(Human[] humans, Hospital[] hospitals) {
         int infectedCounter = 0;
         int healthyCounter = humans.length;
         int immuneCounter = 0;
