@@ -36,7 +36,7 @@ public class LiveStatisticsPanel extends JPanel {
         textDeaths.setValue(String.valueOf(currentStats.getDeaths()));
         textImmune.setValue(String.valueOf(currentStats.getImmune()));
         textInfected.setValue(String.valueOf(currentStats.getInfected()));
-        textRecovered.setValue(String.valueOf(currentStats.getRecovered()));
+        textRecovered.setValue(String.valueOf(currentStats.getHealthy()));
     }
 
     /**
