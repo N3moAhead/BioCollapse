@@ -73,6 +73,6 @@ public class SimulationPanel extends JPanel {
         frame.setVisible(true);
         SimulationPanel panel = new SimulationPanel(null);
         frame.add(panel);
-        panel.stats.update(new LiveStatistics(10, 5, 6, 7));
+        panel.stats.update(new LiveStatistics(10, 5, 6, 7, 9, 9));
     }
 }
