@@ -176,9 +176,6 @@ public class ConfigPanel extends JTabbedPane {
 
         System.out.println(GlobalConfig.config.toString());
 
-        // This will be replaced with the simulation start
-        JOptionPane.showMessageDialog(this, GlobalConfig.config.toString());
-
         controller.showSimulationScreen();
     }
 }

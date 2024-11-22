@@ -10,52 +10,46 @@ public class LiveStatistics {
     public static final String STAT_DEATHS = "Tod";
     public static final String STAT_HOSPITAL_CAPACITY_RATIO = "Krankenhausauslastung";
 
+    private int alive;
     private int infected;
-    private int recovered;
+    private int healthy;
     private int immune;
     private int deaths;
+    private Integer hospitalCapacityRatio;
 
     /**
      * Live statistics store the current simulation state instead of the overall
      * history.
      */
-    public LiveStatistics(int infected, int recovered, int immune, int deaths) {
+    public LiveStatistics(int alive, int infected, int healthy, int immune, int deaths, Integer hospitalCapacityRatio) {
+        this.alive = alive;
         this.infected = infected;
-        this.recovered = recovered;
+        this.healthy = healthy;
         this.immune = immune;
         this.deaths = deaths;
+        this.hospitalCapacityRatio = hospitalCapacityRatio;
     }
 
-    /**
-     * Live statistics store the current simulation state instead of the overall
-     * history.
-     */
-    public LiveStatistics() {
-         // TODO: Decide on whether to use setters or the constructor. Decision by back end.
+    public String toJSON() {
+        return "{ \"alive\": " + alive +
+                ", \"infected\": " + infected +
+                ", \"healthy\": " + healthy +
+                ", \"immune\": " + immune +
+                ", \"deaths\": " + deaths +
+                ", \"hospitalCapacityRatio\": " + hospitalCapacityRatio +
+                " }";
     }
 
-    public void setInfected(int infected) {
-        this.infected = infected;
-    }
-
-    public void setRecovered(int recovered) {
-        this.recovered = recovered;
-    }
-
-    public void setImmune(int immune) {
-        this.immune = immune;
-    }
-
-    public void setDeaths(int deaths) {
-        this.deaths = deaths;
+    public int getAlive() {
+        return alive;
     }
 
     public int getInfected() {
         return infected;
     }
 
-    public int getRecovered() {
-        return recovered;
+    public int getHealthy() {
+        return healthy;
     }
 
     public int getImmune() {
@@ -64,5 +58,9 @@ public class LiveStatistics {
 
     public int getDeaths() {
         return deaths;
+    }
+
+    public double getHospitalCapacityRatio() {
+        return hospitalCapacityRatio;
     }
 }

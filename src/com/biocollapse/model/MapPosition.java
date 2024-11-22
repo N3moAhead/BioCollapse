@@ -55,6 +55,25 @@ public class MapPosition {
     this.col -= 1;
   }
 
+  public void moveIntoDirection(MovementAction direction) {
+    switch (direction) {
+      case UP:
+        moveUp();
+        break;
+      case RIGHT:
+        moveRight();
+        break;
+      case DOWN:
+        moveDown();
+        break;
+      case LEFT:
+        moveLeft();
+        break;
+      default:
+        break;
+    }
+  }
+
   // Returns the position above the current position
   public MapPosition getTop() {
     return new MapPosition(row - 1, col);
