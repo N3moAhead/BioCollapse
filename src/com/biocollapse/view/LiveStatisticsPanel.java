@@ -40,7 +40,7 @@ public class LiveStatisticsPanel extends JPanel {
     }
 
     /**
-     * Get a list with the historiy of statistics.
+     * Get a list with the history of statistics.
      */
     public List<LiveStatistics> getTimelineStats() {
         return (timelineStats == null) ? new ArrayList<>() : timelineStats;

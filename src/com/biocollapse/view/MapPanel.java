@@ -115,6 +115,7 @@ public class MapPanel extends JPanel {
         legend.put(Block.Path, Color.GRAY);
         legend.put(Block.Hospital, Color.PINK);
         legend.put(Block.House, Color.YELLOW);
+        legend.put(Block.Workplace, Color.BLUE);
     }
 
     private JPanel createLegendItem(String name, Color c) {
