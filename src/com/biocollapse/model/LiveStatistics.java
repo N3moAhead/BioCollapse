@@ -7,13 +7,13 @@ public class LiveStatistics {
     private int healthy;
     private int immune;
     private int deaths;
-    private double hospitalCapacityRatio;
+    private Integer hospitalCapacityRatio;
 
     /**
      * Live statistics store the current simulation state instead of the overall
      * history.
      */
-    public LiveStatistics(int alive, int infected, int healthy, int immune, int deaths, double hospitalCapacityRatio) {
+    public LiveStatistics(int alive, int infected, int healthy, int immune, int deaths, Integer hospitalCapacityRatio) {
         this.alive = alive;
         this.infected = infected;
         this.healthy = healthy;
@@ -23,13 +23,13 @@ public class LiveStatistics {
     }
 
     public String toJSON() {
-        return "{ \"alive\": " + alive + 
-               ", \"infected\": " + infected + 
-               ", \"healthy\": " + healthy +
-               ", \"immune\": " + immune +
-               ", \"deaths\": " + deaths +
-               ", \"hospitalCapacityRatio\": " + hospitalCapacityRatio + 
-               " }";
+        return "{ \"alive\": " + alive +
+                ", \"infected\": " + infected +
+                ", \"healthy\": " + healthy +
+                ", \"immune\": " + immune +
+                ", \"deaths\": " + deaths +
+                ", \"hospitalCapacityRatio\": " + hospitalCapacityRatio +
+                " }";
     }
 
     public int getAlive() {

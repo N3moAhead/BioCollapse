@@ -14,7 +14,7 @@ public class SimulationService {
         int deathCounter = 0;
         int hospitalCapacity = 0;
         int usedHospitalCapacity = 0;
-        double hospitalCapacityRatio = 0.0;
+        Integer hospitalCapacityRatio = 0;
 
         for (Human human : humans) {
             if (human.isInfected()) {
@@ -41,10 +41,8 @@ public class SimulationService {
         if (hospitalCapacity > 0) {
             hospitalCapacityRatio = usedHospitalCapacity / hospitalCapacity;
         } else {
-            // Idea: Instead of returning 0, when we got an Error, we could return Pi,
-            // because Pi can never be our result in the calculation, we know that when it
-            // is PI it has to be an error.
-            hospitalCapacityRatio = Math.PI;
+            System.err.println("There was an Error in Calculating the hospital capacity: " + hospitalCapacity);
+            hospitalCapacityRatio = -1;
         }
 
         LiveStatistics current = new LiveStatistics(aliveCounter, infectedCounter, aliveCounter, immuneCounter,
