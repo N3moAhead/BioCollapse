@@ -12,6 +12,7 @@ enum GoalState {
 public class Human {
   private boolean infected;
   private int infectedAt;
+  private boolean hospitalized = false;
   private boolean alive = true;
   private boolean immune;
   private MapPosition pos;
@@ -62,6 +63,14 @@ public class Human {
 
   public void setImmune(boolean immune) {
     this.immune = immune;
+  }
+
+  public boolean isHospitalized() {
+    return hospitalized;
+  }
+
+  public void setHospitalized(boolean hospitalized) {
+    this.hospitalized = hospitalized;
   }
 
   public MapPosition getPos() {

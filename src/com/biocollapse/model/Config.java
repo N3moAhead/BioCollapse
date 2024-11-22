@@ -4,8 +4,8 @@ public class Config {
   private int infectionRadius;
   private int infectionProbability;
   private int incubationTime;
-  private int mortalityRate;
-  private int timeToDeath;
+  private int mortalityRisk;
+  private int infectionTime;
   private int immunityChance;
 
   private int hospitalCapacity;
@@ -23,9 +23,9 @@ public class Config {
   /**
    * @param infectionRadius The radius in which an infected person can infect another person
    * @param infectionProbability The probability of an infected person to infect another person
-   * @param incubationTime The amount of ticks it needs until the virus is deadly
-   * @param mortalityRate The probability of the virus killing a person
-   * @param timeToDeath The amount of ticks after the incubation time in which a person can die
+   * @param incubationTime The amount of ticks until symptoms show and a person chooses to go to the hospital or not
+   * @param mortalityRisk The probability of the virus killing a person
+   * @param infectionTime The amount of ticks after infection in which a person can die
    * @param immunityChance The probability of getting immune after surviving an infection
    * @param hospitalCapacity The capacity each hospital provides
    * @param isolationProbability The probabilty for people to isolate themselves
@@ -38,11 +38,11 @@ public class Config {
    * @param maskMandate
    * @param schoolClosure
    */
-  public Config(int infectionRadius, int infectionProbability, int incubationTime, int mortalityRate, int timeToDeath,
+  public Config(int infectionRadius, int infectionProbability, int incubationTime, int mortalityRisk, int infectionTime,
       int immunityChance, int hospitalCapacity, int isolationProbability, int hospitalProbability,
       int childrenRatio, int adultRatio, int elderlyRatio, boolean lockdown, boolean isolationMandate,
       boolean maskMandate, boolean schoolClosure) {
-    setConfig(infectionRadius, infectionProbability, incubationTime, mortalityRate, timeToDeath, immunityChance,
+    setConfig(infectionRadius, infectionProbability, incubationTime, mortalityRisk, infectionTime, immunityChance,
         hospitalCapacity, isolationProbability, hospitalProbability, childrenRatio, adultRatio, elderlyRatio, lockdown,
         isolationMandate, maskMandate, schoolClosure);
   }
@@ -55,8 +55,8 @@ public class Config {
    * @param infectionRadius The radius in which an infected person can infect another person
    * @param infectionProbability The probability of an infected person to infect another person
    * @param incubationTime The amount of ticks it needs until the virus is deadly
-   * @param mortalityRate The probability of the virus killing a person
-   * @param timeToDeath The amount of ticks after the incubation time in which a person can die
+   * @param mortalityRisk The probability of the virus killing a person
+   * @param infectionTime The amount of ticks after the incubation time in which a person can die
    * @param immunityChance The probability of getting immune after surviving an infection
    * @param hospitalCapacity The capacity each hospital provides
    * @param isolationProbability The probabilty for people to isolate themselves
@@ -69,16 +69,16 @@ public class Config {
    * @param maskMandate
    * @param schoolClosure
    */
-  public void setConfig(int infectionRadius, int infectionProbability, int incubationTime, int mortalityRate,
-      int timeToDeath,
+  public void setConfig(int infectionRadius, int infectionProbability, int incubationTime, int mortalityRisk,
+      int infectionTime,
       int immunityChance, int hospitalCapacity, int isolationProbability, int hospitalProbability,
       int childrenRatio, int adultRatio, int elderlyRatio, boolean lockdown, boolean isolationMandate,
       boolean maskMandate, boolean schoolClosure) {
     this.infectionRadius = infectionRadius;
     this.infectionProbability = infectionProbability;
     this.incubationTime = incubationTime;
-    this.mortalityRate = mortalityRate;
-    this.timeToDeath = timeToDeath;
+    this.mortalityRisk = mortalityRisk;
+    this.infectionTime = infectionTime;
     this.immunityChance = immunityChance;
     this.hospitalCapacity = hospitalCapacity;
     this.isolationProbability = isolationProbability;
@@ -116,20 +116,20 @@ public class Config {
     this.incubationTime = incubationTime;
   }
 
-  public int getMortalityRate() {
-    return mortalityRate;
+  public int getMortalityRisk() {
+    return mortalityRisk;
   }
 
-  public void setMortalityRate(int mortalityRate) {
-    this.mortalityRate = mortalityRate;
+  public void setMortalityRisk(int mortalityRisk) {
+    this.mortalityRisk = mortalityRisk;
   }
 
-  public int getTimeToDeath() {
-    return timeToDeath;
+  public int getInfectionTime() {
+    return infectionTime;
   }
 
-  public void setTimeToDeath(int timeToDeath) {
-    this.timeToDeath = timeToDeath;
+  public void setInfectionTime(int infectionTime) {
+    this.infectionTime = infectionTime;
   }
 
   public int getImmunityChance() {
@@ -226,8 +226,8 @@ public class Config {
         "infectionRadius=" + infectionRadius +
         ", infectionProbability=" + infectionProbability +
         ", incubationTime=" + incubationTime +
-        ", mortalityRate=" + mortalityRate +
-        ", timeToDeath=" + timeToDeath +
+        ", mortalityRisk=" + mortalityRisk +
+        ", infectionTime=" + infectionTime +
         ", immunityChance=" + immunityChance +
         ", hospitalCapacity=" + hospitalCapacity +
         ", isolationProbability=" + isolationProbability +
