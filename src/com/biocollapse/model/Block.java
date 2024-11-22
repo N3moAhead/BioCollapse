@@ -5,5 +5,5 @@ public enum Block {
   Path,
   House,
   Hospital,
-  Workplace
+  Workplace,
 }

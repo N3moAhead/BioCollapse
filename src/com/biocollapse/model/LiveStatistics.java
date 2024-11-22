@@ -2,6 +2,14 @@ package src.com.biocollapse.model;
 
 public class LiveStatistics {
 
+    public static final String STAT_ALIVE = "Lebendig";
+    public static final String STAT_INFECTED = "Infiziert";
+    public static final String STAT_RECOVERED = "Erholt";
+    public static final String STAT_HEALTHY = "Gesung";
+    public static final String STAT_IMMUNE = "Immun";
+    public static final String STAT_DEATHS = "Tod";
+    public static final String STAT_HOSPITAL_CAPACITY_RATIO = "Krankenhausauslastung";
+
     private int alive;
     private int infected;
     private int healthy;
