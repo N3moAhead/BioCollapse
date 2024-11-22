@@ -24,12 +24,12 @@ public class SimulationPanel extends JPanel {
 
     private void setupLayout() {
         setLayout(new BorderLayout());
-        setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 0));
+        setBorder(BorderFactory.createEmptyBorder(0, 5, 5, 0));
         JPanel innerMapPanel = new JPanel(new BorderLayout());
+        add(innerMapPanel, BorderLayout.WEST);
         map = new MapPanel();
         innerMapPanel.add(map, BorderLayout.CENTER);
         innerMapPanel.add(map.legendPanel(), BorderLayout.NORTH);
-        add(innerMapPanel, BorderLayout.WEST);
 
         stats = new LiveStatisticsPanel();
         add(stats, BorderLayout.CENTER);

@@ -4,13 +4,17 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
+import java.awt.geom.Ellipse2D;
+import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
-
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 import src.com.biocollapse.model.Block;
 import src.com.biocollapse.model.Human;
 import src.com.biocollapse.model.MapPosition;
@@ -18,7 +22,7 @@ import src.com.biocollapse.util.GlobalRandom;
 
 public class MapPanel extends JPanel {
 
-    private static final int CELL_SIZE = 8;
+    private static float CELL_SIZE;
     private static int width = 100;
     private static int height = 100;
     private Block[][] map;
@@ -36,12 +40,30 @@ public class MapPanel extends JPanel {
      */
     public MapPanel() {
         initLegend();
+        addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(ComponentEvent e) {
+                calculateCellSize();
+            }
+        });
 
         if (DEBUG_MAP) {
             setMap(doFakeMap());
             update(doFakeHumans());
-			System.out.println("DEBUG_MAP="+DEBUG_MAP);
+            System.out.println("DEBUG_MAP=" + DEBUG_MAP);
         }
+    }
+
+    /**
+     * Calculates the map size based on the panels height.
+     */
+    private void calculateCellSize() {
+        SwingUtilities.invokeLater(() -> {
+            CELL_SIZE = (float)(getSize().getHeight() / height);
+            setDimensions();
+            revalidate();
+            repaint();
+        });
     }
 
     /**
@@ -62,7 +84,7 @@ public class MapPanel extends JPanel {
         this.map = map;
         width = map.length;
         height = map[0].length;
-		setDimensions();
+        calculateCellSize();
     }
 
     /**
@@ -128,35 +150,37 @@ public class MapPanel extends JPanel {
     }
 
     private void drawObject(Block block, int x, int y, Graphics2D g2d) {
-        int cellX = x * CELL_SIZE;
-        int cellY = y * CELL_SIZE;
+        float cellX = x * CELL_SIZE;
+        float cellY = y * CELL_SIZE;
 
         g2d.setColor(legend.get(block));
 
-        g2d.fillRect(cellX, cellY, CELL_SIZE, CELL_SIZE);
+        g2d.fill(new Rectangle2D.Float(cellX, cellY, CELL_SIZE,CELL_SIZE));
 
         g2d.setColor(Color.BLACK);
-        g2d.drawRect(cellX, cellY, CELL_SIZE, CELL_SIZE);
+        g2d.draw(new Rectangle2D.Float(cellX, cellY, CELL_SIZE,CELL_SIZE));
     }
 
     private void drawHuman(Human human, Graphics2D g2d) {
         int x = human.getPos().getRow();
         int y = human.getPos().getCol();
 
-        int cellX = x * CELL_SIZE;
-        int cellY = y * CELL_SIZE;
+        float cellX = x * CELL_SIZE;
+        float cellY = y * CELL_SIZE;
 
         Color c = human.isInfected() ? COLOR_INFECTED : COLOR_HEALTHY;
         g2d.setColor(c);
-        g2d.fillOval(cellX + 1, cellY + 1, CELL_SIZE - 2, CELL_SIZE - 2);
+        Ellipse2D.Float oval = new Ellipse2D.Float();
+        oval.setFrame(cellX + 1, cellY + 1, CELL_SIZE - 2, CELL_SIZE - 2);
+        g2d.fill(oval);
+    }
+
+    public static Dimension getMapDimension() {
+        return new Dimension((int) (width * CELL_SIZE), (int) (height * CELL_SIZE));
     }
 
     // ----- DEBUGGING CODE ONLY TODO: Remove ----- 
     public static boolean DEBUG_MAP = true;
-
-    public static Dimension getMapDimension() {
-        return new Dimension(width * CELL_SIZE, height * CELL_SIZE);
-    }
 
     public static Block[][] doFakeMap() {
         Block[][] map = new Block[height][width];

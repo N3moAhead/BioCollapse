@@ -6,7 +6,7 @@ public class LiveStatistics {
     public static final String STAT_INFECTED = "Infiziert";
     public static final String STAT_RECOVERED = "Erholt";
     public static final String STAT_HEALTHY = "Gesung";
-    public static final String STAT_IMMUNE = "Imumn";
+    public static final String STAT_IMMUNE = "Immun";
     public static final String STAT_DEATHS = "Tod";
     public static final String STAT_HOSPITAL_CAPACITY_RATIO = "Krankenhausauslastung";
 
