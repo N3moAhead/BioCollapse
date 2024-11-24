@@ -10,6 +10,7 @@ enum GoalState {
 }
 
 public class Human {
+  private Age age;
   private boolean infected;
   private int infectedAt;
   private boolean hospitalized = false;
@@ -33,6 +34,14 @@ public class Human {
     this.goalPos = homePos;
   }
 
+  public Age getAge() {
+    return this.age;
+  }
+
+  public void setAge(Age age) {
+    this.age = age;
+  }
+  
   public boolean isInfected() {
     return infected;
   }

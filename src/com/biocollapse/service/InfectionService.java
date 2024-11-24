@@ -4,6 +4,7 @@ import src.com.biocollapse.model.Human;
 import src.com.biocollapse.model.Map;
 import src.com.biocollapse.model.MapPosition;
 import src.com.biocollapse.util.GlobalRandom;
+import src.com.biocollapse.model.Age;
 import src.com.biocollapse.model.Config;
 
 
@@ -123,20 +124,33 @@ public class InfectionService {
      */
     private void updateDeadOrHealed(Human[] humans, Config config, int currentTick) {
         int mortalityRisk = config.getMortalityRisk();
+        int infectionTime = config.getInfectionTime();
+        int immunityChance = config.getImmunityChance();
 
         for (Human human : humans) {
             if (human.isInfected()) {
-                //hospitalization decreases mortality risk 
-                int effectiveMortalityRisk = human.isHospitalized() ? mortalityRisk / 4 : mortalityRisk;
+                Age humanAge = human.getAge();
+
+                //being an elder or a child increases mortality risk and infection time
+                int effectiveMortalityRisk = humanAge == Age.Adult ? mortalityRisk : mortalityRisk + mortalityRisk / 3;
+                int effectiveinfectionTime = humanAge == Age.Adult ? infectionTime : infectionTime + infectionTime / 3;
+
+                //hospitalization decreases mortality risk and infection time
+                effectiveMortalityRisk = human.isHospitalized() ? effectiveMortalityRisk / 4 : effectiveMortalityRisk;
+                effectiveinfectionTime = human.isHospitalized() ? effectiveinfectionTime / 2 : effectiveinfectionTime;
 
                 //if still within infectionTime a human has a probability to die
-                if(currentTick - human.getInfectedAt() <= config.getInfectionTime()) {
+                if(currentTick - human.getInfectedAt() <= effectiveinfectionTime) {
                     if (GlobalRandom.checkProbability(effectiveMortalityRisk)) {
                         human.setAlive(false);
                     }
                 } else { //otherwise they are healed and have a chance to become immune
                     human.setInfected(false);
-                    if (GlobalRandom.checkProbability(config.getImmunityChance())) {
+
+                    //Adults have a better chance at becoming immune than children and the elderly
+                    int effectiveImmunityChance = humanAge == Age.Adult ? immunityChance + immunityChance / 2 : immunityChance;
+                    
+                    if (GlobalRandom.checkProbability(effectiveImmunityChance)) {
                         human.setImmune(true);
                     }
                 }
