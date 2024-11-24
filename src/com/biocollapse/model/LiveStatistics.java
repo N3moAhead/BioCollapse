@@ -16,6 +16,7 @@ public class LiveStatistics {
     private int immune;
     private int deaths;
     private Integer hospitalCapacityRatio;
+    private long timestamp;
 
     /**
      * Live statistics store the current simulation state instead of the overall
@@ -28,6 +29,7 @@ public class LiveStatistics {
         this.immune = immune;
         this.deaths = deaths;
         this.hospitalCapacityRatio = hospitalCapacityRatio;
+        this.timestamp = System.currentTimeMillis();
     }
 
     public String toJSON() {
@@ -62,5 +64,9 @@ public class LiveStatistics {
 
     public double getHospitalCapacityRatio() {
         return hospitalCapacityRatio;
+    }
+
+    public long getTimestamp() {
+        return timestamp;
     }
 }
