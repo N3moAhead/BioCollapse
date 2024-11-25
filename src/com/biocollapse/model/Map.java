@@ -3,6 +3,7 @@ package src.com.biocollapse.model;
 import java.util.HashMap;
 import java.util.Set;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.Scanner;
 
 public class Map {
@@ -17,11 +18,48 @@ public class Map {
     }
 
     public Map(String name) {
-        
+        try {
+            File mapFile = mapList.get(name);
+            Scanner mapReader = new Scanner(mapFile);
+            int height = 0;
+            int width = 0;
+            while (mapReader.hasNextLine()) {
+                String line = mapReader.nextLine();
+                for (char block : line.toCharArray()) {
+                    switch (block) {
+                        case 'g':
+                            this.map[height][width] = Block.Grass;
+                            break;
+                        case 'p':
+                            this.map[height][width] = Block.Path;
+                            break;
+                        case 'h':
+                            this.map[height][width] = Block.House;
+                            break;
+                        case 'H':
+                            this.map[height][width] = Block.Hospital;
+                            break;
+                        case 'w':
+                            this.map[height][width] = Block.Workplace;
+                            break;
+                    
+                        default:
+                            System.out.println("Invalid character found: " + block);
+                            break;
+                    }
+                    width++;
+                }
+                height++;
+            }
+            mapReader.close();
+        } catch (FileNotFoundException e) {
+            System.out.println("File not Found: maps/" + name + ".txt");
+            e.printStackTrace();
+        }
     }
 
     public Map() {
-        this("211124.txt");
+        this(getSomeMapName());
     }
 
     private static void initializeMapList() {
@@ -40,8 +78,16 @@ public class Map {
     }
 
     public static Set<String> getMapNames() {
-        initializeMapList();
         return mapList.keySet();
+    }
+
+    public static String getSomeMapName() {
+        String someMapName = "211124.txt";
+        for(String mapName: getMapNames()) {
+            someMapName = mapName;
+            break;
+        }
+        return someMapName;
     }
 
     public void printMap() {
@@ -53,7 +99,7 @@ public class Map {
         }
     }
 
-    private boolean isValidPosition(int x, int y) {
+    public boolean isValidPosition(int x, int y) {
         return x >= 0 && x < WIDTH && y >= 0 && y < HEIGHT;
     }
 
@@ -69,6 +115,7 @@ public class Map {
     }
 
     public static void main(String[] args) {
+        Map map = new Map();
         
     }
 
@@ -78,5 +125,11 @@ public class Map {
 
     public int getHeight() {
         return HEIGHT;
+    }
+}
+
+class InvalidCharacterException extends Exception {
+    public InvalidCharacterException(String message) {
+        super(message);
     }
 }
