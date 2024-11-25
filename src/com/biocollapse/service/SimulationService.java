@@ -6,7 +6,7 @@ import src.com.biocollapse.model.LiveStatistics;
 
 public class SimulationService {
 
-    public static LiveStatistics calculateLiveStatistics(Human[] humans, Hospital[] hospitals) {
+    public LiveStatistics calculateLiveStatistics(Human[] humans, Hospital[] hospitals) {
         int infectedCounter = 0;
         int healthyCounter = humans.length;
         int immuneCounter = 0;
@@ -26,10 +26,9 @@ public class SimulationService {
                 aliveCounter = (aliveCounter > 0) ? aliveCounter -= 1 : aliveCounter;
                 infectedCounter = (infectedCounter > 0) ? infectedCounter -= 1 : infectedCounter;
             }
-            // This case can only occur when someone was infected is healthy again
+            // This case can only occur after someone was infected
             if (human.isImmune()) {
                 immuneCounter++;
-                healthyCounter++;
             }
         }
 

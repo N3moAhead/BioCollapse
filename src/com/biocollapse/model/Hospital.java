@@ -16,4 +16,14 @@ public class Hospital {
     public int getUsedCapacity() {
         return this.usedCapacity;
     }
+
+    public void incrementUsedCapacity() {
+        this.usedCapacity += 1;
+    }
+
+    public void decreaseUsedCapacity(){
+        if (usedCapacity > 0) {
+            usedCapacity -= 1;
+        }
+    }
 }
