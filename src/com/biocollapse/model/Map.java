@@ -19,14 +19,16 @@ public class Map {
 
     public Map(String name) {
         try {
+            this.map = new Block[HEIGHT][WIDTH];
             File mapFile = mapList.get(name);
             Scanner mapReader = new Scanner(mapFile);
             int height = 0;
-            int width = 0;
-            while (mapReader.hasNextLine()) {
+            while (mapReader.hasNextLine() && height < HEIGHT) {
                 String line = mapReader.nextLine();
-                for (char block : line.toCharArray()) {
-                    switch (block) {
+                int width = 0;
+                char[] chars = line.toCharArray();
+                while (width < chars.length && width < WIDTH) {
+                    switch (chars[width]) {
                         case 'g':
                             this.map[height][width] = Block.Grass;
                             break;
@@ -44,7 +46,7 @@ public class Map {
                             break;
                     
                         default:
-                            System.out.println("Invalid character found: " + block);
+                            System.out.println("Invalid character found: " + chars[width]);
                             break;
                     }
                     width++;
@@ -116,7 +118,7 @@ public class Map {
 
     public static void main(String[] args) {
         Map map = new Map();
-        
+        map.printMap();
     }
 
     public int getWidth() {
@@ -125,11 +127,5 @@ public class Map {
 
     public int getHeight() {
         return HEIGHT;
-    }
-}
-
-class InvalidCharacterException extends Exception {
-    public InvalidCharacterException(String message) {
-        super(message);
     }
 }
