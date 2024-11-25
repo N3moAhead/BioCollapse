@@ -13,45 +13,56 @@ public class Map {
 
     private Block[][] map;
 
+    /*
+     * Automatically load all map Files.
+     * 
+     * to update the list of files manually, it is also possible to call `Map.updateMapList()`.
+     */
     static {
-        initializeMapList();
+        updateMapList();
     }
 
+    /*
+     * Creates a Map based on a name.
+     * The file extension .txt is not needed as this references the HashMap of all "loaded" files.
+     * 
+     * Valid filenames/keys are provided by getMapNames();
+     */
     public Map(String name) {
         try {
             this.map = new Block[HEIGHT][WIDTH];
             File mapFile = mapList.get(name);
             Scanner mapReader = new Scanner(mapFile);
-            int height = 0;
-            while (mapReader.hasNextLine() && height < HEIGHT) {
+            for (int height = 0; mapReader.hasNextLine() && height < HEIGHT ; height++) {
                 String line = mapReader.nextLine();
-                int width = 0;
                 char[] chars = line.toCharArray();
-                while (width < chars.length && width < WIDTH) {
-                    switch (chars[width]) {
-                        case 'g':
-                            this.map[height][width] = Block.Grass;
-                            break;
-                        case 'p':
-                            this.map[height][width] = Block.Path;
-                            break;
-                        case 'h':
-                            this.map[height][width] = Block.House;
-                            break;
-                        case 'H':
-                            this.map[height][width] = Block.Hospital;
-                            break;
-                        case 'w':
-                            this.map[height][width] = Block.Workplace;
-                            break;
-                    
-                        default:
-                            System.out.println("Invalid character found: " + chars[width]);
-                            break;
+                for (int width = 0 ; width < chars.length && width < WIDTH ; width++) {
+                    if (isValidPosition(height, width)) {
+                        switch (chars[width]) {
+                            case 'g':
+                                this.map[height][width] = Block.Grass;
+                                break;
+                            case 'p':
+                                this.map[height][width] = Block.Path;
+                                break;
+                            case 'h':
+                                this.map[height][width] = Block.House;
+                                break;
+                            case 'H':
+                                this.map[height][width] = Block.Hospital;
+                                break;
+                            case 'w':
+                                this.map[height][width] = Block.Workplace;
+                                break;
+                        
+                            default:
+                                System.out.println("Invalid character found: " + chars[width]);
+                                break;
+                        }
+                    } else {
+                        System.out.printf("Invalid Position: height=%i, width=%i.\n",height,width);
                     }
-                    width++;
                 }
-                height++;
             }
             mapReader.close();
         } catch (FileNotFoundException e) {
@@ -60,11 +71,17 @@ public class Map {
         }
     }
 
+    /*
+     * Chooses one map File from the maps folder to be used
+     * 
+     * As the file list is a set there is no first map and as such this might give different results if not specified.
+     */
     public Map() {
         this(getSomeMapName());
     }
 
-    private static void initializeMapList() {
+    public static void updateMapList() {
+        mapList.clear();
         final File mapFolder = new File("maps");
         if (!mapFolder.exists()) {
             mapFolder.mkdir();
@@ -84,7 +101,7 @@ public class Map {
     }
 
     public static String getSomeMapName() {
-        String someMapName = "211124.txt";
+        String someMapName = "";
         for(String mapName: getMapNames()) {
             someMapName = mapName;
             break;
