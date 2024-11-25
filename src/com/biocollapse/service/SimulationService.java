@@ -2,9 +2,7 @@ package src.com.biocollapse.service;
 
 import src.com.biocollapse.model.Hospital;
 import src.com.biocollapse.model.Human;
-import src.com.biocollapse.model.GoalState;
 import src.com.biocollapse.model.LiveStatistics;
-import src.com.biocollapse.model.MapPosition;
 
 public class SimulationService {
 
