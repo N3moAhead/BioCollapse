@@ -1,29 +1,30 @@
 package src.com.biocollapse.model;
 
-import java.util.Random;
-import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Set;
 import java.io.File;
-import src.com.biocollapse.util.GlobalRandom;
+import java.util.Scanner;
 
 public class Map {
-    private static ArrayList<Map> mapFiles;
+    private static HashMap<String, File> mapList = new HashMap<String, File>();
+    private static final int WIDTH = 100;
+    private static final int HEIGHT = 100;
 
-    private int width;
-    private int height;
     private Block[][] map;
 
+    static {
+        initializeMapList();
+    }
+
+    public Map(String name) {
+        
+    }
+
     public Map() {
-        this.width = 100;
-        this.height = 100;
-        this.map = new Block[height][width];
-        this.initializeRandomMap();
+        this("211124.txt");
     }
 
-    public Map(File file) {
-
-    }
-
-    private static void initialszeMapsFromFolder() {
+    private static void initializeMapList() {
         final File mapFolder = new File("maps");
         if (!mapFolder.exists()) {
             mapFolder.mkdir();
@@ -31,25 +32,21 @@ public class Map {
             final File[] mapFileArray = mapFolder.listFiles();
             if (mapFileArray.length > 0) {
                 for (final File fileEntry : mapFolder.listFiles()) {
-                    mapFiles.add(new Map(fileEntry));
-                    System.out.println(fileEntry.getName());
+                    mapList.put(fileEntry.getName().substring(0,fileEntry.getName().length() - 4), fileEntry);
+                    System.out.println("Found file :" + fileEntry.getName().substring(0,fileEntry.getName().length() - 4));
                 }
             }
         }
     }
 
-    private void initializeRandomMap() {
-        Random random = GlobalRandom.getInstance();
-        for (int y = 0; y < height; y++) {
-            for (int x = 0; x < width; x++) {
-                map[y][x] = Block.values()[random.nextInt(Block.values().length)];
-            }
-        }
+    public static Set<String> getMapNames() {
+        initializeMapList();
+        return mapList.keySet();
     }
 
     public void printMap() {
-        for (int y = 0; y < height; y++) {
-            for (int x = 0; x < width; x++) {
+        for (int y = 0; y < HEIGHT; y++) {
+            for (int x = 0; x < WIDTH; x++) {
                 System.out.print(map[y][x].name().charAt(0) + " ");
             }
             System.out.println();
@@ -57,7 +54,7 @@ public class Map {
     }
 
     private boolean isValidPosition(int x, int y) {
-        return x >= 0 && x < width && y >= 0 && y < height;
+        return x >= 0 && x < WIDTH && y >= 0 && y < HEIGHT;
     }
 
     public Block getBlock(int x, int y) {
@@ -72,15 +69,14 @@ public class Map {
     }
 
     public static void main(String[] args) {
-        Map map = new Map();
-        map.printMap();
+        
     }
 
     public int getWidth() {
-        return width;
+        return WIDTH;
     }
 
     public int getHeight() {
-        return height;
+        return HEIGHT;
     }
 }
