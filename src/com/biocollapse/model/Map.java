@@ -123,6 +123,10 @@ public class Map {
         }
     }
 
+    public Block[][] getMap() {
+        return this.map;
+    }
+
     private boolean isValidPosition(int row, int col) {
         return col >= 0 && col < MAP_WIDTH && row >= 0 && row < MAP_HEIGHT;
     }
