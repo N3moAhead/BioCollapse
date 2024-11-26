@@ -2,21 +2,23 @@ package src.com.biocollapse.model;
 
 import java.util.HashMap;
 import java.util.Set;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 
 public class Map {
     private static HashMap<String, File> mapList = new HashMap<String, File>();
-    private static final int WIDTH = 100;
-    private static final int HEIGHT = 100;
+    public static final int MAP_WIDTH = 100;
+    public static final int MAP_HEIGHT = 100;
 
     private Block[][] map;
 
     /*
      * Automatically load all map Files.
      * 
-     * to update the list of files manually, it is also possible to call `Map.updateMapList()`.
+     * to update the list of files manually, it is also possible to call
+     * `Map.updateMapList()`.
      */
     static {
         updateMapList();
@@ -24,43 +26,44 @@ public class Map {
 
     /*
      * Creates a Map based on a name.
-     * The file extension .txt is not needed as this references the HashMap of all "loaded" files.
+     * The file extension .txt is not needed as this references the HashMap of all
+     * "loaded" files.
      * 
      * Valid filenames/keys are provided by getMapNames();
      */
     public Map(String name) {
         try {
-            this.map = new Block[HEIGHT][WIDTH];
+            this.map = new Block[MAP_HEIGHT][MAP_WIDTH];
             File mapFile = mapList.get(name);
             Scanner mapReader = new Scanner(mapFile);
-            for (int height = 0; mapReader.hasNextLine() && height < HEIGHT ; height++) {
+            for (int row = 0; mapReader.hasNextLine() && row < MAP_HEIGHT; row++) {
                 String line = mapReader.nextLine();
                 char[] chars = line.toCharArray();
-                for (int width = 0 ; width < chars.length && width < WIDTH ; width++) {
-                    if (isValidPosition(height, width)) {
-                        switch (chars[width]) {
+                for (int col = 0; col < chars.length && col < MAP_WIDTH; col++) {
+                    if (isValidPosition(row, col)) {
+                        switch (chars[col]) {
                             case 'g':
-                                this.map[height][width] = Block.Grass;
+                                this.map[row][col] = Block.Grass;
                                 break;
                             case 'p':
-                                this.map[height][width] = Block.Path;
+                                this.map[row][col] = Block.Path;
                                 break;
                             case 'h':
-                                this.map[height][width] = Block.House;
+                                this.map[row][col] = Block.House;
                                 break;
                             case 'H':
-                                this.map[height][width] = Block.Hospital;
+                                this.map[row][col] = Block.Hospital;
                                 break;
                             case 'w':
-                                this.map[height][width] = Block.Workplace;
+                                this.map[row][col] = Block.Workplace;
                                 break;
-                        
+
                             default:
-                                System.out.println("Invalid character found: " + chars[width]);
+                                System.out.println("Invalid character found: " + chars[col]);
                                 break;
                         }
                     } else {
-                        System.out.printf("Invalid Position: height=%i, width=%i.\n",height,width);
+                        System.out.printf("Invalid Position: row=%i, width=%i.\n", row, col);
                     }
                 }
             }
@@ -74,7 +77,8 @@ public class Map {
     /*
      * Chooses one map File from the maps folder to be used
      * 
-     * As the file list is a set there is no first map and as such this might give different results if not specified.
+     * As the file list is a set there is no first map and as such this might give
+     * different results if not specified.
      */
     public Map() {
         this(getSomeMapName());
@@ -89,8 +93,9 @@ public class Map {
             final File[] mapFileArray = mapFolder.listFiles();
             if (mapFileArray.length > 0) {
                 for (final File fileEntry : mapFolder.listFiles()) {
-                    mapList.put(fileEntry.getName().substring(0,fileEntry.getName().length() - 4), fileEntry);
-                    System.out.println("Found file :" + fileEntry.getName().substring(0,fileEntry.getName().length() - 4));
+                    mapList.put(fileEntry.getName().substring(0, fileEntry.getName().length() - 4), fileEntry);
+                    System.out.println(
+                            "Found file :" + fileEntry.getName().substring(0, fileEntry.getName().length() - 4));
                 }
             }
         }
@@ -102,7 +107,7 @@ public class Map {
 
     public static String getSomeMapName() {
         String someMapName = "";
-        for(String mapName: getMapNames()) {
+        for (String mapName : getMapNames()) {
             someMapName = mapName;
             break;
         }
@@ -110,21 +115,21 @@ public class Map {
     }
 
     public void printMap() {
-        for (int y = 0; y < HEIGHT; y++) {
-            for (int x = 0; x < WIDTH; x++) {
-                System.out.print(map[y][x].name().charAt(0) + " ");
+        for (int row = 0; row < MAP_HEIGHT; row++) {
+            for (int col = 0; col < MAP_WIDTH; col++) {
+                System.out.print(map[row][col].name().charAt(0) + " ");
             }
             System.out.println();
         }
     }
 
-    public boolean isValidPosition(int x, int y) {
-        return x >= 0 && x < WIDTH && y >= 0 && y < HEIGHT;
+    private boolean isValidPosition(int row, int col) {
+        return col >= 0 && col < MAP_WIDTH && row >= 0 && row < MAP_HEIGHT;
     }
 
-    public Block getBlock(int x, int y) {
-        if (isValidPosition(x, y)) {
-            return map[y][x];
+    public Block getBlock(int col, int row) {
+        if (isValidPosition(col, row)) {
+            return map[row][col];
         }
         throw new IndexOutOfBoundsException("Invalid map coordinates");
     }
@@ -133,16 +138,10 @@ public class Map {
         return getBlock(pos.getCol(), pos.getRow());
     }
 
+    //! Just for debugging. Can be removed
     public static void main(String[] args) {
-        Map map = new Map();
-        map.printMap();
+        Map test = new Map(getSomeMapName());
+        test.printMap();
     }
 
-    public int getWidth() {
-        return WIDTH;
-    }
-
-    public int getHeight() {
-        return HEIGHT;
-    }
 }

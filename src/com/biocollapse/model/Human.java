@@ -3,15 +3,10 @@ package src.com.biocollapse.model;
 import src.com.biocollapse.util.GlobalConfig;
 import src.com.biocollapse.util.GlobalRandom;
 
-enum GoalState {
-  to_home,
-  to_work,
-  to_hospital,
-}
-
 public class Human {
   private boolean infected;
   private int infectedAt;
+  private boolean hospitalized = false;
   private boolean alive = true;
   private boolean immune;
   private MapPosition pos;
@@ -20,7 +15,7 @@ public class Human {
   private MapPosition workPos;
   private MapPosition homePos;
 
-  Human(boolean infected, boolean immune, MapPosition pos, MapPosition workPos, MapPosition homePos) {
+  public Human(boolean infected, boolean immune, MapPosition pos, MapPosition workPos, MapPosition homePos) {
     this.infected = infected;
     this.immune = immune;
     this.pos = pos;
@@ -46,6 +41,14 @@ public class Human {
 
   public void setInfectedAt(int infectedAt) {
     this.infectedAt = infectedAt;
+  }
+
+  public boolean isHospitalized(){
+    return hospitalized;
+  }
+
+  public void setHospitalized(boolean hosptialized){
+    this.hospitalized = hosptialized;
   }
 
   public boolean isAlive() {

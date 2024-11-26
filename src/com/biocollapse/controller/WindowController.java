@@ -3,6 +3,7 @@ package src.com.biocollapse.controller;
 import java.awt.Dimension;
 import java.awt.Image;
 import java.awt.Toolkit;
+import java.util.ArrayList;
 import java.util.List;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
@@ -64,6 +65,16 @@ public class WindowController extends JFrame{
         simulationScreen = new SimulationPanel(this);
         setContentPane(simulationScreen);
         revalidate();
+        
+        // Following can be used to test the statistics Screen.
+        
+        // List<LiveStatistics> timelineStats = new ArrayList<LiveStatistics>();
+
+        // for (int i = 0; i < 10; i++) {
+        //     LiveStatistics test = new LiveStatistics(100, 15, 70, 10, 2, 43.5);
+        //     timelineStats.add(test);
+        // }
+        // showStatisticsScreen(timelineStats);
     }
 
     public void showStatisticsScreen(List<LiveStatistics> timelineStats){
