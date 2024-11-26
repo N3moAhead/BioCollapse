@@ -1,65 +1,151 @@
 package src.com.biocollapse.model;
 
-import java.util.Random;
-import src.com.biocollapse.util.GlobalRandom;
+import java.util.HashMap;
+import java.util.Set;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.Scanner;
 
 public class Map {
-  public static final int MAP_WIDTH = 100;
-  public static final int MAP_HEIGHT = 100;
-  private Block[][] map;
+    private static HashMap<String, File> mapList = new HashMap<String, File>();
+    public static final int MAP_WIDTH = 100;
+    public static final int MAP_HEIGHT = 100;
 
-  public Map() {
-    map = new Block[MAP_HEIGHT][MAP_WIDTH];
-    initializeMap();
-  }
+    private Block[][] map;
 
-  private void initializeMap() {
-    Random random = GlobalRandom.getInstance();
-    for (int y = 0; y < MAP_HEIGHT; y++) {
-      for (int x = 0; x < MAP_WIDTH; x++) {
-        map[y][x] = Block.values()[random.nextInt(Block.values().length)];
-      }
+    /*
+     * Automatically load all map Files.
+     * 
+     * to update the list of files manually, it is also possible to call
+     * `Map.updateMapList()`.
+     */
+    static {
+        updateMapList();
     }
-  }
 
-  public void printMap() {
-    for (int y = 0; y < MAP_HEIGHT; y++) {
-      for (int x = 0; x < MAP_WIDTH; x++) {
-        System.out.print(map[y][x].name().charAt(0) + " ");
-      }
-      System.out.println();
+    /*
+     * Creates a Map based on a name.
+     * The file extension .txt is not needed as this references the HashMap of all
+     * "loaded" files.
+     * 
+     * Valid filenames/keys are provided by getMapNames();
+     */
+    public Map(String name) {
+        try {
+            this.map = new Block[MAP_HEIGHT][MAP_WIDTH];
+            File mapFile = mapList.get(name);
+            Scanner mapReader = new Scanner(mapFile);
+            for (int row = 0; mapReader.hasNextLine() && row < MAP_HEIGHT; row++) {
+                String line = mapReader.nextLine();
+                char[] chars = line.toCharArray();
+                for (int col = 0; col < chars.length && col < MAP_WIDTH; col++) {
+                    if (isValidPosition(row, col)) {
+                        switch (chars[col]) {
+                            case 'g':
+                                this.map[row][col] = Block.Grass;
+                                break;
+                            case 'p':
+                                this.map[row][col] = Block.Path;
+                                break;
+                            case 'h':
+                                this.map[row][col] = Block.House;
+                                break;
+                            case 'H':
+                                this.map[row][col] = Block.Hospital;
+                                break;
+                            case 'w':
+                                this.map[row][col] = Block.Workplace;
+                                break;
+
+                            default:
+                                System.out.println("Invalid character found: " + chars[col]);
+                                break;
+                        }
+                    } else {
+                        System.out.printf("Invalid Position: row=%i, col=%i.\n", row, col);
+                    }
+                }
+            }
+            mapReader.close();
+        } catch (FileNotFoundException e) {
+            System.out.println("File not Found: maps/" + name + ".txt");
+            e.printStackTrace();
+        }
     }
-  }
 
-  public Block[][] getMap() {
-    return map;
-  }
-
-  private boolean isValidPosition(int x, int y) {
-    return x >= 0 && x < MAP_WIDTH && y >= 0 && y < MAP_HEIGHT;
-  }
-
-  public Block getBlock(int x, int y) {
-    if (isValidPosition(x, y)) {
-      return map[y][x];
+    /*
+     * Chooses one map File from the maps folder to be used
+     * 
+     * As the file list is a set there is no first map and as such this might give
+     * different results if not specified.
+     */
+    public Map() {
+        this(getSomeMapName());
     }
-    throw new IndexOutOfBoundsException("Invalid map coordinates");
-  }
 
-  public Block getBlock(MapPosition pos) {
-    return getBlock(pos.getCol(), pos.getRow());
-  }
+    public static void updateMapList() {
+        mapList.clear();
+        final File mapFolder = new File("maps");
+        if (!mapFolder.exists()) {
+            mapFolder.mkdir();
+        } else {
+            final File[] mapFileArray = mapFolder.listFiles();
+            if (mapFileArray.length > 0) {
+                for (final File fileEntry : mapFolder.listFiles()) {
+                    mapList.put(fileEntry.getName().substring(0, fileEntry.getName().length() - 4), fileEntry);
+                    System.out.println(
+                            "Found file :" + fileEntry.getName().substring(0, fileEntry.getName().length() - 4));
+                }
+            }
+        }
+    }
 
-  public static void main(String[] args) {
-    Map map = new Map();
-    map.printMap();
-  }
+    public static Set<String> getMapNames() {
+        return mapList.keySet();
+    }
 
-  public static int getMAP_WIDTH() {
-    return MAP_WIDTH;
-  }
+    public static String getSomeMapName() {
+        String someMapName = "";
+        for (String mapName : getMapNames()) {
+            someMapName = mapName;
+            break;
+        }
+        return someMapName;
+    }
 
-  public static int getMAP_HEIGHT() {
-    return MAP_HEIGHT;
-  }
+    public void printMap() {
+        for (int row = 0; row < MAP_HEIGHT; row++) {
+            for (int col = 0; col < MAP_WIDTH; col++) {
+                System.out.print(map[row][col].name().charAt(0) + " ");
+            }
+            System.out.println();
+        }
+    }
+
+    public Block[][] getMap() {
+        return this.map;
+    }
+
+    private boolean isValidPosition(int row, int col) {
+        return col >= 0 && col < MAP_WIDTH && row >= 0 && row < MAP_HEIGHT;
+    }
+
+    public Block getBlock(int col, int row) {
+        if (isValidPosition(col, row)) {
+            return map[row][col];
+        }
+        throw new IndexOutOfBoundsException("Invalid map coordinates");
+    }
+
+    public Block getBlock(MapPosition pos) {
+        return getBlock(pos.getCol(), pos.getRow());
+    }
+
+    //! Just for debugging. Can be removed
+    public static void main(String[] args) {
+        Map test = new Map(getSomeMapName());
+        test.printMap();
+    }
+
 }
