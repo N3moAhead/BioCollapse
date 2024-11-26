@@ -63,7 +63,7 @@ public class Map {
                                 break;
                         }
                     } else {
-                        System.out.printf("Invalid Position: row=%i, width=%i.\n", row, col);
+                        System.out.printf("Invalid Position: row=%i, col=%i.\n", row, col);
                     }
                 }
             }
