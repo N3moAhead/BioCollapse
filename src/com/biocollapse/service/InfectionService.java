@@ -54,16 +54,18 @@ public class InfectionService {
     private void infectNearbyHumans(Config config, Human[] humans, ArrayList<MapPosition> infectedPos, int currentTick) {
         int infectionRadius = config.getInfectionRadius();
         int infectionProbability = config.getInfectionProbability();
-        int effectiveInfectionProbability = config.getMaskMandate() ? infectionProbability / 2 : infectionProbability;
+        int effectiveInfectionProbability = config.getMaskMandate() ? infectionProbability / config.getmaskEffect() : infectionProbability;
 
         // Check surrounding positions within the infection radius
         for (MapPosition pos : infectedPos){
             for (MapPosition neighbor : getPositionsWithinRadius(pos, infectionRadius)) {
-                Human neighborHuman = findHumanAtPosition(neighbor, humans);
-                if (neighborHuman != null && neighborHuman.isAlive() && !neighborHuman.isInfected() && !neighborHuman.isImmune()) {
-                    if (GlobalRandom.checkProbability(effectiveInfectionProbability)) {
-                        neighborHuman.setInfected(true);
-                        neighborHuman.setInfectedAt(currentTick);
+                ArrayList<Human> neighborHumans = findHumansAtPos(neighbor, humans);
+                for (Human neighborHuman: neighborHumans) {
+                    if (neighborHuman.isAlive() && !neighborHuman.isInfected() && !neighborHuman.isImmune()) {
+                        if (GlobalRandom.checkProbability(effectiveInfectionProbability)) {
+                            neighborHuman.setInfected(true);
+                            neighborHuman.setInfectedAt(currentTick);
+                        }
                     }
                 }
             }
@@ -102,22 +104,23 @@ public class InfectionService {
     }
 
     /**
-     * finds the human located in  specific MapPosition 
+     * finds the humans located in a specific MapPosition 
      * @param position
      * @param humans
      * @return Human
      */
-    private Human findHumanAtPosition(MapPosition position, Human[] humans) {
+    private ArrayList<Human> findHumansAtPos(MapPosition position, Human[] humans) {
+        ArrayList<Human> humansAtPos = new ArrayList<Human>();
         for (Human human : humans) {
             if (human.getPos().equals(position)) {
-                return human;
+                humansAtPos.add(human);
             }
         }
-        return null;
+        return humansAtPos;
     }
 
     /**
-     * updates the human list with new healed of dead humans according to the parameters
+     * updates the human list with new healed or dead humans according to the parameters
      * @param humans
      * @param config
      * @param currentTick
@@ -132,8 +135,8 @@ public class InfectionService {
                 Age humanAge = human.getAge();
 
                 //being an elder or a child increases mortality risk and infection time
-                int effectiveMortalityRisk = humanAge == Age.Adult ? mortalityRisk : mortalityRisk + mortalityRisk / 3;
-                int effectiveinfectionTime = humanAge == Age.Adult ? infectionTime : infectionTime + infectionTime / 3;
+                int effectiveMortalityRisk = humanAge == Age.Adult ? mortalityRisk : mortalityRisk + mortalityRisk / config.getAgeEffect();
+                int effectiveinfectionTime = humanAge == Age.Adult ? infectionTime : infectionTime + infectionTime / config.getAgeEffect();
 
                 //hospitalization decreases mortality risk and infection time
                 effectiveMortalityRisk = human.isHospitalized() ? effectiveMortalityRisk / 4 : effectiveMortalityRisk;

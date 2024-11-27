@@ -19,6 +19,8 @@ public class Config {
   private boolean isolationMandate;
   private boolean maskMandate;
   private boolean schoolClosure;
+  private int maskEffect = 2; // how much the maskMandate decreases the infectionProbability
+  private int ageEffect = 3; // how much the age of a human increases mortalityRisk
 
   /**
    * @param infectionRadius The radius in which an infected person can infect another person
@@ -218,6 +220,22 @@ public class Config {
 
   public void setSchoolClosure(boolean schoolClosure) {
     this.schoolClosure = schoolClosure;
+  }
+
+  public int getmaskEffect() {
+    return this.maskEffect;
+  }
+
+  public void setMaskEffect(int maskEffect) {
+      this.maskEffect = maskEffect;
+  }
+
+  public int getAgeEffect() {
+    return ageEffect;
+  }
+
+  public void setAgeEffect(int ageEffect) {
+    this.ageEffect = ageEffect;
   }
 
   @Override
