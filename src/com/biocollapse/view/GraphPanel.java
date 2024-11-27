@@ -15,7 +15,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import javax.swing.JPanel;
 import src.com.biocollapse.model.Graph;
-import src.com.biocollapse.model.GraphItem;
 
 public class GraphPanel extends JPanel {
 
@@ -38,13 +37,13 @@ public class GraphPanel extends JPanel {
 
         width = getWidth();
         height = getHeight();
-        cellSize = (width - PADDING_LEFT - PADDING_RIGHT) / 10;
-
+        cellSize = width / 12;
         addComponentListener(new ComponentAdapter() {
             @Override
             public void componentResized(ComponentEvent e) {
                 height = getHeight();
                 width = getWidth();
+                cellSize = width / 12; // TODO: Find sweet spot for how many graph points be shown.
                 revalidate();
                 repaint();
             }
@@ -54,7 +53,6 @@ public class GraphPanel extends JPanel {
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        System.out.println(getWidth());
         highestVisibleNum = getHighestVisibleNum();
         legendY = 0;
         Graphics2D g2d = (Graphics2D) g;
@@ -159,10 +157,15 @@ public class GraphPanel extends JPanel {
         g2d.setColor(graph.getColor());
 
         int i = 0;
-        for (GraphItem graphItem : graph) {
+        int size = 0;
+        for (int j = graph.size()-1; j >= 0; j--) {
+            size+=cellSize;
+            if (size > getWidth()) {
+                break;
+            }
             double x = i * cellSize + PADDING_LEFT;
 
-            double y = (height - PADDING_BOTTOM) - ((height - 2 * PADDING_BOTTOM) / highestVisibleNum * graphItem.getValue());
+            double y = (height - PADDING_BOTTOM) - ((height - 2 * PADDING_BOTTOM) / highestVisibleNum * graph.get(j).getValue());
 
             Ellipse2D.Float oval = new Ellipse2D.Float();
             oval.setFrame(x - 3, y - 3, 6, 6);
