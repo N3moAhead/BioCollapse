@@ -94,6 +94,10 @@ public class MapPosition {
     return new MapPosition(row, col - 1);
   }
 
+  public MapPosition copy() {
+    return new MapPosition(this.row, this.col);
+  }
+
   @Override
   public String toString() {
     return "MapPosition{" + "row=" + row + ", col=" + col + '}';
