@@ -24,7 +24,7 @@ public class SimulationController {
     // Models
     private final List<Hospital> hospitals = new ArrayList<>();
     private final List<Human> humans = new ArrayList<>();
-    private final Map map = new Map();
+    private final Map map = new Map("211124");
     private final Virus virus = new Virus(); //! Probably not needed
 
     // Services
@@ -66,9 +66,9 @@ public class SimulationController {
             humans.add(new Human(
                     false,
                     false,
-                    houses.get(i % houses.size()),
-                    getRandomPosition(workplaces),
-                    getRandomPosition(houses)
+                    houses.get(i % houses.size()).copy(),
+                    getRandomPosition(workplaces).copy(),
+                    houses.get(i % houses.size()).copy()
             ));
         }
         // Creating hospitals
@@ -121,6 +121,7 @@ public class SimulationController {
 
     private void updateHumans() {
         for (Human currentHuman : humans) {
+            currentHuman.updateHumanGoal();
             movementService.move(currentHuman);
             // TODO: Update infections and hospitals
         }
