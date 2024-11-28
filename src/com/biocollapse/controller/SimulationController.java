@@ -9,7 +9,6 @@ import src.com.biocollapse.model.Hospital;
 import src.com.biocollapse.model.Human;
 import src.com.biocollapse.model.LiveStatistics;
 import src.com.biocollapse.model.Map;
-import src.com.biocollapse.model.Virus;
 import src.com.biocollapse.service.InfectionService;
 import src.com.biocollapse.service.MovementService;
 import src.com.biocollapse.service.SimulationService;
@@ -24,7 +23,6 @@ public class SimulationController {
     private final List<Hospital> hospitals = new ArrayList<>();
     private final List<Human> humans = new ArrayList<>();
     private final Map map = new Map();
-    private final Virus virus = new Virus(); // ! Probably not needed
 
     // Services
     private final InfectionService infectionService = new InfectionService();
