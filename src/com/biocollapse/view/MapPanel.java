@@ -144,8 +144,10 @@ public class MapPanel extends JPanel {
     }
 
     private void drawHumans(Graphics2D g2d) {
-        for (Human human : humanData) {
-            drawHuman(human, g2d);
+        if (humanData != null) {
+            for (Human human : humanData) {
+                drawHuman(human, g2d);
+            }
         }
     }
 
