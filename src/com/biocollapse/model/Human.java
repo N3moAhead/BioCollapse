@@ -76,14 +76,6 @@ public class Human {
     this.immune = immune;
   }
 
-  public boolean isHospitalized() {
-    return hospitalized;
-  }
-
-  public void setHospitalized(boolean hospitalized) {
-    this.hospitalized = hospitalized;
-  }
-
   public MapPosition getPos() {
     return pos;
   }
