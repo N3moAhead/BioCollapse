@@ -4,6 +4,7 @@ import src.com.biocollapse.util.GlobalConfig;
 import src.com.biocollapse.util.GlobalRandom;
 
 public class Human {
+  private Age age;
   private boolean infected;
   private int infectedAt;
   private boolean hospitalized = false;
@@ -27,6 +28,14 @@ public class Human {
     this.goalPos = homePos;
   }
 
+  public Age getAge() {
+    return this.age;
+  }
+
+  public void setAge(Age age) {
+    this.age = age;
+  }
+  
   public boolean isInfected() {
     return infected;
   }
@@ -65,6 +74,14 @@ public class Human {
 
   public void setImmune(boolean immune) {
     this.immune = immune;
+  }
+
+  public boolean isHospitalized() {
+    return hospitalized;
+  }
+
+  public void setHospitalized(boolean hospitalized) {
+    this.hospitalized = hospitalized;
   }
 
   public MapPosition getPos() {
