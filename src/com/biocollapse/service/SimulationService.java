@@ -1,16 +1,18 @@
 package src.com.biocollapse.service;
 
+import java.util.List;
+
 import src.com.biocollapse.model.Hospital;
 import src.com.biocollapse.model.Human;
 import src.com.biocollapse.model.LiveStatistics;
 
 public class SimulationService {
 
-    public LiveStatistics calculateLiveStatistics(Human[] humans, Hospital[] hospitals) {
+    public LiveStatistics calculateLiveStatistics(List<Human> humans, List<Hospital> hospitals) {
         int infectedCounter = 0;
-        int healthyCounter = humans.length;
+        int healthyCounter = humans.size();
         int immuneCounter = 0;
-        int aliveCounter = humans.length;
+        int aliveCounter = humans.size();
         int deathCounter = 0;
         int hospitalCapacity = 0;
         int usedHospitalCapacity = 0;

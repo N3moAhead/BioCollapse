@@ -3,9 +3,9 @@ package src.com.biocollapse.service;
 import src.com.biocollapse.model.Human;
 import src.com.biocollapse.model.Map;
 import src.com.biocollapse.model.MapPosition;
+import src.com.biocollapse.util.GlobalConfig;
 import src.com.biocollapse.util.GlobalRandom;
 import src.com.biocollapse.model.Age;
-import src.com.biocollapse.model.Config;
 
 
 import java.util.ArrayList;
@@ -20,13 +20,13 @@ public class InfectionService {
      * @param config
      * @param currentTick
      */
-    public void updateHumansStatus(Human[] humans, Config config,  int currentTick) {
+    public void updateHumansStatus(List<Human> humans,  int currentTick) {
 
         ArrayList<MapPosition> infectedPos = new ArrayList<MapPosition>();
 
         updateInfectedPositions(humans, infectedPos);
-        infectNearbyHumans(config, humans, infectedPos, currentTick);
-        updateDeadOrHealed(humans, config, currentTick);
+        infectNearbyHumans(humans, infectedPos, currentTick);
+        updateDeadOrHealed(humans, currentTick);
     } 
 
     /**
@@ -34,7 +34,7 @@ public class InfectionService {
      * @param humans
      * @param infectedPos
      */
-    private void updateInfectedPositions(Human[] humans, ArrayList<MapPosition> infectedPos) {
+    private void updateInfectedPositions(List<Human> humans, ArrayList<MapPosition> infectedPos) {
 
         //iterate over the humans list to find infected humans
         for (Human currentHuman : humans) {
@@ -51,10 +51,10 @@ public class InfectionService {
      * @param infectedPos
      * @param currentTick
      */
-    private void infectNearbyHumans(Config config, Human[] humans, ArrayList<MapPosition> infectedPos, int currentTick) {
-        int infectionRadius = config.getInfectionRadius();
-        int infectionProbability = config.getInfectionProbability();
-        int effectiveInfectionProbability = config.getMaskMandate() ? infectionProbability / config.getmaskEffect() : infectionProbability;
+    private void infectNearbyHumans(List<Human> humans, ArrayList<MapPosition> infectedPos, int currentTick) {
+        int infectionRadius = GlobalConfig.config.getInfectionRadius();
+        int infectionProbability = GlobalConfig.config.getInfectionProbability();
+        int effectiveInfectionProbability = GlobalConfig.config.getMaskMandate() ? infectionProbability / GlobalConfig.config.getmaskEffect() : infectionProbability;
 
         // Check surrounding positions within the infection radius
         for (MapPosition pos : infectedPos){
@@ -109,7 +109,7 @@ public class InfectionService {
      * @param humans
      * @return Human
      */
-    private ArrayList<Human> findHumansAtPos(MapPosition position, Human[] humans) {
+    private ArrayList<Human> findHumansAtPos(MapPosition position, List<Human> humans) {
         ArrayList<Human> humansAtPos = new ArrayList<Human>();
         for (Human human : humans) {
             if (human.getPos().equals(position)) {
@@ -125,18 +125,18 @@ public class InfectionService {
      * @param config
      * @param currentTick
      */
-    private void updateDeadOrHealed(Human[] humans, Config config, int currentTick) {
-        int mortalityRisk = config.getMortalityRisk();
-        int infectionTime = config.getInfectionTime();
-        int immunityChance = config.getImmunityChance();
+    private void updateDeadOrHealed(List<Human> humans, int currentTick) {
+        int mortalityRisk = GlobalConfig.config.getMortalityRisk();
+        int infectionTime = GlobalConfig.config.getInfectionTime();
+        int immunityChance = GlobalConfig.config.getImmunityChance();
 
         for (Human human : humans) {
             if (human.isInfected()) {
                 Age humanAge = human.getAge();
 
                 //being an elder or a child increases mortality risk and infection time
-                int effectiveMortalityRisk = humanAge == Age.Adult ? mortalityRisk : mortalityRisk + mortalityRisk / config.getAgeEffect();
-                int effectiveinfectionTime = humanAge == Age.Adult ? infectionTime : infectionTime + infectionTime / config.getAgeEffect();
+                int effectiveMortalityRisk = humanAge == Age.Adult ? mortalityRisk : mortalityRisk + mortalityRisk / GlobalConfig.config.getAgeEffect();
+                int effectiveinfectionTime = humanAge == Age.Adult ? infectionTime : infectionTime + infectionTime / GlobalConfig.config.getAgeEffect();
 
                 //hospitalization decreases mortality risk and infection time
                 effectiveMortalityRisk = human.isHospitalized() ? effectiveMortalityRisk / 4 : effectiveMortalityRisk;

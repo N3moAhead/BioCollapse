@@ -20,11 +20,12 @@ import src.com.biocollapse.view.SimulationPanel;
 public class SimulationController {
 
     public static int SIMULATION_FRAME_DELAY = 25;
+    private int tick = 0;
 
     // Models
     private final List<Hospital> hospitals = new ArrayList<>();
     private final List<Human> humans = new ArrayList<>();
-    private final Map map = new Map("211124");
+    private final Map map = new Map();
     private final Virus virus = new Virus(); //! Probably not needed
 
     // Services
@@ -64,7 +65,7 @@ public class SimulationController {
     private void createEntities(Block[][] map, List<MapPosition> workplaces, List<MapPosition> houses, List<MapPosition> hospitalPositions) {
         for (int i = 0; i < 100; i++) {
             humans.add(new Human(
-                    false,
+                    i % 5 == 0 ? true : false,
                     false,
                     houses.get(i % houses.size()).copy(),
                     getRandomPosition(workplaces).copy(),
@@ -103,7 +104,8 @@ public class SimulationController {
                 double fps = lastFps; // Needed for swingutilities to access scope.
                 SwingUtilities.invokeLater(() -> {
                     // TODO: Get actual statistics.
-                    visualisation.update(humans, new LiveStatistics(0, 0, 0, 0, 0, 0), fps);
+                    LiveStatistics newLiveStatistics = simulationService.calculateLiveStatistics(humans, hospitals);
+                    visualisation.update(humans, newLiveStatistics, fps);
                 });
 
                 // TODO: Check if simulation is complete.
@@ -115,6 +117,7 @@ public class SimulationController {
                 long frameTimeNano = System.nanoTime() - startTime; // Time taken for this frame in nanoseconds
                 double frameTimeSeconds = frameTimeNano / 1_000_000_000.0; // Convert to seconds
                 lastFps = 1.0 / frameTimeSeconds;
+                tick++;
             }
         }).start();
     }
@@ -125,5 +128,6 @@ public class SimulationController {
             movementService.move(currentHuman);
             // TODO: Update infections and hospitals
         }
+        infectionService.updateHumansStatus(humans, tick);
     }
 }
