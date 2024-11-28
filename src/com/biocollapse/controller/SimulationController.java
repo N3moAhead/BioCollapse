@@ -25,7 +25,7 @@ public class SimulationController {
     // Models
     private final List<Hospital> hospitals = new ArrayList<>();
     private final List<Human> humans = new ArrayList<>();
-    private final Map map = new Map("test");
+    private final Map map = new Map();
     private final Virus virus = new Virus(); //! Probably not needed
 
     // Services
