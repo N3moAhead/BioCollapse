@@ -9,6 +9,7 @@ import src.com.biocollapse.model.Hospital;
 import src.com.biocollapse.model.Human;
 import src.com.biocollapse.model.LiveStatistics;
 import src.com.biocollapse.model.Map;
+import src.com.biocollapse.service.HospitalService;
 import src.com.biocollapse.service.InfectionService;
 import src.com.biocollapse.service.MovementService;
 import src.com.biocollapse.service.SimulationService;
@@ -28,6 +29,7 @@ public class SimulationController {
     private final InfectionService infectionService = new InfectionService();
     private final MovementService movementService = new MovementService(map);
     private final SimulationService simulationService = new SimulationService();
+    private final HospitalService hospitalService = new HospitalService();
 
     // Display
     private final SimulationPanel visualisation;
@@ -50,6 +52,7 @@ public class SimulationController {
                 long startTime = System.nanoTime(); // Start time for this frame
 
                 updateHumans();
+                hospitalService.updateHospitals(hospitals, humans);
 
                 try {
                     // TODO: Find sweet spot. And let user fast forward or slow down (x2 / x0.5)
