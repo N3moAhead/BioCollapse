@@ -35,6 +35,7 @@ public class MovementService {
 
         MapPosition humanPos = human.getPos();
         MapPosition humanGoalPos = human.getGoalPos();
+        MapPosition previouPosition = human.getPreviouPosition();
 
         // Check all four directions
         for (MovementAction direction : MovementAction.values()) {
@@ -47,6 +48,9 @@ public class MovementService {
                 // Only consider positions that are walkable
                 if (blockAtNewPos == Block.Path || newPos.equals(humanGoalPos)) {
                     int newDistance = distance(newPos, humanGoalPos);
+                    if (newPos.getRow() == previouPosition.getRow() && newPos.getCol() == previouPosition.getCol()) {
+                        newDistance += 1;
+                    }
                     if (newDistance < shortestDistance) {
                         shortestDistance = newDistance;
                         bestDirection = direction;
@@ -58,6 +62,7 @@ public class MovementService {
         }
 
         // Move the human in the best direction found
+        human.setPreviouPosition(humanPos.copy());
         human.moveIntoDirection(bestDirection);
     }
 

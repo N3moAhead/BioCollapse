@@ -15,6 +15,15 @@ public class Human {
   private GoalState goalState = GoalState.to_home;
   private MapPosition workPos;
   private MapPosition homePos;
+  private MapPosition previouPosition;
+
+  public MapPosition getPreviouPosition() {
+    return previouPosition;
+  }
+
+  public void setPreviouPosition(MapPosition previouPosition) {
+    this.previouPosition = previouPosition;
+  }
 
   public Human(boolean infected, boolean immune, MapPosition pos, MapPosition workPos, MapPosition homePos) {
     this.infected = infected;
@@ -26,6 +35,7 @@ public class Human {
     // On init a human spwans at an unknown
     // location and his first action will be to walk home.
     this.goalPos = homePos;
+    this.previouPosition = new MapPosition(-1, -1);
   }
 
   public Age getAge() {
