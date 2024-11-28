@@ -35,7 +35,6 @@ public class Human {
     // On init a human spwans at an unknown
     // location and his first action will be to walk home.
     this.goalPos = homePos;
-    this.previouPosition = new MapPosition(-1, -1);
   }
 
   public Age getAge() {

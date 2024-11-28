@@ -8,6 +8,7 @@ import src.com.biocollapse.model.MovementAction;
 
 public class MovementService {
     private final Map map;
+    private static final int MOVE_TO_PREVIOUS_PENALTY = 2;
 
     public MovementService(Map map) {
         this.map = map;
@@ -48,8 +49,8 @@ public class MovementService {
                 // Only consider positions that are walkable
                 if (blockAtNewPos == Block.Path || newPos.equals(humanGoalPos)) {
                     int newDistance = distance(newPos, humanGoalPos);
-                    if (newPos.getRow() == previouPosition.getRow() && newPos.getCol() == previouPosition.getCol()) {
-                        newDistance += 1;
+                    if (newPos.equals(previouPosition)) {
+                        newDistance += MOVE_TO_PREVIOUS_PENALTY;
                     }
                     if (newDistance < shortestDistance) {
                         shortestDistance = newDistance;
