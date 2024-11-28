@@ -3,10 +3,10 @@ package src.com.biocollapse.controller;
 import java.awt.Dimension;
 import java.awt.Image;
 import java.awt.Toolkit;
-import java.util.ArrayList;
 import java.util.List;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
+import javax.swing.SwingUtilities;
 import src.com.biocollapse.model.LiveStatistics;
 import src.com.biocollapse.view.ConfigPanel;
 import src.com.biocollapse.view.HomePanel;
@@ -62,9 +62,14 @@ public class WindowController extends JFrame{
     }
 
     public void showSimulationScreen(){
+      SwingUtilities.invokeLater(() -> {
+        invalidate();
+        repaint();
         simulationScreen = new SimulationPanel(this);
         setContentPane(simulationScreen);
-        revalidate();
+        invalidate();
+        repaint();
+    });
         
         // Following can be used to test the statistics Screen.
         

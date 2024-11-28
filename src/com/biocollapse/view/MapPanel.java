@@ -39,7 +39,6 @@ public class MapPanel extends JPanel {
      * This panel is responsible for displaying the map.
      */
     public MapPanel() {
-        initLegend();
         addComponentListener(new ComponentAdapter() {
             @Override
             public void componentResized(ComponentEvent e) {
@@ -109,13 +108,13 @@ public class MapPanel extends JPanel {
         return legendPanel;
     }
 
-    private void initLegend() {
+    public void initLegend() {
         legend = new HashMap();
         legend.put(Block.Grass, Color.GREEN);
         legend.put(Block.Path, Color.GRAY);
         legend.put(Block.Hospital, Color.PINK);
         legend.put(Block.House, Color.YELLOW);
-        legend.put(Block.Workplace, Color.BLUE);
+        legend.put(Block.Workplace, new Color(135,206,235));
     }
 
     private JPanel createLegendItem(String name, Color c) {
@@ -145,8 +144,10 @@ public class MapPanel extends JPanel {
     }
 
     private void drawHumans(Graphics2D g2d) {
-        for (Human human : humanData) {
-            drawHuman(human, g2d);
+        if (humanData != null) {
+            for (Human human : humanData) {
+                drawHuman(human, g2d);
+            }
         }
     }
 
@@ -181,7 +182,7 @@ public class MapPanel extends JPanel {
     }
 
     // ----- DEBUGGING CODE ONLY TODO: Remove ----- 
-    public static boolean DEBUG_MAP = true;
+    public static boolean DEBUG_MAP = false;
 
     public static Block[][] doFakeMap() {
         Block[][] map = new Block[height][width];
