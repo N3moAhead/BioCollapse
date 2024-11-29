@@ -35,7 +35,6 @@ public class MovementService {
                 if (nearestHospital != null) {
                     human.setGoalPos(nearestHospital);
                 }
-                // human.setGoalPos(map.findNearest(Block.Hospital, human.getPos()));
             }
         } else {
             // When a person reaches their destination, they return home or go to work.
