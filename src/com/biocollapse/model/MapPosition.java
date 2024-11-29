@@ -35,7 +35,7 @@ public class MapPosition {
     this.col -= pos.col;
   }
 
-  // Move position up one field 
+  // Move position up one field
   public void moveUp() {
     this.row -= 1;
   }
@@ -71,6 +71,28 @@ public class MapPosition {
         break;
       default:
         break;
+    }
+  }
+
+  /**
+   * Returns the next position based on the current position and the given
+   * direction.
+   *
+   * @param direction the direction to move
+   * @return the new position
+   */
+  public MapPosition getByMove(MovementAction direction) {
+    switch (direction) {
+      case UP:
+        return getTop();
+      case RIGHT:
+        return getRight();
+      case DOWN:
+        return getBot();
+      case LEFT:
+        return getLeft();
+      default:
+        throw new IllegalArgumentException("Invalid direction: " + direction);
     }
   }
 

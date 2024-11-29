@@ -44,7 +44,7 @@ public class Human {
   public void setAge(Age age) {
     this.age = age;
   }
-  
+
   public boolean isInfected() {
     return infected;
   }
@@ -61,11 +61,11 @@ public class Human {
     this.infectedAt = infectedAt;
   }
 
-  public boolean isHospitalized(){
+  public boolean isHospitalized() {
     return hospitalized;
   }
 
-  public void setHospitalized(boolean hosptialized){
+  public void setHospitalized(boolean hosptialized) {
     this.hospitalized = hosptialized;
   }
 
@@ -128,36 +128,6 @@ public class Human {
   public void setHomePos(MapPosition homePos) {
     this.homePos = homePos;
   }
-
-  // A person is always travelling back and forth between home and work.
-  // If the person is infected, there is a probability that the person will go to hospital. 
-  // If the person arrives at home, there is a probability that
-  // he can continue to stay at home instead of going to work.
-  public void updateHumanGoal() {
-    if (infected) {
-      // If the person is infected, they have a chance to change their destination to a hospital.
-      if (goalState != GoalState.to_hospital && GlobalRandom.checkProbability(GlobalConfig.config.getHospitalProbability())) {
-        goalState = GoalState.to_hospital;
-        // TODO Implement a function to get a Hospital position
-        goalPos = new MapPosition(0, 0);
-      }
-    } else {
-      // When a person reaches their destination, they return home or go to work.
-      if (pos.equals(goalPos)) {
-        if (goalState == GoalState.to_work) {
-          goalState = GoalState.to_home;
-          goalPos = homePos;
-        } else {
-          // If the person arrived at home there is a chance that the person will stay at home
-          if (!GlobalRandom.checkProbability(GlobalConfig.config.getIsolationProbability())) {
-            goalState = GoalState.to_work;
-            goalPos = workPos;
-          }
-        }
-      }
-    }
-  }
-
 
   @Override
   public String toString() {

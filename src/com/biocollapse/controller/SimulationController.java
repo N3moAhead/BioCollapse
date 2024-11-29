@@ -84,7 +84,7 @@ public class SimulationController {
 
     private void updateHumans() {
         for (Human currentHuman : humans) {
-            currentHuman.updateHumanGoal();
+            movementService.updateHumanGoal(currentHuman);
             movementService.move(currentHuman);
             // TODO: Update infections and hospitals
         }
