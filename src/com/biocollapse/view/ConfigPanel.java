@@ -35,7 +35,7 @@ public class ConfigPanel extends JTabbedPane {
     private WindowController controller;
     private JPanel mainPanel;
 
-    public ConfigPanel(WindowController controller){
+    public ConfigPanel(WindowController controller) {
         this.controller = controller;
 
         initializeComponents();
@@ -49,7 +49,7 @@ public class ConfigPanel extends JTabbedPane {
 
     private JPanel createSliderWithLabels(JSlider slider, String title, int min, int max) {
         JPanel sliderPanel = new JPanel(new BorderLayout());
-        
+
         JLabel minLabel = new JLabel(String.valueOf(min));
         JLabel maxLabel = new JLabel(String.valueOf(max));
         JLabel currentValueLabel = new JLabel(String.valueOf(slider.getValue()));
@@ -58,20 +58,18 @@ public class ConfigPanel extends JTabbedPane {
         titleAndValue.add(new JLabel(title), BorderLayout.WEST);
         titleAndValue.add(currentValueLabel, BorderLayout.CENTER);
 
-        
         JPanel titleAndSlider = new JPanel(new BorderLayout());
         titleAndSlider.add(titleAndValue, BorderLayout.NORTH);
         titleAndSlider.add(slider, BorderLayout.CENTER);
-        
+
         slider.addChangeListener(e -> currentValueLabel.setText(String.valueOf(slider.getValue())));
-    
+
         sliderPanel.add(minLabel, BorderLayout.WEST);
         sliderPanel.add(titleAndSlider, BorderLayout.CENTER);
         sliderPanel.add(maxLabel, BorderLayout.EAST);
-        
+
         return sliderPanel;
     }
-    
 
     private void initializeComponents() {
         // Initialize Panels
@@ -112,7 +110,8 @@ public class ConfigPanel extends JTabbedPane {
 
         // virus sliders with captions
         virusPanel.add(createSliderWithLabels(infectionRadiusSlider, "Infektionsradius:    ", 1, 10));
-        virusPanel.add(createSliderWithLabels(infectionProbabilitySlider, "Ansteckungswahrscheinlichkeit:    ", 0, 100));
+        virusPanel
+                .add(createSliderWithLabels(infectionProbabilitySlider, "Ansteckungswahrscheinlichkeit:    ", 0, 100));
         virusPanel.add(createSliderWithLabels(incubationTimeSlider, "Inkubationszeit:    ", 0, 5));
         virusPanel.add(createSliderWithLabels(mortalityRateSlider, "Mortalitätsrate:    ", 0, 100));
         virusPanel.add(createSliderWithLabels(timeToDeathSlider, "Zeit bis Tod möglich:    ", 1, 20));
@@ -120,12 +119,13 @@ public class ConfigPanel extends JTabbedPane {
 
         // population sliders with captions
         populationPanel.add(createSliderWithLabels(hospitalCapacitySlider, "Krankenhauskapazität:    ", 100, 1000));
-        populationPanel.add(createSliderWithLabels(homeIsolationProbabilitySlider, "Wahrscheinlichkeit für Heimquarantäne:    ", 0, 100));
-        populationPanel.add(createSliderWithLabels(hospitalizationProbabilitySlider, "Wahrscheinlichkeit für Krankenhausaufenthalt:    ", 0, 100));
+        populationPanel.add(createSliderWithLabels(homeIsolationProbabilitySlider,
+                "Wahrscheinlichkeit für Heimquarantäne:    ", 0, 100));
+        populationPanel.add(createSliderWithLabels(hospitalizationProbabilitySlider,
+                "Wahrscheinlichkeit für Krankenhausaufenthalt:    ", 0, 100));
         populationPanel.add(createSliderWithLabels(childrenRatioSlider, "Bevölkerungsanteil Kinder:    ", 0, 100));
         populationPanel.add(createSliderWithLabels(adultRatioSlider, "Bevölkerungsanteil Erwachsene:    ", 0, 100));
         populationPanel.add(createSliderWithLabels(elderlyRatioSlider, "Bevölkerungsanteil Alte:    ", 0, 100));
-
 
         measuresPanel.add(lockdownCheckBox);
         measuresPanel.add(isolationCheckBox);
@@ -170,11 +170,10 @@ public class ConfigPanel extends JTabbedPane {
         boolean maskMandate = maskMandateCheckBox.isSelected();
         boolean schoolClosure = schoolClosureCheckBox.isSelected();
 
-        GlobalConfig.config.setConfig(infectionRadius, infectionProbability, incubationTime, mortalityRate, timeToDeath, immunityChance, 
-        hospitalCapacity, isolationProbability, hospitalProbability, childrenRatio, adultRatio, elderlyRatio, 
-        lockdown, isolateMandate, maskMandate, schoolClosure);
-
-        System.out.println(GlobalConfig.config.toString());
+        GlobalConfig.config.setConfig(infectionRadius, infectionProbability, incubationTime, mortalityRate, timeToDeath,
+                immunityChance,
+                hospitalCapacity, isolationProbability, hospitalProbability, childrenRatio, adultRatio, elderlyRatio,
+                lockdown, isolateMandate, maskMandate, schoolClosure);
 
         controller.showSimulationScreen();
     }

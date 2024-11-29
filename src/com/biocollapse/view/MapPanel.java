@@ -58,7 +58,7 @@ public class MapPanel extends JPanel {
      */
     private void calculateCellSize() {
         SwingUtilities.invokeLater(() -> {
-            CELL_SIZE = (float)(getSize().getHeight() / height);
+            CELL_SIZE = (float) (getSize().getHeight() / height);
             setDimensions();
             revalidate();
             repaint();
@@ -109,12 +109,12 @@ public class MapPanel extends JPanel {
     }
 
     public void initLegend() {
-        legend = new HashMap();
+        legend = new HashMap<Block, Color>();
         legend.put(Block.Grass, Color.GREEN);
         legend.put(Block.Path, Color.GRAY);
         legend.put(Block.Hospital, Color.PINK);
         legend.put(Block.House, Color.YELLOW);
-        legend.put(Block.Workplace, new Color(135,206,235));
+        legend.put(Block.Workplace, new Color(135, 206, 235));
     }
 
     private JPanel createLegendItem(String name, Color c) {
@@ -157,10 +157,10 @@ public class MapPanel extends JPanel {
 
         g2d.setColor(legend.get(block));
 
-        g2d.fill(new Rectangle2D.Float(cellX, cellY, CELL_SIZE,CELL_SIZE));
+        g2d.fill(new Rectangle2D.Float(cellX, cellY, CELL_SIZE, CELL_SIZE));
 
         g2d.setColor(Color.BLACK);
-        g2d.draw(new Rectangle2D.Float(cellX, cellY, CELL_SIZE,CELL_SIZE));
+        g2d.draw(new Rectangle2D.Float(cellX, cellY, CELL_SIZE, CELL_SIZE));
     }
 
     private void drawHuman(Human human, Graphics2D g2d) {
@@ -181,7 +181,7 @@ public class MapPanel extends JPanel {
         return new Dimension((int) (width * CELL_SIZE), (int) (height * CELL_SIZE));
     }
 
-    // ----- DEBUGGING CODE ONLY TODO: Remove ----- 
+    // ----- DEBUGGING CODE ONLY TODO: Remove -----
     public static boolean DEBUG_MAP = false;
 
     public static Block[][] doFakeMap() {
