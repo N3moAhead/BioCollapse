@@ -15,14 +15,12 @@ public class HospitalService {
      * @param hospitals
      * @param humans
      */
-    public void updateHospitals(List<Hospital> hospitals, List<Human> humans) {
+    public void updateHospitals(List<Hospital> hospitals, Human human) {
         for (Hospital hospital : hospitals) {
-            for (Human human : humans) {
-                if (human.isHospitalized()) {
-                    checkPatient(human, hospital);
-                } else {
-                    checkHospitalization(human, hospital);
-                }
+            if (human.isHospitalized()) {
+                checkPatient(human, hospital);
+            } else {
+                checkHospitalization(human, hospital);
             }
         }
     }

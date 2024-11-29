@@ -52,7 +52,6 @@ public class SimulationController {
                 long startTime = System.nanoTime(); // Start time for this frame
 
                 updateHumans();
-                hospitalService.updateHospitals(hospitals, humans);
 
                 try {
                     // TODO: Find sweet spot. And let user fast forward or slow down (x2 / x0.5)
@@ -86,7 +85,7 @@ public class SimulationController {
         for (Human currentHuman : humans) {
             movementService.updateHumanGoal(currentHuman);
             movementService.move(currentHuman);
-            // TODO: Update infections and hospitals
+            hospitalService.updateHospitals(hospitals, currentHuman);
         }
         infectionService.updateHumansStatus(humans, tick);
     }
