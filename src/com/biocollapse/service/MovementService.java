@@ -31,7 +31,6 @@ public class MovementService {
                     && GlobalRandom.checkProbability(GlobalConfig.config.getHospitalProbability())) {
                 human.setGoalState(GoalState.to_hospital);
                 MapPosition nearestHospital = map.findNearest(Block.Hospital, human.getPos().copy());
-                System.out.println(nearestHospital);
                 if (nearestHospital != null) {
                     human.setGoalPos(nearestHospital);
                 }
