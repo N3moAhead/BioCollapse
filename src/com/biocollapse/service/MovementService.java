@@ -22,7 +22,7 @@ public class MovementService {
     // hospital.
     // If the person arrives at home, there is a probability that
     // he can continue to stay at home instead of going to work.
-    public void updateHumanGoal(Human human) {
+    public void updateHumanGoal(Human human, int tick) {
         GoalState humanGoalState = human.getGoalState();
         if (human.isInfected()) {
             // If the person is infected, they have a chance to change their destination to
@@ -38,14 +38,30 @@ public class MovementService {
         } else {
             // When a person reaches their destination, they return home or go to work.
             if (human.getPos().equals(human.getGoalPos())) {
-                if (humanGoalState == GoalState.to_work) {
-                    human.setGoalState(GoalState.to_home);
-                    human.setGoalPos(human.getHomePos());
+                // let them stay at home for a while
+                Integer reachedLocationAt = human.getReachedLocationAt();
+                if (reachedLocationAt == null) {
+                    human.setReachedLocationAt(tick);
                 } else {
-                    // There is a chance that a person will stay at home
-                    if (!GlobalRandom.checkProbability(GlobalConfig.config.getIsolationProbability())) {
-                        human.setGoalState(GoalState.to_work);
-                        human.setGoalPos(human.getWorkPos());
+                    // If the human has not stayed long enough at one specific location he will stay
+                    // there for a while
+                    if (tick - reachedLocationAt < GlobalConfig.config.getTicksAtLocation())
+                        return;
+                    if (humanGoalState == GoalState.to_work) {
+                        // set it to null because we left the current location
+                        human.setReachedLocationAt(null);
+                        human.setGoalState(GoalState.to_home);
+                        human.setGoalPos(human.getHomePos());
+                    } else {
+                        // There is a chance that a person will stay at home
+                        if (GlobalRandom.checkProbability(GlobalConfig.config.getIsolationProbability())) {
+                            human.setReachedLocationAt(tick);
+                        } else {
+                            // Set it to null because we left the current location
+                            human.setReachedLocationAt(null);
+                            human.setGoalState(GoalState.to_work);
+                            human.setGoalPos(human.getWorkPos());
+                        }
                     }
                 }
             }
