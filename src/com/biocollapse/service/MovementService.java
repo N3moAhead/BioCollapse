@@ -42,8 +42,16 @@ public class MovementService {
                     human.setGoalState(GoalState.to_home);
                     human.setGoalPos(human.getHomePos());
                 } else {
-                    // There is a chance that a person will stay at home
-                    if (!GlobalRandom.checkProbability(GlobalConfig.config.getIsolationProbability())) {
+                    // There is a chance that a person will stay at home which can be increased when
+                    // the isolationMandate is true
+                    int isolationProbability = GlobalConfig.config.getIsolationProbability();
+                    int effeciteIsolationProbability;
+                    if (GlobalConfig.config.getIsolationMandate()) {
+                        effeciteIsolationProbability = isolationProbability * GlobalConfig.config.getIsolationEffect();
+                    } else {
+                        effeciteIsolationProbability = isolationProbability;
+                    }
+                    if (!GlobalRandom.checkProbability(effeciteIsolationProbability)) {
                         human.setGoalState(GoalState.to_work);
                         human.setGoalPos(human.getWorkPos());
                     }
