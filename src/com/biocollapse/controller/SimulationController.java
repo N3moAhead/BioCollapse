@@ -83,7 +83,9 @@ public class SimulationController {
 
     private void updateHumans() {
         for (Human currentHuman : humans) {
-            movementService.updateHumanGoal(currentHuman);
+            if (!currentHuman.isAlive())
+                continue;
+            movementService.updateHumanGoal(currentHuman, tick);
             movementService.move(currentHuman);
             hospitalService.updateHospitals(hospitals, currentHuman);
         }
