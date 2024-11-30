@@ -26,14 +26,27 @@ public class MovementService {
         GoalState humanGoalState = human.getGoalState();
         if (human.isInfected()) {
             // If the person is infected, they have a chance to change their destination to
-            // a hospital.
+            // a hospital or stay at home.
+            int hospitalProbability = GlobalConfig.config.getHospitalProbability();
+            int isolationProbability = GlobalConfig.config.getIsolationProbability();
+            if (GlobalConfig.config.getIsolationMandate()) {
+                isolationProbability = isolationProbability * GlobalConfig.config.getIsolationEffect();
+            }
+
+            // If human is not on its way to a hospital and the hospitalProbability checks
+            // the human will go to the hospital
             if (humanGoalState != GoalState.to_hospital
-                    && GlobalRandom.checkProbability(GlobalConfig.config.getHospitalProbability())) {
+                    && GlobalRandom.checkProbability(hospitalProbability)) {
                 human.setGoalState(GoalState.to_hospital);
                 MapPosition nearestHospital = map.findNearest(Block.Hospital, human.getPos().copy());
                 if (nearestHospital != null) {
                     human.setGoalPos(nearestHospital);
                 }
+            } else if (humanGoalState != GoalState.to_hospital && GlobalRandom.checkProbability(isolationProbability)) {
+                // If human is not on its way to a hospital and the isolationProbability checks
+                // the human will go home
+                human.setGoalState(GoalState.to_home);
+                human.setGoalPos(human.getHomePos());
             }
         } else {
             // When a person reaches their destination, they return home or go to work.
@@ -43,15 +56,15 @@ public class MovementService {
                     human.setGoalPos(human.getHomePos());
                 } else {
                     // There is a chance that a person will stay at home which can be increased when
-                    // the isolationMandate is true
-                    int isolationProbability = GlobalConfig.config.getIsolationProbability();
-                    int effeciteIsolationProbability;
-                    if (GlobalConfig.config.getIsolationMandate()) {
-                        effeciteIsolationProbability = isolationProbability * GlobalConfig.config.getIsolationEffect();
+                    // the lockdownMandate is true
+                    int lockdownProbability = 0;
+                    int effectiveLockdownProbability;
+                    if (GlobalConfig.config.getLockdown() || GlobalConfig.config.getSchoolClosure()) {
+                        effectiveLockdownProbability = GlobalConfig.config.getLockdownEffect();
                     } else {
-                        effeciteIsolationProbability = isolationProbability;
+                        effectiveLockdownProbability = lockdownProbability;
                     }
-                    if (!GlobalRandom.checkProbability(effeciteIsolationProbability)) {
+                    if (!GlobalRandom.checkProbability(effectiveLockdownProbability)) {
                         human.setGoalState(GoalState.to_work);
                         human.setGoalPos(human.getWorkPos());
                     }

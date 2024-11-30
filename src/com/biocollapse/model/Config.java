@@ -22,6 +22,7 @@ public class Config {
   private int maskEffect = 2; // how much the maskMandate decreases the infectionProbability
   private int ageEffect = 3; // how much the age of a human increases mortalityRisk
   private int isolationEffect = 2; // how much the isolationMandate increases the isolationProbability
+  private int lockdownEffect = 75;
 
   /**
    * @param infectionRadius      The radius in which an infected person can infect
@@ -262,6 +263,14 @@ public class Config {
 
   public void setIsolationEffect(int isolationEffect) {
     this.isolationEffect = isolationEffect;
+  }
+
+  public int getLockdownEffect() {
+    return lockdownEffect;
+  }
+
+  public void setLockdownEffect(int lockdownEffect) {
+    this.lockdownEffect = lockdownEffect;
   }
 
   @Override
