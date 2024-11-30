@@ -77,6 +77,10 @@ public class MovementService {
         MapPosition humanGoalPos = human.getGoalPos();
         MapPosition previouPosition = human.getPreviouPosition();
 
+        if (humanPos.equals(humanGoalPos)) {
+            return;
+        }
+
         // Check all four directions
         for (MovementAction direction : MovementAction.values()) {
             if (direction == MovementAction.NONE)
