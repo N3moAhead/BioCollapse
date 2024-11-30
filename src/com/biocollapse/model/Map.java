@@ -173,11 +173,11 @@ public class Map {
         return this.map;
     }
 
-    private boolean isValidPosition(int row, int col) {
+    public static boolean isValidPosition(int row, int col) {
         return col >= 0 && col < MAP_WIDTH && row >= 0 && row < MAP_HEIGHT;
     }
 
-    private boolean isValidPosition(MapPosition pos) {
+    public static boolean isValidPosition(MapPosition pos) {
         return isValidPosition(pos.getRow(), pos.getCol());
     }
 
