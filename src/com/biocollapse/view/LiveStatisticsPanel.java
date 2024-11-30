@@ -14,12 +14,12 @@ import static src.com.biocollapse.model.LiveStatistics.STAT_HEALTHY;
 import static src.com.biocollapse.model.LiveStatistics.STAT_HOSPITAL_CAPACITY_RATIO;
 import static src.com.biocollapse.model.LiveStatistics.STAT_IMMUNE;
 import static src.com.biocollapse.model.LiveStatistics.STAT_INFECTED;
-import static src.com.biocollapse.model.LiveStatistics.STAT_RECOVERED;
 
 public class LiveStatisticsPanel extends JPanel {
 
     private final List<LiveStatistics> timelineStats;
-    private StatItem textAlive, textInfected, textRecovered, textHealthy, textImmune, textDeaths, textHospitalCapacityRation;
+    private StatItem textAlive, textInfected, textHealthy, textImmune, textDeaths,
+            textHospitalCapacityRation;
     private GridBagLayout glb;
     private Integer row;
 
@@ -33,10 +33,11 @@ public class LiveStatisticsPanel extends JPanel {
 
     public void update(LiveStatistics currentStats) {
         timelineStats.add(currentStats);
+        textAlive.setValue(String.valueOf(currentStats.getAlive()));
         textDeaths.setValue(String.valueOf(currentStats.getDeaths()));
         textImmune.setValue(String.valueOf(currentStats.getImmune()));
         textInfected.setValue(String.valueOf(currentStats.getInfected()));
-        textRecovered.setValue(String.valueOf(currentStats.getHealthy()));
+        textHealthy.setValue(String.valueOf(currentStats.getHealthy()));
     }
 
     /**
@@ -53,7 +54,6 @@ public class LiveStatisticsPanel extends JPanel {
 
         textAlive = new StatItem(STAT_ALIVE);
         textInfected = new StatItem(STAT_INFECTED);
-        textRecovered = new StatItem(STAT_RECOVERED);
         textHealthy = new StatItem(STAT_HEALTHY);
         textImmune = new StatItem(STAT_IMMUNE);
         textDeaths = new StatItem(STAT_DEATHS);
@@ -61,7 +61,6 @@ public class LiveStatisticsPanel extends JPanel {
 
         textAlive.add(this);
         textInfected.add(this);
-        textRecovered.add(this);
         textHealthy.add(this);
         textImmune.add(this);
         textDeaths.add(this);
