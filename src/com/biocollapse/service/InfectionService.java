@@ -10,7 +10,14 @@ import src.com.biocollapse.model.Age;
 import java.util.List;
 
 public class InfectionService {
-    boolean[][] infected;
+    private boolean[][] infected;
+    private final int infectionProbability = GlobalConfig.config.getInfectionProbability();
+    private final int effectiveInfectionProbability = GlobalConfig.config.getMaskMandate()
+            ? infectionProbability / GlobalConfig.config.getmaskEffect()
+            : infectionProbability;
+    private final int mortalityRisk = GlobalConfig.config.getMortalityRisk();
+    private final int infectionTime = GlobalConfig.config.getInfectionTime();
+    private final int immunityChance = GlobalConfig.config.getImmunityChance();
 
     public void initInfectionUpdates() {
         this.infected = new boolean[Map.MAP_HEIGHT][Map.MAP_WIDTH];
@@ -81,11 +88,6 @@ public class InfectionService {
      * @param currentTick
      */
     private void infectHumans(Human human, int currentTick) {
-        int infectionProbability = GlobalConfig.config.getInfectionProbability();
-        int effectiveInfectionProbability = GlobalConfig.config.getMaskMandate()
-                ? infectionProbability / GlobalConfig.config.getmaskEffect()
-                : infectionProbability;
-
         MapPosition pos = human.getPos();
         if (infected[pos.getRow()][pos.getCol()]) {
             if (human.isAlive() && !human.isInfected() && !human.isImmune()) {
@@ -106,10 +108,6 @@ public class InfectionService {
      * @param currentTick
      */
     private void updateDeadOrHealed(Human human, int currentTick) {
-        int mortalityRisk = GlobalConfig.config.getMortalityRisk();
-        int infectionTime = GlobalConfig.config.getInfectionTime();
-        int immunityChance = GlobalConfig.config.getImmunityChance();
-
         if (human.isInfected()) {
             Age humanAge = human.getAge();
 
