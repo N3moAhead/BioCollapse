@@ -23,19 +23,27 @@ public class Config {
   private int ageEffect = 3; // how much the age of a human increases mortalityRisk
 
   /**
-   * @param infectionRadius The radius in which an infected person can infect another person
-   * @param infectionProbability The probability of an infected person to infect another person
-   * @param incubationTime The amount of ticks until symptoms show and a person chooses to go to the hospital or not
-   * @param mortalityRisk The probability of the virus killing a person
-   * @param infectionTime The amount of ticks after infection in which a person can die
-   * @param immunityChance The probability of getting immune after surviving an infection
-   * @param hospitalCapacity The capacity each hospital provides
+   * @param infectionRadius      The radius in which an infected person can infect
+   *                             another person
+   * @param infectionProbability The probability of an infected person to infect
+   *                             another person
+   * @param incubationTime       The amount of ticks until symptoms show and a
+   *                             person chooses to go to the hospital or not
+   * @param mortalityRisk        The probability of the virus killing a person
+   * @param infectionTime        The amount of ticks after infection in which a
+   *                             person can die
+   * @param immunityChance       The probability of getting immune after surviving
+   *                             an infection
+   * @param hospitalCapacity     The capacity each hospital provides
    * @param isolationProbability The probabilty for people to isolate themselves
-   * @param hospitalProbability The probability for people to go into the hospital when infected
-   * @param childrenRatio The ratio of children inside of the simulation
-   * @param adultRatio The ratio of adult people inside of the simulation
-   * @param elderlyRatio The ratio of elderly people inside of the simulation
-   * @param lockdown 
+   * @param hospitalProbability  The probability for people to go into the
+   *                             hospital when infected
+   * @param childrenRatio        The ratio of children inside of the simulation
+   * @param adultRatio           The ratio of adult people inside of the
+   *                             simulation
+   * @param elderlyRatio         The ratio of elderly people inside of the
+   *                             simulation
+   * @param lockdown
    * @param isolationMandate
    * @param maskMandate
    * @param schoolClosure
@@ -54,19 +62,28 @@ public class Config {
 
   /**
    * Allows us to initialize the Config class lazily
-   * @param infectionRadius The radius in which an infected person can infect another person
-   * @param infectionProbability The probability of an infected person to infect another person
-   * @param incubationTime The amount of ticks it needs until the virus is deadly
-   * @param mortalityRisk The probability of the virus killing a person
-   * @param infectionTime The amount of ticks after the incubation time in which a person can die
-   * @param immunityChance The probability of getting immune after surviving an infection
-   * @param hospitalCapacity The capacity each hospital provides
+   * 
+   * @param infectionRadius      The radius in which an infected person can infect
+   *                             another person
+   * @param infectionProbability The probability of an infected person to infect
+   *                             another person
+   * @param incubationTime       The amount of ticks it needs until the virus is
+   *                             deadly
+   * @param mortalityRisk        The probability of the virus killing a person
+   * @param infectionTime        The amount of ticks after the incubation time in
+   *                             which a person can die
+   * @param immunityChance       The probability of getting immune after surviving
+   *                             an infection
+   * @param hospitalCapacity     The capacity each hospital provides
    * @param isolationProbability The probabilty for people to isolate themselves
-   * @param hospitalProbability The probability for people to go into the hospital when infected
-   * @param childrenRatio The ratio of children inside of the simulation
-   * @param adultRatio The ratio of adult people inside of the simulation
-   * @param elderlyRatio The ratio of elderly people inside of the simulation
-   * @param lockdown 
+   * @param hospitalProbability  The probability for people to go into the
+   *                             hospital when infected
+   * @param childrenRatio        The ratio of children inside of the simulation
+   * @param adultRatio           The ratio of adult people inside of the
+   *                             simulation
+   * @param elderlyRatio         The ratio of elderly people inside of the
+   *                             simulation
+   * @param lockdown
    * @param isolationMandate
    * @param maskMandate
    * @param schoolClosure
@@ -227,7 +244,7 @@ public class Config {
   }
 
   public void setMaskEffect(int maskEffect) {
-      this.maskEffect = maskEffect;
+    this.maskEffect = maskEffect;
   }
 
   public int getAgeEffect() {
