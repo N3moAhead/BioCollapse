@@ -1,8 +1,5 @@
 package src.com.biocollapse.model;
 
-import src.com.biocollapse.util.GlobalConfig;
-import src.com.biocollapse.util.GlobalRandom;
-
 public class Human {
   private Age age;
   private boolean infected;
