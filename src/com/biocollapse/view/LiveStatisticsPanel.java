@@ -138,6 +138,7 @@ public class LiveStatisticsPanel extends JPanel {
         sliderLabel.setFont(new Font("Arial", Font.PLAIN, 12));
         sliderLabel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 2));
         JSlider slider = new JSlider(50, 500);
+        slider.setValue(graph.getVisiblePoints());
         slider.addChangeListener((ChangeEvent arg0) -> {
             graph.setVisiblePoints(slider.getValue());
             sliderLabel.setText("Sichtbare Punkte ("+graph.getVisiblePoints()+")");
@@ -148,11 +149,12 @@ public class LiveStatisticsPanel extends JPanel {
 
         JCheckBox points = new JCheckBox("Punkte zeichnen");
         JCheckBox connections = new JCheckBox("Verbindungen zeichnen");
-
+        connections.setSelected(graph.isDrawConnections());
+        points.setSelected(graph.isDrawPoints());
         points.addChangeListener((ChangeEvent arg0) -> {
             graph.setDrawPoints(points.isSelected());
             if (!points.isSelected()) {
-                connections.setSelected(true);
+                connections.setSelected(graph.isDrawConnections());
             }
         });
         panel.add(points, makeConfigGbc(0, points, configRow));
@@ -161,7 +163,7 @@ public class LiveStatisticsPanel extends JPanel {
         connections.addChangeListener((ChangeEvent arg0) -> {
             graph.setDrawConnections(connections.isSelected());
             if (!connections.isSelected()) {
-                points.setSelected(true);
+                points.setSelected(graph.isDrawPoints());
             }
         });
         panel.add(connections, makeConfigGbc(0, connections, configRow));

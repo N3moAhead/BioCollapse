@@ -2,10 +2,8 @@ package src.com.biocollapse.view;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Dimension;
 import java.util.List;
 import javax.swing.BorderFactory;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import src.com.biocollapse.controller.SimulationController;
@@ -78,58 +76,5 @@ public class SimulationPanel extends JPanel {
      */
     public void simulationComplete() {
         controller.showStatisticsScreen(stats.getTimelineStats());
-    }
-
-    /**
-     * Map debugging. TODO: Remove later.
-     *
-     * @param args
-     */
-    public static void main(String[] args) {
-        MapPanel.DEBUG_MAP = true;
-        JFrame frame = new JFrame();
-        Dimension d = MapPanel.getMapDimension();
-        Dimension newDim = new Dimension((int) d.getWidth() + 460, (int) d.getHeight() + 475);
-        frame.setSize(newDim);
-        frame.setMinimumSize(newDim);
-        frame.setPreferredSize(newDim);
-        frame.setVisible(true);
-        SimulationPanel panel = new SimulationPanel(null);
-        frame.add(panel);
-        panel.stats.update(new LiveStatistics(0,0,0,0,0,0));
-        panel.stats.update(new LiveStatistics(1,1,1,1,1,1));
-        panel.stats.update(new LiveStatistics(5,2,3,4,5,6));
-        panel.stats.update(new LiveStatistics(3,3,3,3,3,3));
-        panel.stats.update(new LiveStatistics(2,1,1,1,1,1));
-        panel.stats.update(new LiveStatistics(1,1,1,1,1,1));
-        panel.stats.update(new LiveStatistics(5,2,3,4,5,0));
-        panel.stats.update(new LiveStatistics(3,3,3,3,3,3));
-        panel.stats.update(new LiveStatistics(2,1,1,1,1,1));
-
-        panel.stats.update(new LiveStatistics(5,2,3,4,5,6));
-        panel.stats.update(new LiveStatistics(3,3,3,3,3,3));
-        panel.stats.update(new LiveStatistics(2,1,1,1,1,1));
-        panel.stats.update(new LiveStatistics(1,1,1,1,1,1));
-        panel.stats.update(new LiveStatistics(5,2,3,4,5,0));
-        panel.stats.update(new LiveStatistics(3,3,3,3,3,3));
-        panel.stats.update(new LiveStatistics(2,1,1,1,1,1));
-
-        panel.stats.update(new LiveStatistics(0,0,0,0,0,0));
-        panel.stats.update(new LiveStatistics(1,1,1,1,1,1));
-        panel.stats.update(new LiveStatistics(5,2,3,4,5,6));
-        panel.stats.update(new LiveStatistics(3,3,3,3,3,3));
-        panel.stats.update(new LiveStatistics(2,1,1,1,1,1));
-        panel.stats.update(new LiveStatistics(1,1,1,1,1,1));
-        panel.stats.update(new LiveStatistics(5,2,3,4,5,0));
-        panel.stats.update(new LiveStatistics(3,3,3,3,3,3));
-        panel.stats.update(new LiveStatistics(2,1,1,1,1,1));
-
-        panel.stats.update(new LiveStatistics(5,2,3,4,5,6));
-        panel.stats.update(new LiveStatistics(3,3,3,3,3,3));
-        panel.stats.update(new LiveStatistics(2,1,1,1,1,1));
-        panel.stats.update(new LiveStatistics(1,1,1,1,1,1));
-        panel.stats.update(new LiveStatistics(5,2,3,4,5,0));
-        panel.stats.update(new LiveStatistics(3,3,3,3,3,3));
-        panel.stats.update(new LiveStatistics(2,1,1,1,1,1));
     }
 }

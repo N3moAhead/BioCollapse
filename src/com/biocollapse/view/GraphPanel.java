@@ -26,7 +26,7 @@ public class GraphPanel extends JPanel {
 
     private int visiblePoints = 50;
     private boolean drawPoints = true;
-    private boolean drawConnections = false;
+    private boolean drawConnections = true;
 
     private static final int PADDING_TOP = 20;
     private static final int PADDING_BOTTOM = 20;

@@ -63,11 +63,15 @@ public class SimulationController {
 
                 double fps = lastFps; // Needed for swingutilities to access scope.
                 SwingUtilities.invokeLater(() -> {
-                    // TODO: Get actual statistics.
                     LiveStatistics newLiveStatistics = simulationService.calculateLiveStatistics(humans, hospitals);
-                    // visualisation.update(humans, newLiveStatistics, fps);
 
-                    visualisation.update(humans, new LiveStatistics(GlobalRandom.getRandIntBetween(0, 100), GlobalRandom.getRandIntBetween(0, 50), GlobalRandom.getRandIntBetween(0, 50), GlobalRandom.getRandIntBetween(40, 60), GlobalRandom.getRandIntBetween(80, 100), GlobalRandom.getRandIntBetween(0, 50)), fps);
+                    // For testing, please set testGraphs to true. TODO: Remove testing code later.
+                    boolean testGraphs = false;
+                    if (testGraphs) {
+                        visualisation.update(humans, new LiveStatistics(GlobalRandom.getRandIntBetween(0, 100), GlobalRandom.getRandIntBetween(0, 50), GlobalRandom.getRandIntBetween(0, 50), GlobalRandom.getRandIntBetween(40, 60), GlobalRandom.getRandIntBetween(80, 100), GlobalRandom.getRandIntBetween(0, 50)), fps);
+                    } else {
+                        visualisation.update(humans, newLiveStatistics, fps);
+                    }
                 });
 
                 // TODO: Check if simulation is complete.
