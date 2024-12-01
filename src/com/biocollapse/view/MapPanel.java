@@ -1,5 +1,6 @@
 package src.com.biocollapse.view;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -12,6 +13,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
+import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
@@ -39,6 +41,7 @@ public class MapPanel extends JPanel {
      * This panel is responsible for displaying the map.
      */
     public MapPanel() {
+        initLegend();
         addComponentListener(new ComponentAdapter() {
             @Override
             public void componentResized(ComponentEvent e) {
@@ -97,6 +100,10 @@ public class MapPanel extends JPanel {
     }
 
     public JPanel legendPanel() {
+        if (legend == null) {
+            return new JPanel();
+        }
+        JPanel layoutPanel = new JPanel(new BorderLayout());
         JPanel legendPanel = new JPanel();
         for (Block b : Block.values()) {
             legendPanel.add(createLegendItem(b.name(), legend.get(b)));
@@ -105,7 +112,8 @@ public class MapPanel extends JPanel {
         legendPanel.add(createLegendItem(STATUS_HEALTHY, COLOR_HEALTHY));
         legendPanel.add(createLegendItem(STATUS_INFECTED, COLOR_INFECTED));
 
-        return legendPanel;
+        layoutPanel.add(legendPanel, BorderLayout.WEST);
+        return layoutPanel;
     }
 
     public void initLegend() {
@@ -120,7 +128,7 @@ public class MapPanel extends JPanel {
     private JPanel createLegendItem(String name, Color c) {
         JPanel item = new JPanel();
         item.add(new JLabel(name));
-        item.setBackground(c);
+        item.setBorder(BorderFactory.createLineBorder(c, 3));
         return item;
     }
 
