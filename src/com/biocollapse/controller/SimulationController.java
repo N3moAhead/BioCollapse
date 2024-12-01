@@ -7,13 +7,11 @@ import javax.swing.SwingUtilities;
 import src.com.biocollapse.model.Block;
 import src.com.biocollapse.model.Hospital;
 import src.com.biocollapse.model.Human;
-import src.com.biocollapse.model.LiveStatistics;
 import src.com.biocollapse.model.Map;
 import src.com.biocollapse.service.HospitalService;
 import src.com.biocollapse.service.InfectionService;
 import src.com.biocollapse.service.MovementService;
 import src.com.biocollapse.service.SimulationService;
-import src.com.biocollapse.util.GlobalRandom;
 import src.com.biocollapse.view.SimulationPanel;
 
 public class SimulationController {
@@ -62,17 +60,7 @@ public class SimulationController {
                 }
 
                 double fps = lastFps; // Needed for swingutilities to access scope.
-                SwingUtilities.invokeLater(() -> {
-                    LiveStatistics newLiveStatistics = simulationService.calculateLiveStatistics(humans, hospitals);
-
-                    // For testing, please set testGraphs to true. TODO: Remove testing code later.
-                    boolean testGraphs = false;
-                    if (testGraphs) {
-                        visualisation.update(humans, new LiveStatistics(GlobalRandom.getRandIntBetween(0, 100), GlobalRandom.getRandIntBetween(0, 50), GlobalRandom.getRandIntBetween(0, 50), GlobalRandom.getRandIntBetween(40, 60), GlobalRandom.getRandIntBetween(80, 100), GlobalRandom.getRandIntBetween(0, 50)), fps);
-                    } else {
-                        visualisation.update(humans, newLiveStatistics, fps);
-                    }
-                });
+                SwingUtilities.invokeLater(() -> visualisation.update(humans, simulationService.calculateLiveStatistics(humans, hospitals), fps));
 
                 // TODO: Check if simulation is complete.
                 boolean simulationComplete = false;
