@@ -13,6 +13,7 @@ import src.com.biocollapse.service.HospitalService;
 import src.com.biocollapse.service.InfectionService;
 import src.com.biocollapse.service.MovementService;
 import src.com.biocollapse.service.SimulationService;
+import src.com.biocollapse.util.GlobalRandom;
 import src.com.biocollapse.view.SimulationPanel;
 
 public class SimulationController {
@@ -64,7 +65,9 @@ public class SimulationController {
                 SwingUtilities.invokeLater(() -> {
                     // TODO: Get actual statistics.
                     LiveStatistics newLiveStatistics = simulationService.calculateLiveStatistics(humans, hospitals);
-                    visualisation.update(humans, newLiveStatistics, fps);
+                    // visualisation.update(humans, newLiveStatistics, fps);
+
+                    visualisation.update(humans, new LiveStatistics(GlobalRandom.getRandIntBetween(0, 100), GlobalRandom.getRandIntBetween(0, 50), GlobalRandom.getRandIntBetween(0, 50), GlobalRandom.getRandIntBetween(40, 60), GlobalRandom.getRandIntBetween(80, 100), GlobalRandom.getRandIntBetween(0, 50)), fps);
                 });
 
                 // TODO: Check if simulation is complete.
