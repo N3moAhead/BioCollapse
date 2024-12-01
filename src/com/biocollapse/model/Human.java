@@ -1,8 +1,5 @@
 package src.com.biocollapse.model;
 
-import src.com.biocollapse.util.GlobalConfig;
-import src.com.biocollapse.util.GlobalRandom;
-
 public class Human {
   private Age age;
   private boolean infected;
@@ -16,6 +13,7 @@ public class Human {
   private MapPosition workPos;
   private MapPosition homePos;
   private MapPosition previouPosition;
+  private Integer reachedLocationAt = null;
 
   public MapPosition getPreviouPosition() {
     return previouPosition;
@@ -35,6 +33,14 @@ public class Human {
     // On init a human spwans at an unknown
     // location and his first action will be to walk home.
     this.goalPos = homePos;
+  }
+
+  public Integer getReachedLocationAt() {
+    return reachedLocationAt;
+  }
+
+  public void setReachedLocationAt(Integer reachedLocationAt) {
+    this.reachedLocationAt = reachedLocationAt;
   }
 
   public Age getAge() {

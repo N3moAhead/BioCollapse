@@ -83,7 +83,7 @@ public class SimulationController {
 
     private void updateHumans() {
         for (Human currentHuman : humans) {
-            movementService.updateHumanGoal(currentHuman);
+            movementService.updateHumanGoal(currentHuman, tick);
             movementService.move(currentHuman);
             hospitalService.updateHospitals(hospitals, currentHuman);
         }
