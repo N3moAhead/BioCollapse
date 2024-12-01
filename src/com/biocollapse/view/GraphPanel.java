@@ -120,7 +120,7 @@ public class GraphPanel extends JPanel {
         drawLeftString(String.valueOf((float) highestVisibleNum / 4), g2d, 2, height / 4 * 3 + 5);
 
         g2d.drawLine(PADDING_LEFT, height - PADDING_BOTTOM, width - PADDING_RIGHT, height - PADDING_BOTTOM); // X-axis
-        g2d.drawLine(PADDING_LEFT, height - PADDING_BOTTOM, PADDING_RIGHT, PADDING_BOTTOM);                 // Y-axis
+        g2d.drawLine(PADDING_LEFT, height - PADDING_BOTTOM, PADDING_LEFT, PADDING_BOTTOM);                 // Y-axis
 
         for (Entry<String, Graph> entry : graphs.entrySet()) {
             drawPoints(entry.getValue(), g2d);
