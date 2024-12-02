@@ -1,7 +1,6 @@
 package src.com.biocollapse.service;
 
 import src.com.biocollapse.model.Block;
-import src.com.biocollapse.model.GoalState;
 import src.com.biocollapse.model.Human;
 import src.com.biocollapse.model.Map;
 import src.com.biocollapse.model.MapPosition;
@@ -23,13 +22,13 @@ public class MovementService {
     // If the person arrives at home, there is a probability that
     // he can continue to stay at home instead of going to work.
     public void updateHumanGoal(Human human, int tick) {
-        GoalState humanGoalState = human.getGoalState();
+        MapPosition humanGoalPos = human.getGoalPos();
+        Block blockGoal = map.getBlock(humanGoalPos);
         if (human.isInfected()) {
             // If the person is infected, they have a chance to change their destination to
             // a hospital.
-            if (humanGoalState != GoalState.to_hospital
+            if (blockGoal != Block.Hospital
                     && GlobalRandom.checkProbability(GlobalConfig.config.getHospitalProbability())) {
-                human.setGoalState(GoalState.to_hospital);
                 MapPosition nearestHospital = map.findNearest(Block.Hospital, human.getPos().copy());
                 if (nearestHospital != null) {
                     human.setGoalPos(nearestHospital);
@@ -47,10 +46,9 @@ public class MovementService {
                     // there for a while
                     if (tick - reachedLocationAt < GlobalConfig.config.getTicksAtLocation())
                         return;
-                    if (humanGoalState == GoalState.to_work) {
+                    if (blockGoal == Block.Workplace) {
                         // set it to null because we left the current location
                         human.setReachedLocationAt(null);
-                        human.setGoalState(GoalState.to_home);
                         human.setGoalPos(human.getHomePos());
                     } else {
                         // There is a chance that a person will stay at home
@@ -59,7 +57,6 @@ public class MovementService {
                         } else {
                             // Set it to null because we left the current location
                             human.setReachedLocationAt(null);
-                            human.setGoalState(GoalState.to_work);
                             human.setGoalPos(human.getWorkPos());
                         }
                     }

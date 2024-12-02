@@ -28,7 +28,7 @@ public class SimulationController {
     private final InfectionService infectionService = new InfectionService();
     private final MovementService movementService = new MovementService(map);
     private final SimulationService simulationService = new SimulationService();
-    private final HospitalService hospitalService = new HospitalService();
+    private final HospitalService hospitalService = new HospitalService(map);
 
     // Display
     private final SimulationPanel visualisation;

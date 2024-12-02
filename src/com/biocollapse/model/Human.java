@@ -9,7 +9,6 @@ public class Human {
   private boolean immune;
   private MapPosition pos;
   private MapPosition goalPos;
-  private GoalState goalState = GoalState.to_home;
   private MapPosition workPos;
   private MapPosition homePos;
   private MapPosition previouPosition;
@@ -111,14 +110,6 @@ public class Human {
     this.goalPos = goalPos;
   }
 
-  public GoalState getGoalState() {
-    return goalState;
-  }
-
-  public void setGoalState(GoalState goalState) {
-    this.goalState = goalState;
-  }
-
   public MapPosition getWorkPos() {
     return workPos;
   }
@@ -144,7 +135,6 @@ public class Human {
         ", immune=" + immune +
         ", pos=" + (pos != null ? pos.toString() : "null") +
         ", goalPos=" + (goalPos != null ? goalPos.toString() : "null") +
-        ", goalState=" + goalState.toString() +
         ", workPos=" + (workPos != null ? workPos.toString() : "null") +
         ", homePos=" + (homePos != null ? homePos.toString() : "null") +
         '}';
