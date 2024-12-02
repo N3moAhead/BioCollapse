@@ -2,7 +2,6 @@ package src.com.biocollapse.service;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import src.com.biocollapse.model.Block;
 import src.com.biocollapse.model.Hospital;
 import src.com.biocollapse.model.Human;
@@ -86,7 +85,7 @@ public class SimulationService {
         if (hospitalCapacity > 0) {
             hospitalCapacityRatio = usedHospitalCapacity / hospitalCapacity;
         } else {
-            System.err.println("There was an Error in Calculating the hospital capacity: " + hospitalCapacity);
+            // System.err.println("There was an Error in Calculating the hospital capacity: " + hospitalCapacity);
             hospitalCapacityRatio = -1;
         }
 

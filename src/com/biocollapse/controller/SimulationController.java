@@ -7,7 +7,6 @@ import javax.swing.SwingUtilities;
 import src.com.biocollapse.model.Block;
 import src.com.biocollapse.model.Hospital;
 import src.com.biocollapse.model.Human;
-import src.com.biocollapse.model.LiveStatistics;
 import src.com.biocollapse.model.Map;
 import src.com.biocollapse.service.HospitalService;
 import src.com.biocollapse.service.InfectionService;
@@ -61,11 +60,7 @@ public class SimulationController {
                 }
 
                 double fps = lastFps; // Needed for swingutilities to access scope.
-                SwingUtilities.invokeLater(() -> {
-                    // TODO: Get actual statistics.
-                    LiveStatistics newLiveStatistics = simulationService.calculateLiveStatistics(humans, hospitals);
-                    visualisation.update(humans, newLiveStatistics, fps);
-                });
+                SwingUtilities.invokeLater(() -> visualisation.update(humans, simulationService.calculateLiveStatistics(humans, hospitals), fps));
 
                 // TODO: Check if simulation is complete.
                 boolean simulationComplete = false;

@@ -2,14 +2,11 @@ package src.com.biocollapse.view;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Dimension;
 import java.util.List;
 import javax.swing.BorderFactory;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import src.com.biocollapse.controller.SimulationController;
-import static src.com.biocollapse.controller.SimulationController.SIMULATION_FRAME_DELAY;
 import src.com.biocollapse.controller.WindowController;
 import src.com.biocollapse.model.Block;
 import src.com.biocollapse.model.Human;
@@ -20,7 +17,6 @@ public class SimulationPanel extends JPanel {
     private final WindowController controller;
     private MapPanel map;
     private LiveStatisticsPanel stats;
-    private JLabel fps;
 
     public SimulationPanel(WindowController controller) {
         this.controller = controller;
@@ -35,39 +31,32 @@ public class SimulationPanel extends JPanel {
 
     private void setupLayout() {
         setLayout(new BorderLayout());
-        setBorder(BorderFactory.createEmptyBorder(0, 5, 5, 0));
+        
+        JPanel topBar = new JPanel(new BorderLayout());
+        topBar.setBackground(new Color(201, 218, 234));
+        topBar.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 0));
+        JLabel title = new JLabel("SIMULATION");
+        topBar.add(title, BorderLayout.WEST);
+        add(topBar, BorderLayout.NORTH);
 
-        JPanel leftMapPanel = new JPanel(new BorderLayout());
+        JPanel centerContent = new JPanel(new BorderLayout());
+        add(centerContent, BorderLayout.CENTER);
 
+        JPanel innerMapPanel = new JPanel(new BorderLayout());
+        centerContent.add(innerMapPanel, BorderLayout.WEST);
         map = new MapPanel();
-        map.initLegend();
-
-        leftMapPanel.add(map, BorderLayout.CENTER);
-        JPanel legendPanel = map.legendPanel();
-        legendPanel.setVisible(true);
-        leftMapPanel.add(legendPanel, BorderLayout.NORTH);
-  
-        add(leftMapPanel, BorderLayout.WEST);
-
-        JPanel rightPanel = new JPanel(new BorderLayout());
-        add(rightPanel, BorderLayout.CENTER);
-
-        fps = new JLabel();
-        fps.setForeground(Color.RED);
-        rightPanel.add(fps, BorderLayout.NORTH);
+        innerMapPanel.add(map, BorderLayout.CENTER);
+        innerMapPanel.add(map.legendPanel(), BorderLayout.NORTH);
 
         stats = new LiveStatisticsPanel();
-        rightPanel.add(stats, BorderLayout.CENTER);
-
-        invalidate();
-        repaint();
+        centerContent.add(stats, BorderLayout.CENTER);
     }
 
     /**
      * Call each frame to update the human position and statistics.
      */
     public void update(List<Human> humanData, LiveStatistics liveStatistics, double fps) {
-        this.fps.setText(String.format("%.1f", fps) + " FPS (" + SIMULATION_FRAME_DELAY + " ms delay active)");
+        // this.fps.setText(String.format("%.1f", fps) + " FPS (" + SIMULATION_FRAME_DELAY + " ms delay active)");
         map.update(humanData);
         stats.update(liveStatistics);
 
@@ -87,24 +76,5 @@ public class SimulationPanel extends JPanel {
      */
     public void simulationComplete() {
         controller.showStatisticsScreen(stats.getTimelineStats());
-    }
-
-    /**
-     * Map debugging. TODO: Remove later.
-     *
-     * @param args
-     */
-    public static void main(String[] args) {
-        MapPanel.DEBUG_MAP = true;
-        JFrame frame = new JFrame();
-        Dimension d = MapPanel.getMapDimension();
-        Dimension newDim = new Dimension((int) d.getWidth() + 260, (int) d.getHeight() + 75);
-        frame.setSize(newDim);
-        frame.setMinimumSize(newDim);
-        frame.setPreferredSize(newDim);
-        frame.setVisible(true);
-        SimulationPanel panel = new SimulationPanel(null);
-        frame.add(panel);
-        panel.stats.update(new LiveStatistics(10, 5, 6, 7, 9, 9));
     }
 }
