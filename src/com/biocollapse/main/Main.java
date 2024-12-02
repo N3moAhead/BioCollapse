@@ -1,3 +1,4 @@
+// Authors: Lars, Lukas
 package src.com.biocollapse.main;
 
 import src.com.biocollapse.controller.WindowController;

@@ -1,3 +1,4 @@
+// Authors: Inaas, Lars, Sebastian, Lukas
 package src.com.biocollapse.model;
 
 public class Human {

@@ -1,3 +1,4 @@
+// Authors: Lukas, Johann
 package src.com.biocollapse.util;
 
 import java.awt.Graphics2D;

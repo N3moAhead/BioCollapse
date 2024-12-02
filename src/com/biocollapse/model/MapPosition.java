@@ -1,3 +1,4 @@
+// Authors: Lukas
 package src.com.biocollapse.model;
 
 public class MapPosition {

@@ -1,3 +1,4 @@
+// Authors: Lars
 package src.com.biocollapse.model;
 
 public enum GoalState {

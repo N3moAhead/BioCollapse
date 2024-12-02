@@ -1,3 +1,4 @@
+// Authors: Lars, Lukas, Johann
 package src.com.biocollapse.model;
 
 import java.awt.Color;
