@@ -1,3 +1,4 @@
+// Authors: Lukas, Sebastian
 package src.com.biocollapse.service;
 
 import src.com.biocollapse.model.Block;

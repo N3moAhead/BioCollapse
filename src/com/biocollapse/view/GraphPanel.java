@@ -1,3 +1,4 @@
+// Authors: Johann
 package src.com.biocollapse.view;
 
 import java.awt.Color;
