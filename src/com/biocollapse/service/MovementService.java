@@ -66,31 +66,24 @@ public class MovementService {
     }
 
     /**
-     * Calculates the Manhattan distance between two positions.
-     *
-     * @param p1 the first position
-     * @param p2 the second position
-     * @return the Manhattan distance
-     */
-    private int distance(MapPosition p1, MapPosition p2) {
-        return Math.abs(p2.getRow() - p1.getRow()) + Math.abs(p2.getCol() - p1.getCol());
-    }
-
-    /**
-     * Moves the human towards the goal position by evaluating the shortest valid
-     * path.
+     * Moves the human towards the goal position by evaluating the least amount
+     * of steps it would take to walk to the destination.
      *
      * @param human the human to move
      */
     public void move(Human human) {
         MovementAction bestDirection = MovementAction.NONE;
-        int shortestDistance = Integer.MAX_VALUE;
+        int smallestSteps = Integer.MAX_VALUE;
 
-        MapPosition humanPos = human.getPos();
         MapPosition humanGoalPos = human.getGoalPos();
-        MapPosition previouPosition = human.getPreviouPosition();
+        MapPosition humanPos = human.getPos();
 
         if (humanPos.equals(humanGoalPos)) {
+            return;
+        }
+
+        Integer[][] stepMatrix = map.getStepMatrix(humanGoalPos, humanPos);
+        if (stepMatrix == null) {
             return;
         }
 
@@ -105,12 +98,9 @@ public class MovementService {
 
                 // Only consider positions that are walkable
                 if (blockAtNewPos == Block.Path || newPos.equals(humanGoalPos)) {
-                    int newDistance = distance(newPos, humanGoalPos);
-                    if (newPos.equals(previouPosition)) {
-                        newDistance += MOVE_TO_PREVIOUS_PENALTY;
-                    }
-                    if (newDistance < shortestDistance) {
-                        shortestDistance = newDistance;
+                    Integer currentSteps = stepMatrix[newPos.getRow()][newPos.getCol()];
+                    if (currentSteps != null && currentSteps < smallestSteps) {
+                        smallestSteps = currentSteps;
                         bestDirection = direction;
                     }
                 }
@@ -119,8 +109,7 @@ public class MovementService {
             }
         }
 
-        // Move the human in the best direction found
-        human.setPreviouPosition(humanPos.copy());
         human.moveIntoDirection(bestDirection);
     }
+
 }
