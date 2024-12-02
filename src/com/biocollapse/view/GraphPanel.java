@@ -134,6 +134,9 @@ public class GraphPanel extends JPanel {
         int legendSize = getLongestLegendLength(g2d);
         g2d.setFont(new Font("Arial", Font.PLAIN, 8));
         for (Entry<String, Graph> entry : graphs.entrySet()) {
+            if (entry.getValue().isAlwaysHidden() || !entry.getValue().isVisible()) {
+                return;
+            }
             drawLegendString(entry.getKey(), entry.getValue().getColor(), g2d, legendSize);
         }
     }
@@ -202,6 +205,9 @@ public class GraphPanel extends JPanel {
      * Draw the points of a graph.
      */
     private void drawPoints(Graph graph, Graphics2D g2d) {
+        if (graph.isAlwaysHidden() || !graph.isVisible()) {
+            return;
+        }
         double prevX = PADDING_LEFT;
         double prevY = height - PADDING_BOTTOM;
 

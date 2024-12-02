@@ -14,6 +14,7 @@ public class LiveStatistics {
     private static final String STAT_IMMUNE = "Immun";
     private static final String STAT_DEATHS = "Tod";
     private static final String STAT_HOSPITAL_CAPACITY_RATIO = "Krankenhausauslastung";
+    private static final String STAT_DAY = "Tag";
 
     private static final Color COLOR_ALIVE = Color.BLUE;
     private static final Color COLOR_INFECTED = Color.RED;
@@ -23,25 +24,27 @@ public class LiveStatistics {
     private static final Color COLOR_DEATHS = Color.BLACK;
     private static final Color COLOR_HOSPITAL_CAPACITY_RATIO = Color.DARK_GRAY;
 
-    private int alive;
-    private int infected;
-    private int healthy;
-    private int immune;
-    private int deaths;
-    private Integer hospitalCapacityRatio;
-    private long timestamp;
+    private final int alive;
+    private final int infected;
+    private final int healthy;
+    private final int immune;
+    private final int deaths;
+    private final int day;
+    private final Integer hospitalCapacityRatio;
+    private final long timestamp;
 
     /**
      * Live statistics store the current simulation state instead of the overall
      * history.
      */
-    public LiveStatistics(int alive, int infected, int healthy, int immune, int deaths, Integer hospitalCapacityRatio) {
+    public LiveStatistics(int alive, int infected, int healthy, int immune, int deaths, Integer hospitalCapacityRatio, int day) {
         this.alive = alive;
         this.infected = infected;
         this.healthy = healthy;
         this.immune = immune;
         this.deaths = deaths;
         this.hospitalCapacityRatio = hospitalCapacityRatio;
+        this.day = day;
         this.timestamp = System.currentTimeMillis();
     }
 
@@ -52,6 +55,7 @@ public class LiveStatistics {
                 ", \"immune\": " + immune +
                 ", \"deaths\": " + deaths +
                 ", \"hospitalCapacityRatio\": " + hospitalCapacityRatio +
+                ", \"day\": " + day +
                 " }";
     }
 
@@ -63,6 +67,7 @@ public class LiveStatistics {
         items.add(new GraphItem(STAT_IMMUNE, immune, true, false, COLOR_IMMUNE));
         items.add(new GraphItem(STAT_DEATHS, deaths, true, false, COLOR_DEATHS));
         items.add(new GraphItem(STAT_HOSPITAL_CAPACITY_RATIO, hospitalCapacityRatio, true, false, COLOR_HOSPITAL_CAPACITY_RATIO));
+        items.add(new GraphItem(STAT_DAY, day, true, true, COLOR_HOSPITAL_CAPACITY_RATIO));
         return items;
     }
 
