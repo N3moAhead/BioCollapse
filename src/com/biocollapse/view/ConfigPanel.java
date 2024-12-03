@@ -3,6 +3,9 @@ package src.com.biocollapse.view;
 
 import java.awt.*;
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+
 import src.com.biocollapse.controller.WindowController;
 import src.com.biocollapse.util.GlobalConfig;
 
@@ -35,6 +38,8 @@ public class ConfigPanel extends JTabbedPane {
     private JButton backButton;
     private WindowController controller;
     private JPanel mainPanel;
+
+    private final int TICK = 250;
 
     public ConfigPanel(WindowController controller) {
         this.controller = controller;
@@ -72,6 +77,41 @@ public class ConfigPanel extends JTabbedPane {
         return sliderPanel;
     }
 
+    private void adjustSlider(JSlider source) {
+        int total = childrenRatioSlider.getValue() + adultRatioSlider.getValue() + elderlyRatioSlider.getValue();
+
+        if (total > 100) {
+            int excess = total - 100;
+
+            if (source != null) {
+                if (source == childrenRatioSlider) {
+                    redistribute(adultRatioSlider, elderlyRatioSlider, excess);
+                } else if (source == adultRatioSlider) {
+                    redistribute(childrenRatioSlider, elderlyRatioSlider, excess);
+                } else if (source == elderlyRatioSlider) {
+                    redistribute(childrenRatioSlider, adultRatioSlider, excess);
+                }
+            }
+        }
+    }
+
+    private void redistribute(JSlider slider1, JSlider slider2, int excess) {
+        int value1 = slider1.getValue();
+        int value2 = slider2.getValue();
+        int total = value1 + value2;
+
+        if (total > 0) {
+            int reduce1 = Math.min(value1, (excess * value1) / total);
+            int reduce2 = Math.min(value2, excess - reduce1);
+            slider1.setValue(value1 - reduce1);
+            slider2.setValue(value2 - reduce2);
+        } else {
+            // If both are 0, only reduce source slider
+            slider1.setValue(0);
+            slider2.setValue(0);
+        }
+    }
+
     private void initializeComponents() {
         // Initialize Panels
         virusPanel = new JPanel(new GridLayout(10, 1, 10, 10));
@@ -103,6 +143,18 @@ public class ConfigPanel extends JTabbedPane {
 
         saveButton = new JButton("Speichern");
         backButton = new JButton("Zurück");
+
+        ChangeListener sliderListener = new ChangeListener() {
+            @Override
+            public void stateChanged(ChangeEvent e) {
+                JSlider sourcSlider = (JSlider) e.getSource();
+                adjustSlider(sourcSlider);
+            }
+        };
+
+        childrenRatioSlider.addChangeListener(sliderListener);
+        adultRatioSlider.addChangeListener(sliderListener);
+        elderlyRatioSlider.addChangeListener(sliderListener);
     }
 
     private void setupLayout() {
@@ -133,9 +185,9 @@ public class ConfigPanel extends JTabbedPane {
         measuresPanel.add(maskMandateCheckBox);
         measuresPanel.add(schoolClosureCheckBox);
 
-        addTab("Virusparameter", virusPanel);
         addTab("Populationsdaten", populationPanel);
         addTab("Maßnahmen", measuresPanel);
+        addTab("Virusparameter", virusPanel);
 
         buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 10));
         buttonPanel.add(backButton);
@@ -154,9 +206,9 @@ public class ConfigPanel extends JTabbedPane {
         // Save Config parameters
         int infectionRadius = infectionRadiusSlider.getValue();
         int infectionProbability = infectionProbabilitySlider.getValue();
-        int incubationTime = incubationTimeSlider.getValue();
+        int incubationTime = incubationTimeSlider.getValue() * TICK;
         int mortalityRate = mortalityRateSlider.getValue();
-        int timeToDeath = timeToDeathSlider.getValue();
+        int timeToDeath = timeToDeathSlider.getValue() * TICK;
         int immunityChance = immunityChanceSlider.getValue();
 
         int hospitalCapacity = hospitalCapacitySlider.getValue();
