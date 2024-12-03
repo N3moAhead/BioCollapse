@@ -1,17 +1,18 @@
 // Authors: Lukas, Sebastian, Johann
 package src.com.biocollapse.model;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.NoSuchElementException;
 import java.util.Queue;
-import java.util.Set;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.Scanner;
 
 public class Map {
-    private static HashMap<String, File> mapList = new HashMap<String, File>();
+    private static ArrayList<String> mapList = new ArrayList<String>();
     public static final int MAP_WIDTH = 100;
     public static final int MAP_HEIGHT = 100;
 
@@ -34,47 +35,92 @@ public class Map {
      * 
      * Valid filenames/keys are provided by getMapNames();
      */
-    public Map(String name) {
+    public Map(String fileName) {
+        try {
+            // Determine file extension
+            int fileExtensionDot = fileName.lastIndexOf(".");
+            String fileExtension = "";
+            if (fileExtensionDot > 0) {
+                fileExtension = fileName.substring(fileExtensionDot, fileName.length());
+            } else {
+                throw new IOException("Could not determine file Type of " + fileName);
+            }
+
+            // Use correct function for given file extension
+            switch (fileExtension.toLowerCase()) {
+                case ".txt":
+                    parseTxtMap(fileName);
+                    break;
+                case ".bmp":
+                    parseBmpMap(fileName);
+                    break;
+                default:
+                    throw new IOException("File extension not supported: " + fileExtension);
+            }
+        } catch (IOException e) {
+            System.out.println("File type error.");
+            e.printStackTrace();
+        }
+    }
+
+    private void parseTxtMap(String fileName) {
         try {
             this.map = new Block[MAP_HEIGHT][MAP_WIDTH];
-            File mapFile = mapList.get(name);
+            File mapFile = new File("maps/" + fileName);
+            int row;
+            int col;
             Scanner mapReader = new Scanner(mapFile);
-            for (int row = 0; mapReader.hasNextLine() && row < MAP_HEIGHT; row++) {
+            for (row = 0; mapReader.hasNextLine() && row < MAP_HEIGHT; row++) {
                 String line = mapReader.nextLine();
                 char[] chars = line.toCharArray();
-                for (int col = 0; col < chars.length && col < MAP_WIDTH; col++) {
-                    if (isValidPosition(row, col)) {
-                        switch (chars[col]) {
-                            case 'g':
-                                this.map[row][col] = Block.Grass;
-                                break;
-                            case 'p':
-                                this.map[row][col] = Block.Path;
-                                break;
-                            case 'h':
-                                this.map[row][col] = Block.House;
-                                break;
-                            case 'H':
-                                this.map[row][col] = Block.Hospital;
-                                break;
-                            case 'w':
-                                this.map[row][col] = Block.Workplace;
-                                break;
+                for (col = 0; col < chars.length && col < MAP_WIDTH; col++) {
+                    switch (chars[col]) {
+                        case 'g':
+                            this.map[row][col] = Block.Grass;
+                            break;
+                        case 'p':
+                            this.map[row][col] = Block.Path;
+                            break;
+                        case 'h':
+                            this.map[row][col] = Block.House;
+                            break;
+                        case 'H':
+                            this.map[row][col] = Block.Hospital;
+                            break;
+                        case 'w':
+                            this.map[row][col] = Block.Workplace;
+                            break;
 
-                            default:
-                                System.out.println("Invalid character found: " + chars[col]);
-                                break;
-                        }
-                    } else {
-                        System.out.printf("Invalid Position: row=%i, col=%i.\n", row, col);
+                        default:
+                            this.map[row][col] = Block.Grass;
+                            System.out.println("Invalid character '" + chars[col] + "' found at row: " + (row+1) + ", col: " + (col+1) + ". Set to Grass.");
+                    }
+                }
+                if (col < MAP_WIDTH) {
+                    System.out.println("Map too slim. Filling up empty spaces with Grass.");
+                    for (;col < MAP_WIDTH;col++) {
+                        this.map[row][col] = Block.Grass;
+                    }
+                }
+            }
+            if (row < MAP_HEIGHT) {
+                System.out.println("Map too short. Filling up empty spaces with Grass.");
+                for (;row < MAP_HEIGHT;row++) {
+                    for (col = 0 ; col < MAP_WIDTH ; col++) {
+                        this.map[row][col] = Block.Grass;
                     }
                 }
             }
             mapReader.close();
         } catch (FileNotFoundException e) {
-            System.out.println("File not Found: maps/" + name + ".txt");
+            System.out.println("File not found: maps/" + fileName);
             e.printStackTrace();
         }
+        
+    }
+
+    private void parseBmpMap(String fileName) {
+
     }
 
     /*
@@ -92,29 +138,27 @@ public class Map {
         final File mapFolder = new File("maps");
         if (!mapFolder.exists()) {
             mapFolder.mkdir();
-        } else {
-            final File[] mapFileArray = mapFolder.listFiles();
-            if (mapFileArray.length > 0) {
-                for (final File fileEntry : mapFolder.listFiles()) {
-                    mapList.put(fileEntry.getName().substring(0, fileEntry.getName().length() - 4), fileEntry);
-                    System.out.println(
-                            "Found file :" + fileEntry.getName().substring(0, fileEntry.getName().length() - 4));
-                }
+        }
+        final File[] mapFileArray = mapFolder.listFiles();
+        if (mapFileArray.length > 0) {
+            for (final File fileEntry : mapFolder.listFiles()) {
+                mapList.add(fileEntry.getName());
+                System.out.println("Found file: " + fileEntry.getName());
             }
+        } else {
+            System.out.println("Error: No maps found.");
         }
     }
 
-    public static Set<String> getMapNames() {
-        return mapList.keySet();
+    public static ArrayList<String> getMapNames() {
+        return mapList;
     }
 
     public static String getSomeMapName() {
-        String someMapName = "";
-        for (String mapName : getMapNames()) {
-            someMapName = mapName;
-            break;
+        if (mapList.isEmpty()) {
+            throw new NoSuchElementException("List of maps is empty.");
         }
-        return someMapName;
+        return mapList.get(0);
     }
 
     public void printMap() {
