@@ -23,13 +23,13 @@ public class SimulationController {
     // Models
     private final List<Hospital> hospitals = new ArrayList<>();
     private final List<Human> humans = new ArrayList<>();
-    private final Map map = new Map();
+    private final Map map = new Map("maze");
 
     // Services
     private final InfectionService infectionService = new InfectionService();
     private final MovementService movementService = new MovementService(map);
     private final SimulationService simulationService = new SimulationService();
-    private final HospitalService hospitalService = new HospitalService();
+    private final HospitalService hospitalService = new HospitalService(map);
 
     // Display
     private final SimulationPanel visualisation;
