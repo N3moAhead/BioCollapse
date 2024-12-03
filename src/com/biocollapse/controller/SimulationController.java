@@ -1,3 +1,4 @@
+// Authors: Lukas, Johann
 package src.com.biocollapse.controller;
 
 import java.util.ArrayList;

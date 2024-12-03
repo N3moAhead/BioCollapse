@@ -1,3 +1,4 @@
+// Authors: Lars, Lukas, Johann
 package src.com.biocollapse.controller;
 
 import java.awt.Dimension;

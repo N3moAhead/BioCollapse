@@ -1,3 +1,4 @@
+// Authors: Lars, Lukas
 package src.com.biocollapse.service;
 
 import java.util.List;

@@ -1,3 +1,4 @@
+// Authors: Lukas
 package src.com.biocollapse.util;
 
 import java.util.Random;

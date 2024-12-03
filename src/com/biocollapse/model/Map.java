@@ -1,3 +1,4 @@
+// Authors: Lukas, Sebastian, Johann
 package src.com.biocollapse.model;
 
 import java.util.HashMap;

@@ -1,3 +1,4 @@
+// Authors: Lars, Johann
 package src.com.biocollapse.view;
 
 import javax.swing.*;
