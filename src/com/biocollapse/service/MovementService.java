@@ -11,7 +11,6 @@ import src.com.biocollapse.util.GlobalRandom;
 
 public class MovementService {
     private final Map map;
-    private static final int MOVE_TO_PREVIOUS_PENALTY = 2;
 
     public MovementService(Map map) {
         this.map = map;
@@ -26,14 +25,24 @@ public class MovementService {
         MapPosition humanGoalPos = human.getGoalPos();
         Block blockGoal = map.getBlock(humanGoalPos);
         if (human.isInfected()) {
+            int hospitalProbability = GlobalConfig.config.getHospitalProbability();
+            int isolationProbability = GlobalConfig.config.getIsolationProbability();
             // If the person is infected, they have a chance to change their destination to
-            // a hospital.
-            if (blockGoal != Block.Hospital
-                    && GlobalRandom.checkProbability(GlobalConfig.config.getHospitalProbability())) {
+            // a hospital or stay at home.
+            if (GlobalConfig.config.getIsolationMandate()) {
+                isolationProbability = isolationProbability * GlobalConfig.config.getIsolationEffect();
+            }
+
+            // If human is not on its way to a hospital and the hospitalProbability checks
+            // the human will go to the hospital
+            if (blockGoal != Block.Hospital && GlobalRandom.checkProbability(hospitalProbability)) {
                 MapPosition nearestHospital = map.findNearest(Block.Hospital, human.getPos().copy());
                 if (nearestHospital != null) {
                     human.setGoalPos(nearestHospital);
                 }
+            } else if (blockGoal != Block.Hospital && GlobalRandom.checkProbability(isolationProbability)) {
+                // Todo ensure that the isolation does not get revoked in the next
+                human.setGoalPos(human.getHomePos());
             }
         } else {
             // When a person reaches their destination, they return home or go to work.
@@ -47,13 +56,22 @@ public class MovementService {
                     // there for a while
                     if (tick - reachedLocationAt < GlobalConfig.config.getTicksAtLocation())
                         return;
+                    // There is a chance that a person will stay at home which can be increased when
+                    // the lockdownMandate is true
+                    int lockdownProbability = 0;
+                    int effectiveLockdownProbability;
+                    if (GlobalConfig.config.getLockdown() || GlobalConfig.config.getSchoolClosure()) {
+                        effectiveLockdownProbability = GlobalConfig.config.getLockdownEffect();
+                    } else {
+                        effectiveLockdownProbability = lockdownProbability;
+                    }
                     if (blockGoal == Block.Workplace) {
                         // set it to null because we left the current location
                         human.setReachedLocationAt(null);
                         human.setGoalPos(human.getHomePos());
                     } else {
                         // There is a chance that a person will stay at home
-                        if (GlobalRandom.checkProbability(GlobalConfig.config.getIsolationProbability())) {
+                        if (GlobalRandom.checkProbability(effectiveLockdownProbability)) {
                             human.setReachedLocationAt(tick);
                         } else {
                             // Set it to null because we left the current location
