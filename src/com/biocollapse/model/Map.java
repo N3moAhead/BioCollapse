@@ -137,7 +137,6 @@ public class Map {
      *         be found
      */
     public MapPosition findNearest(Block target, MapPosition from) {
-        // Check if the starting point is a path
         Queue<MapPosition> queue = new LinkedList<>();
         boolean[][] visited = new boolean[MAP_HEIGHT][MAP_WIDTH];
         // Adding the starting point
@@ -157,9 +156,10 @@ public class Map {
                 if (isValidPosition(newPos)) {
                     int newRow = newPos.getRow();
                     int newCol = newPos.getCol();
+                    Block newBlock = getBlock(newPos);
                     // Only check not visited positions
                     if (!visited[newRow][newCol]
-                            && (map[newRow][newCol] == Block.Path || map[newRow][newCol] == target)) {
+                            && (newBlock == Block.Path || newBlock == target)) {
                         queue.add(newPos);
                         visited[newRow][newCol] = true;
                     }
@@ -170,15 +170,50 @@ public class Map {
         return null;
     }
 
+    public Integer[][] getStepMatrix(MapPosition from, MapPosition to) {
+        Queue<MapPosition> queue = new LinkedList<>();
+        Integer[][] stepMatrix = new Integer[MAP_HEIGHT][MAP_WIDTH];
+        int step = 0;
+        // Adding the starting point
+        queue.add(from.copy());
+        stepMatrix[from.getRow()][from.getCol()] = step++;
+        while (!queue.isEmpty()) {
+            MapPosition current = queue.poll();
+            // Target found?
+            if (current.equals(to)) {
+                return stepMatrix;
+            }
+            // Check neighbours
+            for (MovementAction move : MovementAction.values()) {
+                if (move == MovementAction.NONE)
+                    continue;
+                MapPosition newPos = current.getByMove(move);
+                if (isValidPosition(newPos)) {
+                    int newRow = newPos.getRow();
+                    int newCol = newPos.getCol();
+                    // Only check not visited positions
+                    if (stepMatrix[newRow][newCol] == null
+                            && (map[newRow][newCol] == Block.Path || newPos.equals(to))) {
+                        queue.add(newPos);
+                        stepMatrix[newRow][newCol] = step;
+                    }
+                }
+            }
+            step++;
+        }
+        // The target could not be found
+        return null;
+    }
+
     public Block[][] getMap() {
         return this.map;
     }
 
-    private boolean isValidPosition(int row, int col) {
+    public static boolean isValidPosition(int row, int col) {
         return col >= 0 && col < MAP_WIDTH && row >= 0 && row < MAP_HEIGHT;
     }
 
-    private boolean isValidPosition(MapPosition pos) {
+    public static boolean isValidPosition(MapPosition pos) {
         return isValidPosition(pos.getRow(), pos.getCol());
     }
 

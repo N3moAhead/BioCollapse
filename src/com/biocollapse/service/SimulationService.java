@@ -77,10 +77,11 @@ public class SimulationService {
             if (!human.isAlive()) {
                 deathCounter++;
                 aliveCounter = (aliveCounter > 0) ? aliveCounter -= 1 : aliveCounter;
+                healthyCounter = (healthyCounter > 0) ? healthyCounter -= 1 : healthyCounter;
                 infectedCounter = (infectedCounter > 0) ? infectedCounter -= 1 : infectedCounter;
             }
             // This case can only occur after someone was infected
-            if (human.isImmune()) {
+            if (human.isImmune() && human.isAlive()) {
                 immuneCounter++;
             }
         }

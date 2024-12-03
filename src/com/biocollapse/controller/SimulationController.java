@@ -24,13 +24,13 @@ public class SimulationController {
     // Models
     private final List<Hospital> hospitals = new ArrayList<>();
     private final List<Human> humans = new ArrayList<>();
-    private final Map map = new Map();
+    private final Map map = new Map("maze");
 
     // Services
     private final InfectionService infectionService = new InfectionService();
     private final MovementService movementService = new MovementService(map);
     private final SimulationService simulationService = new SimulationService();
-    private final HospitalService hospitalService = new HospitalService();
+    private final HospitalService hospitalService = new HospitalService(map);
 
     // Display
     private final SimulationPanel visualisation;
@@ -61,8 +61,7 @@ public class SimulationController {
                 int tickToDay = tick / SIMULATION_ONE_DAY_TICKS;
                 int day = tickToDay < 1 ? 1 : (tickToDay + 1);
 
-                updateHumans(tick);
-
+                updateSimulation(tick);
                 try {
                     // TODO: Find sweet spot. And let user fast forward or slow down (x2 / x0.5)
                     TimeUnit.MILLISECONDS.sleep(SIMULATION_FRAME_DELAY);
@@ -86,10 +85,12 @@ public class SimulationController {
     }
 
     /**
-     * Updates the human state for the next tick.
+     * Updates the simulation state for the next tick.
      */
-    private void updateHumans(int tick) {
+    private void updateSimulation(int tick) {
+        infectionService.initInfectionUpdates();
         for (Human currentHuman : humans) {
+            infectionService.updateInfectedPositions(currentHuman);
             movementService.updateHumanGoal(currentHuman, tick);
             movementService.move(currentHuman);
             hospitalService.updateHospitals(hospitals, currentHuman);

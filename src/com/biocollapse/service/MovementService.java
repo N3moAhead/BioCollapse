@@ -2,7 +2,6 @@
 package src.com.biocollapse.service;
 
 import src.com.biocollapse.model.Block;
-import src.com.biocollapse.model.GoalState;
 import src.com.biocollapse.model.Human;
 import src.com.biocollapse.model.Map;
 import src.com.biocollapse.model.MapPosition;
@@ -12,7 +11,6 @@ import src.com.biocollapse.util.GlobalRandom;
 
 public class MovementService {
     private final Map map;
-    private static final int MOVE_TO_PREVIOUS_PENALTY = 2;
 
     public MovementService(Map map) {
         this.map = map;
@@ -24,17 +22,27 @@ public class MovementService {
     // If the person arrives at home, there is a probability that
     // he can continue to stay at home instead of going to work.
     public void updateHumanGoal(Human human, int tick) {
-        GoalState humanGoalState = human.getGoalState();
+        MapPosition humanGoalPos = human.getGoalPos();
+        Block blockGoal = map.getBlock(humanGoalPos);
         if (human.isInfected()) {
+            int hospitalProbability = GlobalConfig.config.getHospitalProbability();
+            int isolationProbability = GlobalConfig.config.getIsolationProbability();
             // If the person is infected, they have a chance to change their destination to
-            // a hospital.
-            if (humanGoalState != GoalState.to_hospital
-                    && GlobalRandom.checkProbability(GlobalConfig.config.getHospitalProbability())) {
-                human.setGoalState(GoalState.to_hospital);
+            // a hospital or stay at home.
+            if (GlobalConfig.config.getIsolationMandate()) {
+                isolationProbability = isolationProbability * GlobalConfig.config.getIsolationEffect();
+            }
+
+            // If human is not on its way to a hospital and the hospitalProbability checks
+            // the human will go to the hospital
+            if (blockGoal != Block.Hospital && GlobalRandom.checkProbability(hospitalProbability)) {
                 MapPosition nearestHospital = map.findNearest(Block.Hospital, human.getPos().copy());
                 if (nearestHospital != null) {
                     human.setGoalPos(nearestHospital);
                 }
+            } else if (blockGoal != Block.Hospital && GlobalRandom.checkProbability(isolationProbability)) {
+                // Todo ensure that the isolation does not get revoked in the next
+                human.setGoalPos(human.getHomePos());
             }
         } else {
             // When a person reaches their destination, they return home or go to work.
@@ -48,19 +56,26 @@ public class MovementService {
                     // there for a while
                     if (tick - reachedLocationAt < GlobalConfig.config.getTicksAtLocation())
                         return;
-                    if (humanGoalState == GoalState.to_work) {
+                    // There is a chance that a person will stay at home which can be increased when
+                    // the lockdownMandate is true
+                    int lockdownProbability = 0;
+                    int effectiveLockdownProbability;
+                    if (GlobalConfig.config.getLockdown() || GlobalConfig.config.getSchoolClosure()) {
+                        effectiveLockdownProbability = GlobalConfig.config.getLockdownEffect();
+                    } else {
+                        effectiveLockdownProbability = lockdownProbability;
+                    }
+                    if (blockGoal == Block.Workplace) {
                         // set it to null because we left the current location
                         human.setReachedLocationAt(null);
-                        human.setGoalState(GoalState.to_home);
                         human.setGoalPos(human.getHomePos());
                     } else {
                         // There is a chance that a person will stay at home
-                        if (GlobalRandom.checkProbability(GlobalConfig.config.getIsolationProbability())) {
+                        if (GlobalRandom.checkProbability(effectiveLockdownProbability)) {
                             human.setReachedLocationAt(tick);
                         } else {
                             // Set it to null because we left the current location
                             human.setReachedLocationAt(null);
-                            human.setGoalState(GoalState.to_work);
                             human.setGoalPos(human.getWorkPos());
                         }
                     }
@@ -70,31 +85,24 @@ public class MovementService {
     }
 
     /**
-     * Calculates the Manhattan distance between two positions.
-     *
-     * @param p1 the first position
-     * @param p2 the second position
-     * @return the Manhattan distance
-     */
-    private int distance(MapPosition p1, MapPosition p2) {
-        return Math.abs(p2.getRow() - p1.getRow()) + Math.abs(p2.getCol() - p1.getCol());
-    }
-
-    /**
-     * Moves the human towards the goal position by evaluating the shortest valid
-     * path.
+     * Moves the human towards the goal position by evaluating the least amount
+     * of steps it would take to walk to the destination.
      *
      * @param human the human to move
      */
     public void move(Human human) {
         MovementAction bestDirection = MovementAction.NONE;
-        int shortestDistance = Integer.MAX_VALUE;
+        int smallestSteps = Integer.MAX_VALUE;
 
-        MapPosition humanPos = human.getPos();
         MapPosition humanGoalPos = human.getGoalPos();
-        MapPosition previouPosition = human.getPreviouPosition();
+        MapPosition humanPos = human.getPos();
 
         if (humanPos.equals(humanGoalPos)) {
+            return;
+        }
+
+        Integer[][] stepMatrix = map.getStepMatrix(humanGoalPos, humanPos);
+        if (stepMatrix == null) {
             return;
         }
 
@@ -109,12 +117,9 @@ public class MovementService {
 
                 // Only consider positions that are walkable
                 if (blockAtNewPos == Block.Path || newPos.equals(humanGoalPos)) {
-                    int newDistance = distance(newPos, humanGoalPos);
-                    if (newPos.equals(previouPosition)) {
-                        newDistance += MOVE_TO_PREVIOUS_PENALTY;
-                    }
-                    if (newDistance < shortestDistance) {
-                        shortestDistance = newDistance;
+                    Integer currentSteps = stepMatrix[newPos.getRow()][newPos.getCol()];
+                    if (currentSteps != null && currentSteps < smallestSteps) {
+                        smallestSteps = currentSteps;
                         bestDirection = direction;
                     }
                 }
@@ -123,8 +128,7 @@ public class MovementService {
             }
         }
 
-        // Move the human in the best direction found
-        human.setPreviouPosition(humanPos.copy());
         human.moveIntoDirection(bestDirection);
     }
+
 }
