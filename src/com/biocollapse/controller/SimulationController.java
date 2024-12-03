@@ -18,19 +18,18 @@ import src.com.biocollapse.view.SimulationPanel;
 public class SimulationController {
 
     public static int SIMULATION_FRAME_DELAY = 25;
-    private final static int SIMULATION_ONE_DAY_TICKS = 250;
-    private final static int SIMULATION_MAX_DAYS = 250;
+    private int tick = 0;
 
     // Models
     private final List<Hospital> hospitals = new ArrayList<>();
     private final List<Human> humans = new ArrayList<>();
-    private final Map map = new Map();
+    private final Map map = new Map("maze");
 
     // Services
     private final InfectionService infectionService = new InfectionService();
     private final MovementService movementService = new MovementService(map);
     private final SimulationService simulationService = new SimulationService();
-    private final HospitalService hospitalService = new HospitalService();
+    private final HospitalService hospitalService = new HospitalService(map);
 
     // Display
     private final SimulationPanel visualisation;
@@ -61,7 +60,7 @@ public class SimulationController {
                 int tickToDay = tick / SIMULATION_ONE_DAY_TICKS;
                 int day = tickToDay < 1 ? 1 : (tickToDay + 1);
 
-                updateHumans(tick);
+                updateSimulation();
 
                 try {
                     // TODO: Find sweet spot. And let user fast forward or slow down (x2 / x0.5)
@@ -85,11 +84,10 @@ public class SimulationController {
         }).start();
     }
 
-    /**
-     * Updates the human state for the next tick.
-     */
-    private void updateHumans(int tick) {
+    private void updateSimulation() {
+        infectionService.initInfectionUpdates();
         for (Human currentHuman : humans) {
+            infectionService.updateInfectedPositions(currentHuman);
             movementService.updateHumanGoal(currentHuman, tick);
             movementService.move(currentHuman);
             hospitalService.updateHospitals(hospitals, currentHuman);

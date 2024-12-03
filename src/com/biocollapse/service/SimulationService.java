@@ -77,10 +77,11 @@ public class SimulationService {
             if (!human.isAlive()) {
                 deathCounter++;
                 aliveCounter = (aliveCounter > 0) ? aliveCounter -= 1 : aliveCounter;
+                healthyCounter = (healthyCounter > 0) ? healthyCounter -= 1 : healthyCounter;
                 infectedCounter = (infectedCounter > 0) ? infectedCounter -= 1 : infectedCounter;
             }
             // This case can only occur after someone was infected
-            if (human.isImmune()) {
+            if (human.isImmune() && human.isAlive()) {
                 immuneCounter++;
             }
         }
@@ -89,7 +90,17 @@ public class SimulationService {
             hospitalCapacity += hospital.getCapacity();
             usedHospitalCapacity += hospital.getUsedCapacity();
         }
-        hospitalCapacityRatio = hospitalCapacity > 0 ? (usedHospitalCapacity / hospitalCapacity) : -1;
-        return new LiveStatistics(aliveCounter, infectedCounter, aliveCounter, immuneCounter, deathCounter, hospitalCapacityRatio, day);
+
+        if (hospitalCapacity > 0) {
+            hospitalCapacityRatio = usedHospitalCapacity / hospitalCapacity;
+        } else {
+            // System.err.println("There was an Error in Calculating the hospital capacity: " + hospitalCapacity);
+            hospitalCapacityRatio = -1;
+        }
+
+        LiveStatistics current = new LiveStatistics(aliveCounter, infectedCounter, healthyCounter, immuneCounter,
+                deathCounter, hospitalCapacityRatio);
+
+        return current;
     }
 }
