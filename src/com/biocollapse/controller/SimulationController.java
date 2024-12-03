@@ -4,10 +4,13 @@ package src.com.biocollapse.controller;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
+
 import javax.swing.SwingUtilities;
 import src.com.biocollapse.model.Block;
 import src.com.biocollapse.model.Hospital;
 import src.com.biocollapse.model.Human;
+import src.com.biocollapse.model.LiveStatistics;
 import src.com.biocollapse.model.Map;
 import src.com.biocollapse.service.HospitalService;
 import src.com.biocollapse.service.InfectionService;
@@ -17,7 +20,7 @@ import src.com.biocollapse.view.SimulationPanel;
 
 public class SimulationController {
 
-    public static int SIMULATION_FRAME_DELAY = 25;
+    public static int SIMULATION_FRAME_DELAY = 50;
     private int tick = 0;
 
     // Models
@@ -43,15 +46,17 @@ public class SimulationController {
 
     // Main Simulation Loop
     public void runMainLoop() {
-        boolean isRunning = true;
+        AtomicBoolean isRunning = new AtomicBoolean(true);
 
         new Thread(() -> {
             double lastFps = 0.0;
 
-            while (isRunning) {
-                long startTime = System.nanoTime(); // Start time for this frame
 
+            while (isRunning.get()) {
+                long startTime = System.nanoTime(); // Start time for this frame
+; 
                 updateSimulation();
+                LiveStatistics currentStats = simulationService.calculateLiveStatistics(humans, hospitals);
 
                 try {
                     // TODO: Find sweet spot. And let user fast forward or slow down (x2 / x0.5)
@@ -61,19 +66,17 @@ public class SimulationController {
                 }
 
                 double fps = lastFps; // Needed for swingutilities to access scope.
-                SwingUtilities.invokeLater(() -> visualisation.update(humans, simulationService.calculateLiveStatistics(humans, hospitals), fps));
-
-                // TODO: Check if simulation is complete.
-                boolean simulationComplete = false;
-                if (simulationComplete) {
-                    visualisation.simulationComplete();
-                }
+                SwingUtilities.invokeLater(() -> visualisation.update(humans, currentStats, fps));
 
                 long frameTimeNano = System.nanoTime() - startTime; // Time taken for this frame in nanoseconds
                 double frameTimeSeconds = frameTimeNano / 1_000_000_000.0; // Convert to seconds
                 lastFps = 1.0 / frameTimeSeconds;
                 tick++;
+
+                isRunning.set(!isSimulationComplete(currentStats));
             }
+
+            visualisation.simulationComplete();
         }).start();
     }
 
@@ -86,5 +89,15 @@ public class SimulationController {
             hospitalService.updateHospitals(hospitals, currentHuman);
         }
         infectionService.updateHumansStatus(humans, tick);
+    }
+
+    private boolean isSimulationComplete(LiveStatistics currenStatistics){
+        boolean result = false;
+        
+        // Check for: Max Days, No one infected, all dead
+        if (currenStatistics.getInfected() == 0 || currenStatistics.getAlive() == 0 || tick > (250 * 14)) {
+            result = true;
+        }
+        return result;
     }
 }
