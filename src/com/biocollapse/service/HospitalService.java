@@ -1,13 +1,20 @@
+// Authors: Lars, Lukas
 package src.com.biocollapse.service;
 
 import java.util.List;
 
-import src.com.biocollapse.model.GoalState;
+import src.com.biocollapse.model.Block;
 import src.com.biocollapse.model.Hospital;
 import src.com.biocollapse.model.Human;
+import src.com.biocollapse.model.Map;
 import src.com.biocollapse.model.MapPosition;
 
 public class HospitalService {
+    private Map map;
+
+    public HospitalService(Map map) {
+        this.map = map;
+    }
     /**
      * This method updates the hospitals and the humans. It uses checkPatient() and
      * checkHospitalization for updating humans and hospitals accordingly.
@@ -41,7 +48,6 @@ public class HospitalService {
         if (humanPos.equals(hospitalPos)) {
             // Only if human is alive and healthy he can go home
             if (human.isAlive() && !human.isInfected()) {
-                human.setGoalState(GoalState.to_home);
                 human.setGoalPos(human.getHomePos());
                 human.setHospitalized(false);
                 hospital.decreaseUsedCapacity();
@@ -67,7 +73,7 @@ public class HospitalService {
         MapPosition humanPos = human.getPos();
         MapPosition hospitalPos = hospital.getPosition();
         // Check if human is at the hospital and has hospital as goal
-        if (humanPos.equals(hospitalPos) && human.getGoalState() == GoalState.to_hospital) {
+        if (humanPos.equals(hospitalPos) && map.getBlock(human.getGoalPos()) == Block.Hospital) {
             if (hasHospitalCapacity(hospital) && human.isInfected()) {
                 human.setHospitalized(true);
                 hospital.incrementUsedCapacity();

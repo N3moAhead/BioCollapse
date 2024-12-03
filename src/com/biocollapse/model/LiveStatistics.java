@@ -1,14 +1,27 @@
+// Authors: Lars, Lukas, Johann
 package src.com.biocollapse.model;
+
+import java.awt.Color;
+import java.util.ArrayList;
+import java.util.List;
 
 public class LiveStatistics {
 
-    public static final String STAT_ALIVE = "Lebendig";
-    public static final String STAT_INFECTED = "Infiziert";
-    public static final String STAT_RECOVERED = "Erholt";
-    public static final String STAT_HEALTHY = "Gesund";
-    public static final String STAT_IMMUNE = "Immun";
-    public static final String STAT_DEATHS = "Tod";
-    public static final String STAT_HOSPITAL_CAPACITY_RATIO = "Krankenhausauslastung";
+    private static final String STAT_ALIVE = "Lebendig";
+    private static final String STAT_INFECTED = "Infiziert";
+    private static final String STAT_RECOVERED = "Erholt";
+    private static final String STAT_HEALTHY = "Gesund";
+    private static final String STAT_IMMUNE = "Immun";
+    private static final String STAT_DEATHS = "Tod";
+    private static final String STAT_HOSPITAL_CAPACITY_RATIO = "Krankenhausauslastung";
+
+    private static final Color COLOR_ALIVE = Color.BLUE;
+    private static final Color COLOR_INFECTED = Color.RED;
+    private static final Color COLOR_RECOVERED = Color.YELLOW;
+    private static final Color COLOR_HEALTHY = Color.GREEN;
+    private static final Color COLOR_IMMUNE = Color.ORANGE;
+    private static final Color COLOR_DEATHS = Color.BLACK;
+    private static final Color COLOR_HOSPITAL_CAPACITY_RATIO = Color.DARK_GRAY;
 
     private int alive;
     private int infected;
@@ -40,6 +53,17 @@ public class LiveStatistics {
                 ", \"deaths\": " + deaths +
                 ", \"hospitalCapacityRatio\": " + hospitalCapacityRatio +
                 " }";
+    }
+
+    public List<GraphItem> toGraph(){
+        List<GraphItem> items = new ArrayList<>();
+        items.add(new GraphItem(STAT_ALIVE, alive, true, false, COLOR_ALIVE));
+        items.add(new GraphItem(STAT_INFECTED, infected, true, false, COLOR_INFECTED));
+        items.add(new GraphItem(STAT_HEALTHY, healthy, true, false, COLOR_HEALTHY));
+        items.add(new GraphItem(STAT_IMMUNE, immune, true, false, COLOR_IMMUNE));
+        items.add(new GraphItem(STAT_DEATHS, deaths, true, false, COLOR_DEATHS));
+        items.add(new GraphItem(STAT_HOSPITAL_CAPACITY_RATIO, hospitalCapacityRatio, true, false, COLOR_HOSPITAL_CAPACITY_RATIO));
+        return items;
     }
 
     public int getAlive() {

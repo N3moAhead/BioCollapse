@@ -1,3 +1,4 @@
+// Authors: Inaas, Lars, Johann, Lukas
 package src.com.biocollapse.model;
 
 public class Config {
@@ -23,6 +24,7 @@ public class Config {
   private int ageEffect = 3; // how much the age of a human increases mortalityRisk
   private int isolationEffect = 2; // how much the isolationMandate increases the isolationProbability
   private int lockdownEffect = 75;
+  private int ticksAtLocation = 50; // how many ticks does a person stay at home or at work after reaching the goal
 
   /**
    * @param infectionRadius      The radius in which an infected person can infect
@@ -111,6 +113,14 @@ public class Config {
     this.isolationMandate = isolationMandate;
     this.maskMandate = maskMandate;
     this.schoolClosure = schoolClosure;
+  }
+
+  public int getTicksAtLocation() {
+    return ticksAtLocation;
+  }
+
+  public void setTicksAtLocation(int ticksAtLocation) {
+    this.ticksAtLocation = ticksAtLocation;
   }
 
   public int getInfectionRadius() {

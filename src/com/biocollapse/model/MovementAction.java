@@ -1,3 +1,4 @@
+// Authors: Lukas
 package src.com.biocollapse.model;
 
 /** Possible movement options a human can take */

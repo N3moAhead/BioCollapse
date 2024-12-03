@@ -1,27 +1,37 @@
+// Authors: Lukas, Johann
 package src.com.biocollapse.view;
 
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
+import javax.swing.JCheckBox;
+import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JSlider;
+import javax.swing.JSplitPane;
+import javax.swing.event.ChangeEvent;
+import src.com.biocollapse.model.Graph;
+import src.com.biocollapse.model.GraphItem;
 import src.com.biocollapse.model.LiveStatistics;
-import static src.com.biocollapse.model.LiveStatistics.STAT_ALIVE;
-import static src.com.biocollapse.model.LiveStatistics.STAT_DEATHS;
-import static src.com.biocollapse.model.LiveStatistics.STAT_HEALTHY;
-import static src.com.biocollapse.model.LiveStatistics.STAT_HOSPITAL_CAPACITY_RATIO;
-import static src.com.biocollapse.model.LiveStatistics.STAT_IMMUNE;
-import static src.com.biocollapse.model.LiveStatistics.STAT_INFECTED;
 
 public class LiveStatisticsPanel extends JPanel {
 
     private final List<LiveStatistics> timelineStats;
-    private StatItem textAlive, textInfected, textHealthy, textImmune, textDeaths,
-            textHospitalCapacityRation;
     private GridBagLayout glb;
     private Integer row;
+    private final Map<String, Graph> graphs = new HashMap<>();
+    private JPanel legendPanel;
 
     /**
      * This panel is responsible for displaying the real time stats.
@@ -33,11 +43,30 @@ public class LiveStatisticsPanel extends JPanel {
 
     public void update(LiveStatistics currentStats) {
         timelineStats.add(currentStats);
-        textAlive.setValue(String.valueOf(currentStats.getAlive()));
-        textDeaths.setValue(String.valueOf(currentStats.getDeaths()));
-        textImmune.setValue(String.valueOf(currentStats.getImmune()));
-        textInfected.setValue(String.valueOf(currentStats.getInfected()));
-        textHealthy.setValue(String.valueOf(currentStats.getHealthy()));
+        for (GraphItem graph : currentStats.toGraph()) {
+            addPoint(graph);
+        }
+    }
+
+    private void addPoint(GraphItem point) {
+        Graph graph;
+        if (!graphs.containsKey(point.getName())) {
+            graph = new Graph();
+            graph.setName(point.getName());
+            graph.setColor(point.getColor());
+            graph.setAlwaysHidden(point.isAlwaysHidden());
+            graph.setVisible(point.isVisible());
+
+            legendPanel.add(graph.getNameLabel(), makeGbc(0, graph.getNameLabel()));
+            legendPanel.add(graph.getValueLabel(), makeGbc(1, graph.getValueLabel()));
+            row++;
+            graphs.put(point.getName(), graph);
+            revalidate();
+            repaint();
+        } else {
+            graph = graphs.get(point.getName());
+        }
+        graph.addGraphItem(point);
     }
 
     /**
@@ -48,50 +77,110 @@ public class LiveStatisticsPanel extends JPanel {
     }
 
     private void setupLayout() {
+        JSplitPane pane = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
+        pane.setResizeWeight(0.5);
+        pane.setBorder(BorderFactory.createEmptyBorder());
+
+        this.addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(ComponentEvent e) {
+                pane.setDividerLocation(pane.getHeight() / 2);
+            }
+        });
+
+        JPanel topPanel = new JPanel(new BorderLayout());
+
+        JPanel legendPanelHolder = new JPanel(new BorderLayout());
+        JPanel innerLegendPanelHolder = new JPanel(new BorderLayout());
+        legendPanel = new JPanel();
         glb = new GridBagLayout();
         row = 0;
-        setLayout(glb);
+        legendPanel.setLayout(glb);
 
-        textAlive = new StatItem(STAT_ALIVE);
-        textInfected = new StatItem(STAT_INFECTED);
-        textHealthy = new StatItem(STAT_HEALTHY);
-        textImmune = new StatItem(STAT_IMMUNE);
-        textDeaths = new StatItem(STAT_DEATHS);
-        textHospitalCapacityRation = new StatItem(STAT_HOSPITAL_CAPACITY_RATIO);
+        innerLegendPanelHolder.add(legendPanel, BorderLayout.WEST);
+        legendPanelHolder.add(innerLegendPanelHolder, BorderLayout.NORTH);
+        legendPanelHolder.setBorder(BorderFactory.createEmptyBorder(10, 10, 5, 5));
+        JLabel text = new JLabel("Live Daten");
+        text.setFont(new Font("Arial", Font.BOLD, 15));
+        legendPanel.add(text, makeGbc(0, text));
+        row++;
 
-        textAlive.add(this);
-        textInfected.add(this);
-        textHealthy.add(this);
-        textImmune.add(this);
-        textDeaths.add(this);
-        textHospitalCapacityRation.add(this);
+        GraphPanel graph = new GraphPanel(graphs);
+        graph.setBackground(Color.WHITE);
+        pane.setRightComponent(graph);
 
+        topPanel.add(legendPanelHolder, BorderLayout.NORTH);
+        topPanel.add(graphConfigPanel(graph), BorderLayout.CENTER);
+
+        pane.setLeftComponent(topPanel);
+        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+        revalidate();
+        repaint();
+
+        add(pane);
         revalidate();
         repaint();
     }
 
-    private class StatItem {
+    private JPanel graphConfigPanel(GraphPanel graph) {
+        JPanel layoutPanel = new JPanel(new BorderLayout());
+        JPanel innerLayoutPanel = new JPanel(new BorderLayout());
 
-        private final JLabel textName, textValue;
+        int configRow = 0;
+        GridBagLayout configGbl = new GridBagLayout();
+        JPanel panel = new JPanel(configGbl);
 
-        public StatItem(String name) {
-            textName = new JLabel(name);
-            textValue = new JLabel("0");
-            textValue.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 0));
-        }
+        JLabel text = new JLabel("Visualisation");
+        text.setFont(new Font("Arial", Font.BOLD, 15));
+        panel.add(text, makeConfigGbc(0, text, configRow));
+        configRow++;
 
-        public void setValue(String value) {
-            textValue.setText(value);
-        }
+        JLabel sliderLabel = new JLabel("Sichtbare Punkte ("+graph.getVisiblePoints()+")");
+        sliderLabel.setFont(new Font("Arial", Font.PLAIN, 12));
+        sliderLabel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 2));
+        JSlider slider = new JSlider(50, 500);
+        slider.setValue(graph.getVisiblePoints());
+        slider.addChangeListener((ChangeEvent arg0) -> {
+            graph.setVisiblePoints(slider.getValue());
+            sliderLabel.setText("Sichtbare Punkte ("+graph.getVisiblePoints()+")");
+        });
+        panel.add(sliderLabel, makeConfigGbc(0, sliderLabel, configRow));
+        panel.add(slider, makeConfigGbc(1, slider, configRow));
+        configRow++;
 
-        public void add(JPanel target) {
-            target.add(textName, makeGbc(0, textName));
-            target.add(textValue, makeGbc(1, textValue));
-            row++;
-        }
+        JCheckBox points = new JCheckBox("Punkte zeichnen");
+        JCheckBox connections = new JCheckBox("Verbindungen zeichnen");
+        connections.setSelected(graph.isDrawConnections());
+        points.setSelected(graph.isDrawPoints());
+        points.addChangeListener((ChangeEvent arg0) -> {
+            graph.setDrawPoints(points.isSelected());
+            if (!points.isSelected()) {
+                connections.setSelected(graph.isDrawConnections());
+            }
+        });
+        panel.add(points, makeConfigGbc(0, points, configRow));
+        configRow++;
 
-        private GridBagConstraints makeGbc(int x, JLabel label) {
-            return new GridBagConstraints(x, row, 1, 1, 0, 0, GridBagConstraints.WEST, 0, label.getInsets(), 0, 0);
-        }
+        connections.addChangeListener((ChangeEvent arg0) -> {
+            graph.setDrawConnections(connections.isSelected());
+            if (!connections.isSelected()) {
+                points.setSelected(graph.isDrawPoints());
+            }
+        });
+        panel.add(connections, makeConfigGbc(0, connections, configRow));
+        configRow++;
+
+        innerLayoutPanel.add(panel, BorderLayout.NORTH);
+        layoutPanel.add(innerLayoutPanel, BorderLayout.WEST);
+        layoutPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 5, 5));
+        return layoutPanel;
+    }
+
+    private GridBagConstraints makeGbc(int x, JComponent comp) {
+        return new GridBagConstraints(x, row, 1, 1, 0, 0, GridBagConstraints.WEST, 0, comp.getInsets(), 0, 0);
+    }
+
+    private GridBagConstraints makeConfigGbc(int x, JComponent comp, int configRow) {
+        return new GridBagConstraints(x, configRow, 1, 1, 0, 0, GridBagConstraints.WEST, 0, comp.getInsets(), 0, 0);
     }
 }
