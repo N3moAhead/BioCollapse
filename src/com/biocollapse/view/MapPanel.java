@@ -28,8 +28,8 @@ public class MapPanel extends JPanel {
     private List<Human> humanData;
     private java.util.Map<Block, Color> legend;
 
-    private static final Color COLOR_INFECTED = Color.RED;
-    private static final Color COLOR_HEALTHY = Color.MAGENTA;
+    private static final Color COLOR_INFECTED = new Color(220, 38, 38);
+    private static final Color COLOR_HEALTHY = new Color(248, 250, 252);
 
     private static final String STATUS_INFECTED = "Infected";
     private static final String STATUS_HEALTHY = "Healthy";
@@ -109,11 +109,11 @@ public class MapPanel extends JPanel {
 
     private void initLegend() {
         legend = new EnumMap<>(Block.class);
-        legend.put(Block.Grass, new Color 	(216,255,192));
-        legend.put(Block.Path, new Color(194,201,201));
-        legend.put(Block.Hospital, new Color(255,198,198));
-        legend.put(Block.House, new Color(255,195,154));
-        legend.put(Block.Workplace, new Color(133, 206, 209));
+        legend.put(Block.Grass, new Color(27, 48, 10));
+        legend.put(Block.Path, new Color(113, 113, 122));
+        legend.put(Block.Hospital, new Color(232, 78, 251));
+        legend.put(Block.House, new Color(217, 119, 6));
+        legend.put(Block.Workplace, new Color(30, 64, 175));
     }
 
     private JPanel createLegendItem(String name, Color c, boolean drawBackground) {
