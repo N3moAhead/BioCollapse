@@ -95,7 +95,7 @@ public class StatisticsPanel extends JPanel {
         graph = new GraphPanel(graphs);
         graph.setVisiblePoints(graphs.get(LiveStatistics.STAT_ALIVE).size());
         graph.setDrawConnections(true);
-        graph.setDrawPoints(!(graphs.get(LiveStatistics.STAT_ALIVE).size() > 100));
+        graph.setDrawPoints(!(graphs.get(LiveStatistics.STAT_ALIVE).size() > 20));
         graph.setBackground(Color.WHITE);
         graph.setReverseFinalState(true);
         layoutPanel.add(graph, BorderLayout.CENTER);
