@@ -42,6 +42,8 @@ public class GraphPanel extends JPanel {
     private static final int LEGEND_FONT_SIZE = 10;
     private static final int LEGEND_MARGIN = 10;
 
+    private boolean reverseFinalState = false;
+
     public GraphPanel(Map<String, Graph> graphs) {
         this.graphs = graphs;
         Dimension dim = new Dimension(600, 600);
@@ -95,7 +97,15 @@ public class GraphPanel extends JPanel {
             drawPoints = true;
         }
     }
-    
+
+    /**
+     * Reverse the graph
+     * @param reverseFinalState
+     */
+    public void setReverseFinalState(boolean reverseFinalState) {
+        this.reverseFinalState = reverseFinalState;
+    }
+
     /**
      * @return the max amount of points that should be drawn.
      */
@@ -253,25 +263,48 @@ public class GraphPanel extends JPanel {
         int i = 0;
         int size = 0;
         
-        for (int j = graph.size()-1; j >= 0; j--) {
-            size+=cellSize;
-            if (size > getWidth()) {
-                break;
+        if (reverseFinalState) {
+            for (int j = 0; j <= graph.size()-1; j++) {
+                size+=cellSize;
+                if (size > getWidth()) {
+                    break;
+                }
+                double x = i * cellSize + PADDING_LEFT;
+                double y = (height- PADDING_BOTTOM) - ((double)(height - 2*  PADDING_BOTTOM) / (double) highestVisibleNum * graph.get(j).getValue());
+    
+                if (drawPoints) {
+                    Ellipse2D.Float oval = new Ellipse2D.Float();
+                    oval.setFrame(x - 3, y - 3, 6, 6);
+                    g2d.fill(oval);
+                }
+                if (drawConnections && i != 0) {
+                    g2d.draw(new Line2D.Double(prevX, prevY, x, y));
+                }
+                prevX = x;
+                prevY = y;
+                i++;
             }
-            double x = i * cellSize + PADDING_LEFT;
-            double y = (height- PADDING_BOTTOM) - ((double)(height - 2*  PADDING_BOTTOM) / (double) highestVisibleNum * graph.get(j).getValue());
-
-            if (drawPoints) {
-                Ellipse2D.Float oval = new Ellipse2D.Float();
-                oval.setFrame(x - 3, y - 3, 6, 6);
-                g2d.fill(oval);
+        } else {
+            for (int j = graph.size()-1; j >= 0; j--) {
+                size+=cellSize;
+                if (size > getWidth()) {
+                    break;
+                }
+                double x = i * cellSize + PADDING_LEFT;
+                double y = (height- PADDING_BOTTOM) - ((double)(height - 2*  PADDING_BOTTOM) / (double) highestVisibleNum * graph.get(j).getValue());
+    
+                if (drawPoints) {
+                    Ellipse2D.Float oval = new Ellipse2D.Float();
+                    oval.setFrame(x - 3, y - 3, 6, 6);
+                    g2d.fill(oval);
+                }
+                if (drawConnections && i != 0) {
+                    g2d.draw(new Line2D.Double(prevX, prevY, x, y));
+                }
+                prevX = x;
+                prevY = y;
+                i++;
             }
-            if (drawConnections && i != 0) {
-                g2d.draw(new Line2D.Double(prevX, prevY, x, y));
-            }
-            prevX = x;
-            prevY = y;
-            i++;
         }
     }
 }
