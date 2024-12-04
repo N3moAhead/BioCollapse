@@ -91,6 +91,6 @@ public class SimulationService {
             usedHospitalCapacity += hospital.getUsedCapacity();
         }
         hospitalCapacityRatio = hospitalCapacity > 0 ? (usedHospitalCapacity / hospitalCapacity) : -1;
-        return new LiveStatistics(aliveCounter, infectedCounter, aliveCounter, immuneCounter, deathCounter, hospitalCapacityRatio, day);
+        return new LiveStatistics(aliveCounter, infectedCounter, healthyCounter, immuneCounter, deathCounter, hospitalCapacityRatio, day);
     }
 }
