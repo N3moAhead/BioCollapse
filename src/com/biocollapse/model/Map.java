@@ -5,16 +5,23 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.NoSuchElementException;
 import java.util.Queue;
-
+import java.awt.Color;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Scanner;
 
+import javax.imageio.ImageIO;
+
+import src.com.biocollapse.model.Colors;
+
 public class Map {
     private static ArrayList<String> mapList = new ArrayList<String>();
     public static final int MAP_WIDTH = 100;
     public static final int MAP_HEIGHT = 100;
+
+    private static final int pathCol = new Color(0, 0, 0).getRGB();
 
     private Block[][] map;
 
@@ -59,8 +66,16 @@ public class Map {
                 default:
                     throw new IOException("File extension not supported: " + fileExtension);
             }
+        } catch (FileNotFoundException e) {
+            for (int row = 0; row < MAP_HEIGHT; row++) {
+                for (int col = 0; col < MAP_WIDTH; col++) {
+                    this.map[row][col] = Block.Grass;
+                }
+            }
+            System.out.println("File not found: maps/" + fileName);
+            e.printStackTrace();
         } catch (IOException e) {
-            System.out.println("File type error.");
+            System.out.println("File error.");
             e.printStackTrace();
         }
     }
@@ -78,67 +93,57 @@ public class Map {
      * @param fileName
      * @return a map as Block[][]
      */
-    private static Block[][] parseTxtMap(String fileName) {
+    private static Block[][] parseTxtMap(String fileName) throws FileNotFoundException {
         Block[][] map = new Block[MAP_HEIGHT][MAP_WIDTH];
-        try {
-            // Load file.
-            File mapFile = new File("maps/" + fileName);
-            int row;
-            int col;
-            // Scan text.
-            Scanner mapReader = new Scanner(mapFile);
-            for (row = 0; mapReader.hasNextLine() && row < MAP_HEIGHT; row++) {
-                String line = mapReader.nextLine();
-                char[] chars = line.toCharArray();
-                for (col = 0; col < chars.length && col < MAP_WIDTH; col++) {
-                    switch (chars[col]) {
-                        case 'g':
-                            map[row][col] = Block.Grass;
-                            break;
-                        case 'p':
-                            map[row][col] = Block.Path;
-                            break;
-                        case 'h':
-                            map[row][col] = Block.House;
-                            break;
-                        case 'H':
-                            map[row][col] = Block.Hospital;
-                            break;
-                        case 'w':
-                            map[row][col] = Block.Workplace;
-                            break;
+        // Load file.
+        File mapFile = new File("maps/" + fileName);
+        int row;
+        int col;
+        // Scan text.
+        Scanner mapReader = new Scanner(mapFile);
+        for (row = 0; mapReader.hasNextLine() && row < MAP_HEIGHT; row++) {
+            String line = mapReader.nextLine();
+            char[] chars = line.toCharArray();
+            for (col = 0; col < chars.length && col < MAP_WIDTH; col++) {
+                switch (chars[col]) {
+                    case 'g':
+                        map[row][col] = Block.Grass;
+                        break;
+                    case 'p':
+                        map[row][col] = Block.Path;
+                        break;
+                    case 'h':
+                        map[row][col] = Block.House;
+                        break;
+                    case 'H':
+                        map[row][col] = Block.Hospital;
+                        break;
+                    case 'w':
+                        map[row][col] = Block.Workplace;
+                        break;
 
-                        default:
-                            map[row][col] = Block.Grass;
-                            System.out.println("Invalid character '" + chars[col] + "' found at row: " + (row + 1)
-                                    + ", col: " + (col + 1) + ". Set to Grass.");
-                    }
-                }
-                if (col < MAP_WIDTH) {
-                    System.out.println("Map too slim. Filling up empty spaces with Grass.");
-                    for (; col < MAP_WIDTH; col++) {
+                    default:
                         map[row][col] = Block.Grass;
-                    }
+                        System.out.println("Invalid character '" + chars[col] + "' found at row: " + (row + 1)
+                                + ", col: " + (col + 1) + ". Set to Grass.");
                 }
             }
-            if (row < MAP_HEIGHT) {
-                System.out.println("Map too short. Filling up empty spaces with Grass.");
-                for (; row < MAP_HEIGHT; row++) {
-                    for (col = 0; col < MAP_WIDTH; col++) {
-                        map[row][col] = Block.Grass;
-                    }
-                }
-            }
-            mapReader.close();
-        } catch (FileNotFoundException e) {
-            for (int row = 0; row < MAP_HEIGHT; row++) {
-                for (int col = 0; col < MAP_WIDTH; col++) {
+            if (col < MAP_WIDTH) {
+                System.out.println("Map too slim. Filling up empty spaces with Grass.");
+                for (; col < MAP_WIDTH; col++) {
                     map[row][col] = Block.Grass;
                 }
             }
-            System.out.println("File not found: maps/" + fileName);
-            e.printStackTrace();
         }
+        if (row < MAP_HEIGHT) {
+            System.out.println("Map too short. Filling up empty spaces with Grass.");
+            for (; row < MAP_HEIGHT; row++) {
+                for (col = 0; col < MAP_WIDTH; col++) {
+                    map[row][col] = Block.Grass;
+                }
+            }
+        }
+        mapReader.close();
         return map;
     }
 
@@ -148,9 +153,47 @@ public class Map {
      * @param fileName
      * @return a map as Block[][]
      */
-    private Block[][] parseBmpMap(String fileName) {
+    private static Block[][] parseBmpMap(String fileName) throws IOException {
         Block[][] map = new Block[MAP_HEIGHT][MAP_WIDTH];
+        File mapFile = new File("maps/" + fileName);
+        BufferedImage image = ImageIO.read(mapFile);
+        int row;
+        int col;
+        for (row = 0; row < image.getWidth() && row < MAP_HEIGHT; row++) {
+            for (col = 0; col < image.getHeight() && col < MAP_WIDTH; col++) {
+                // These are if else statements because switch case requires "constants" for the cases...
+                if (image.getRGB(row, col) == Colors.getRGB(Block.Grass)) {
+                    map[row][col] = Block.Grass;
+                } else if (image.getRGB(row, col) == Colors.getRGB(Block.Path)) {
+                    map[row][col] = Block.Path;
+                } else if (image.getRGB(row, col) == Colors.getRGB(Block.Hospital)) {
+                    map[row][col] = Block.Hospital;
+                } else if (image.getRGB(row, col) == Colors.getRGB(Block.House)) {
+                    map[row][col] = Block.House;
+                } else if (image.getRGB(row, col) == Colors.getRGB(Block.Workplace)) {
+                    map[row][col] = Block.Workplace;
+                } else {
+                    map[row][col] = Block.Grass;
+                    System.out.println("Invalid Color at row: " + row + ", col: " + col + ". Set to Grass");
+                }
+            }
+            if (col < MAP_WIDTH) {
+                System.out.println("Map too slim. Filling up empty spaces with Grass.");
+                for (; col < MAP_WIDTH; col++) {
+                    map[row][col] = Block.Grass;
+                }
+            }
+        }
+        if (row < MAP_HEIGHT) {
+            System.out.println("Map too short. Filling up empty spaces with Grass.");
+            for (; row < MAP_HEIGHT; row++) {
+                for (col = 0; col < MAP_WIDTH; col++) {
+                    map[row][col] = Block.Grass;
+                }
+            }
+        }
         return map;
+
     }
 
     /**
