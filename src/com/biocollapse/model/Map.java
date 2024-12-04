@@ -372,7 +372,7 @@ public class Map {
 
     // ! Just for debugging. Can be removed
     public static void main(String[] args) {
-        Map test = new Map(getSomeMapName());
+        Map test = new Map("city.bmp");
         test.printMap();
     }
 
