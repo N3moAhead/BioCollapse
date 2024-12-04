@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
-
 import javax.swing.SwingUtilities;
 import src.com.biocollapse.model.Block;
 import src.com.biocollapse.model.Config;
@@ -21,6 +20,7 @@ import src.com.biocollapse.view.SimulationPanel;
 public class SimulationController {
 
     public static int SIMULATION_FRAME_DELAY = 25;
+    public static double SIMULATION_MULTIPLIER = 1.0;
 
     // Models
     private final List<Hospital> hospitals = new ArrayList<>();
@@ -41,6 +41,7 @@ public class SimulationController {
      */
     public SimulationController(SimulationPanel visualisation) {
         this.visualisation = visualisation;
+        SIMULATION_MULTIPLIER = 1.0;
         final Block[][] initMap = map.getMap();
         visualisation.setMap(initMap);
         simulationService.initializeSimulation(initMap, humans, hospitals);
@@ -66,8 +67,7 @@ public class SimulationController {
 
                 updateSimulation(tick);
                 try {
-                    // TODO: Find sweet spot. And let user fast forward or slow down (x2 / x0.5)
-                    TimeUnit.MILLISECONDS.sleep(SIMULATION_FRAME_DELAY);
+                    TimeUnit.MILLISECONDS.sleep((long)(SIMULATION_FRAME_DELAY*SIMULATION_MULTIPLIER));
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }

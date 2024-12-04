@@ -58,7 +58,6 @@ public class SimulationPanel extends JPanel {
         dayText.setFont(new Font("Arial", Font.BOLD, 16));
         topBar.add(dayText, BorderLayout.EAST);
 
-
         JLabel icon = new JLabel();
         try {
             Image originalImage = new ImageIcon(BIO_COLLAPSE_LOGO_TEXT_PATH).getImage();
