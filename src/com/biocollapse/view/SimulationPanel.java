@@ -106,7 +106,7 @@ public class SimulationPanel extends JPanel {
     /**
      * Call when the simulation ended to display the statistics.
      */
-    public void simulationComplete() {
-        controller.showStatisticsScreen(stats.getTimelineStats(), stats.getGraphs());
+    public void simulationComplete(String summary) {
+        controller.showStatisticsScreen(stats.getTimelineStats(), stats.getGraphs(), summary);
     }
 }

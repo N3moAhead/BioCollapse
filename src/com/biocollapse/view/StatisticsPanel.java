@@ -26,7 +26,7 @@ public class StatisticsPanel extends JPanel {
      * This screen displays the finals results and allows the user to export them aswell.
      * It is shown in the end of the simulation.
      */
-    public StatisticsPanel(WindowController controller, List<LiveStatistics> timelineStats, Map<String, Graph> graphs) {
+    public StatisticsPanel(WindowController controller, List<LiveStatistics> timelineStats, Map<String, Graph> graphs, String summary) {
         this.controller = controller;
         this.timelineStats = timelineStats;
         
@@ -50,6 +50,17 @@ public class StatisticsPanel extends JPanel {
         JLabel label = new JLabel("Ergebniss der Simulation", SwingConstants.CENTER);
         label.setFont(new Font("Arial", Font.BOLD, 16));
         topBar.add(label, BorderLayout.WEST);
+        
+        JPanel topPanel = new JPanel();
+        topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.X_AXIS));
+        topPanel.setBorder(new TitledBorder("Zusammenfassung"));
+
+        JLabel text = new JLabel();
+        text.setAlignmentX(Component.CENTER_ALIGNMENT);
+        text.setText(summary);
+        topPanel.add(text);
+
+        layoutPanel.add(topPanel, BorderLayout.SOUTH);
 
         JPanel centerPanel = new JPanel();
         centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.X_AXIS));

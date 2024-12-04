@@ -82,8 +82,8 @@ public class WindowController extends JFrame {
 
     }
 
-    public void showStatisticsScreen(List<LiveStatistics> timelineStats, Map<String, Graph> graphs) {
-        statisticsScreen = new StatisticsPanel(this, timelineStats, graphs);
+    public void showStatisticsScreen(List<LiveStatistics> timelineStats, Map<String, Graph> graphs, String summary) {
+        statisticsScreen = new StatisticsPanel(this, timelineStats, graphs, summary);
         setContentPane(statisticsScreen);
         revalidate();
     }
