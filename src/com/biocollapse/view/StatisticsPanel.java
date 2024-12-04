@@ -68,7 +68,7 @@ public class StatisticsPanel extends JPanel {
 
         centerPanel.add(Box.createRigidArea(new Dimension(10, 0)));
 
-        button = new JButton("Wiederholung abspielen");
+        button = new JButton("Wiederholen");
         button.setAlignmentX(Component.CENTER_ALIGNMENT);
         button.addActionListener(e -> replay());
         centerPanel.add(button);
