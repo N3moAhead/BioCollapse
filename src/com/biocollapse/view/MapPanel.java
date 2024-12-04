@@ -151,7 +151,9 @@ public class MapPanel extends JPanel {
     private void drawHumans(Graphics2D g2d) {
         if (humanData != null) {
             for (Human human : humanData) {
-                drawHuman(human, g2d);
+                if (human.isAlive()) {
+                    drawHuman(human, g2d);
+                }
             }
         }
     }

@@ -24,7 +24,7 @@ public class SimulationController {
     // Models
     private final List<Hospital> hospitals = new ArrayList<>();
     private final List<Human> humans = new ArrayList<>();
-    private final Map map = new Map();
+    private final Map map = new Map("maze");
 
     // Services
     private final InfectionService infectionService = new InfectionService();
@@ -90,10 +90,12 @@ public class SimulationController {
     private void updateSimulation(int tick) {
         infectionService.initInfectionUpdates();
         for (Human currentHuman : humans) {
-            infectionService.updateInfectedPositions(currentHuman);
-            movementService.updateHumanGoal(currentHuman, tick);
-            movementService.move(currentHuman);
-            hospitalService.updateHospitals(hospitals, currentHuman);
+            if (currentHuman.isAlive()) {
+                infectionService.updateInfectedPositions(currentHuman);
+                movementService.updateHumanGoal(currentHuman, tick);
+                movementService.move(currentHuman);
+                hospitalService.updateHospitals(hospitals, currentHuman);
+            }
         }
         infectionService.updateHumansStatus(humans, tick);
     }
