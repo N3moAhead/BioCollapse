@@ -4,11 +4,11 @@ package src.com.biocollapse.model;
 import java.util.HashMap;
 
 public enum Block {
-    Grass(0xFFD8FFC0, 'g'),
-    Path(0xFFC2C9C9, 'p'),
-    Hospital(0xFFFFC6C6, 'H'),
-    House(0xFFFFC39A, 'h'),
-    Workplace(0xFF85CED1, 'w'),;
+    Grass(0xFF1B300A, 'g'),
+    Path(0xFF71717A, 'p'),
+    Hospital(0xFFE84EFB, 'H'),
+    House(0xFFD97706, 'h'),
+    Workplace(0xFF1E40AF, 'w'),;
 
     private final int argb;
     private final char character;
