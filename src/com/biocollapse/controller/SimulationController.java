@@ -25,7 +25,7 @@ public class SimulationController {
     // Models
     private final List<Hospital> hospitals = new ArrayList<>();
     private final List<Human> humans = new ArrayList<>();
-    private final Map map = new Map("maze.txt");
+    private final Map map = new Map("city.bmp");
 
     // Services
     private final InfectionService infectionService = new InfectionService();

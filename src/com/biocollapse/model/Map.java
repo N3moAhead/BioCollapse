@@ -2,10 +2,10 @@
 package src.com.biocollapse.model;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.NoSuchElementException;
 import java.util.Queue;
-import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -14,14 +14,10 @@ import java.util.Scanner;
 
 import javax.imageio.ImageIO;
 
-import src.com.biocollapse.model.Colors;
-
 public class Map {
     private static ArrayList<String> mapList = new ArrayList<String>();
     public static final int MAP_WIDTH = 100;
     public static final int MAP_HEIGHT = 100;
-
-    private static final int pathCol = new Color(0, 0, 0).getRGB();
 
     private Block[][] map;
 
@@ -45,37 +41,61 @@ public class Map {
      * @param fileName
      */
     public Map(String fileName) {
+        // Initialize default map.
+        this.map = new Block[MAP_HEIGHT][MAP_WIDTH];
+        for (int row = 0 ; row < MAP_HEIGHT ; row++) {
+            Arrays.fill(this.map[row], Block.Grass);
+        }
+        // Try to read a map from a file
         try {
-            // Determine file extension
-            int fileExtensionDot = fileName.lastIndexOf(".");
-            String fileExtension = "";
-            if (fileExtensionDot > 0) {
-                fileExtension = fileName.substring(fileExtensionDot, fileName.length());
-            } else {
-                throw new IOException("Could not determine file Type of " + fileName);
-            }
+            if (mapList.contains(fileName)) {
+                // Determine file extension
+                int fileExtensionDot = fileName.lastIndexOf(".");
+                if (fileExtensionDot > 0) {
+                    String fileExtension = fileName.substring(fileExtensionDot, fileName.length());
 
-            // Use correct function for given file extension
-            switch (fileExtension.toLowerCase()) {
-                case ".txt":
-                    this.map = parseTxtMap(fileName);
-                    break;
-                case ".bmp":
-                    this.map = parseBmpMap(fileName);
-                    break;
-                default:
-                    throw new IOException("File extension not supported: " + fileExtension);
+                    // Use correct function for given file extension
+                    File mapFile = new File("maps/" + fileName);
+                    switch (fileExtension.toLowerCase()) {
+                        case ".txt":
+                            Scanner mapReader = new Scanner(mapFile);
+                            for (int row = 0; mapReader.hasNextLine() && row < MAP_HEIGHT; row++) {
+                                char[] chars = mapReader.nextLine().toCharArray();
+                                for (int col = 0; col < chars.length && col < MAP_WIDTH; col++) {
+                                    this.map[row][col] = Block.fromChar(chars[col]);
+                                }
+                            }
+                            mapReader.close();
+                            break;
+                        case ".bmp":
+                            BufferedImage image = ImageIO.read(mapFile);
+                            for (int row = 0; row < image.getWidth() && row < MAP_HEIGHT; row++) {
+                                for (int col = 0; col < image.getHeight() && col < MAP_WIDTH; col++) {
+                                    this.map[row][col] = Block.fromColor(image.getRGB(row, col));
+                                }
+                            }
+                            break;
+                        default:
+                            throw new IOException("File extension '" + fileExtension + "' is not supported.");
+                    }
+                } else {
+                    throw new IOException("Could not determine file type.");
+                }
+            } else {
+                throw new FileNotFoundException("File is not valid: " + fileName);
             }
         } catch (FileNotFoundException e) {
-            for (int row = 0; row < MAP_HEIGHT; row++) {
-                for (int col = 0; col < MAP_WIDTH; col++) {
-                    this.map[row][col] = Block.Grass;
-                }
+            updateMapList();
+            System.out.println("Error: File not found.");
+            System.out.print("Valid map files are: ");
+            for (String mapName : mapList) {
+                System.out.print("'" + mapName + "', ");
             }
-            System.out.println("File not found: maps/" + fileName);
+            System.out.println();
             e.printStackTrace();
+
         } catch (IOException e) {
-            System.out.println("File error.");
+            System.out.println("Error while reading map: " + fileName);
             e.printStackTrace();
         }
     }
@@ -88,137 +108,29 @@ public class Map {
     }
 
     /**
-     * Parses a .txt file into a Block[][]
-     * 
-     * @param fileName
-     * @return a map as Block[][]
-     */
-    private static Block[][] parseTxtMap(String fileName) throws FileNotFoundException {
-        Block[][] map = new Block[MAP_HEIGHT][MAP_WIDTH];
-        // Load file.
-        File mapFile = new File("maps/" + fileName);
-        int row;
-        int col;
-        // Scan text.
-        Scanner mapReader = new Scanner(mapFile);
-        for (row = 0; mapReader.hasNextLine() && row < MAP_HEIGHT; row++) {
-            String line = mapReader.nextLine();
-            char[] chars = line.toCharArray();
-            for (col = 0; col < chars.length && col < MAP_WIDTH; col++) {
-                switch (chars[col]) {
-                    case 'g':
-                        map[row][col] = Block.Grass;
-                        break;
-                    case 'p':
-                        map[row][col] = Block.Path;
-                        break;
-                    case 'h':
-                        map[row][col] = Block.House;
-                        break;
-                    case 'H':
-                        map[row][col] = Block.Hospital;
-                        break;
-                    case 'w':
-                        map[row][col] = Block.Workplace;
-                        break;
-
-                    default:
-                        map[row][col] = Block.Grass;
-                        System.out.println("Invalid character '" + chars[col] + "' found at row: " + (row + 1)
-                                + ", col: " + (col + 1) + ". Set to Grass.");
-                }
-            }
-            if (col < MAP_WIDTH) {
-                System.out.println("Map too slim. Filling up empty spaces with Grass.");
-                for (; col < MAP_WIDTH; col++) {
-                    map[row][col] = Block.Grass;
-                }
-            }
-        }
-        if (row < MAP_HEIGHT) {
-            System.out.println("Map too short. Filling up empty spaces with Grass.");
-            for (; row < MAP_HEIGHT; row++) {
-                for (col = 0; col < MAP_WIDTH; col++) {
-                    map[row][col] = Block.Grass;
-                }
-            }
-        }
-        mapReader.close();
-        return map;
-    }
-
-    /**
-     * Parses a .bmp file into a Block[][]
-     * 
-     * @param fileName
-     * @return a map as Block[][]
-     */
-    private static Block[][] parseBmpMap(String fileName) throws IOException {
-        Block[][] map = new Block[MAP_HEIGHT][MAP_WIDTH];
-        File mapFile = new File("maps/" + fileName);
-        BufferedImage image = ImageIO.read(mapFile);
-        int row;
-        int col;
-        for (row = 0; row < image.getWidth() && row < MAP_HEIGHT; row++) {
-            for (col = 0; col < image.getHeight() && col < MAP_WIDTH; col++) {
-                // These are if else statements because switch case requires "constants" for the cases...
-                if (image.getRGB(row, col) == Colors.getRGB(Block.Grass)) {
-                    map[row][col] = Block.Grass;
-                } else if (image.getRGB(row, col) == Colors.getRGB(Block.Path)) {
-                    map[row][col] = Block.Path;
-                } else if (image.getRGB(row, col) == Colors.getRGB(Block.Hospital)) {
-                    map[row][col] = Block.Hospital;
-                } else if (image.getRGB(row, col) == Colors.getRGB(Block.House)) {
-                    map[row][col] = Block.House;
-                } else if (image.getRGB(row, col) == Colors.getRGB(Block.Workplace)) {
-                    map[row][col] = Block.Workplace;
-                } else {
-                    map[row][col] = Block.Grass;
-                    System.out.println("Invalid Color at row: " + row + ", col: " + col + ". Set to Grass");
-                }
-            }
-            if (col < MAP_WIDTH) {
-                System.out.println("Map too slim. Filling up empty spaces with Grass.");
-                for (; col < MAP_WIDTH; col++) {
-                    map[row][col] = Block.Grass;
-                }
-            }
-        }
-        if (row < MAP_HEIGHT) {
-            System.out.println("Map too short. Filling up empty spaces with Grass.");
-            for (; row < MAP_HEIGHT; row++) {
-                for (col = 0; col < MAP_WIDTH; col++) {
-                    map[row][col] = Block.Grass;
-                }
-            }
-        }
-        return map;
-
-    }
-
-    /**
      * Update the list of valid map files from the map folder.
-     * 
-     * Creates a map folfer if not present.
      */
     public static void updateMapList() {
         // Reset list to make sure old names are deleted
         mapList.clear();
-        final File mapFolder = new File("maps");
-        // Create the folder if it doesn't exist.
-        if (!mapFolder.exists()) {
-            mapFolder.mkdir();
-        }
-        final File[] mapFileArray = mapFolder.listFiles();
-        if (mapFileArray.length > 0) {
-            for (int i = 0; i < mapFileArray.length; i++) {
-                mapList.add(mapFileArray[i].getName());
-                // Ouput the filenames for debugging purposes.
-                System.out.println("Found file: " + mapFileArray[i].getName());
+        try {
+            final File mapFolder = new File("maps");
+            if (mapFolder.exists()) {
+                final File[] mapFileArray = mapFolder.listFiles();
+                if (mapFileArray.length > 0) {
+                    for (int i = 0; i < mapFileArray.length; i++) {
+                        mapList.add(mapFileArray[i].getName());
+                    }
+                    mapList.sort(null);
+                } else {
+                    throw new FileNotFoundException("Error: No maps found.");
+                }
+            } else {
+                throw new FileNotFoundException("Error: 'maps' folder doesn't exist.");
             }
-            mapList.sort(null);
-        } else {
-            System.out.println("Error: No maps found.");
+        } catch (FileNotFoundException e) {
+            System.out.println("Error while updating list of valid map names.");
+            e.printStackTrace();
         }
     }
 
@@ -236,7 +148,7 @@ public class Map {
     /**
      * Get the first map name.
      * 
-     * @return a map name
+     * @return a valid map name
      */
     public static String getSomeMapName() {
         if (mapList.isEmpty()) {
@@ -369,11 +281,4 @@ public class Map {
     public Block getBlock(MapPosition pos) {
         return getBlock(pos.getCol(), pos.getRow());
     }
-
-    // ! Just for debugging. Can be removed
-    public static void main(String[] args) {
-        Map test = new Map("city.bmp");
-        test.printMap();
-    }
-
 }
