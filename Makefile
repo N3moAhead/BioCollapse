@@ -11,7 +11,7 @@ endif
 default: run
 
 clean:
-	$(RM) src$(SEP)**.class
+	find src -name "*.class" -exec $(RM) {} +
 
 build: clean
 	javac src$(SEP)com$(SEP)biocollapse$(SEP)main$(SEP)Main.java
