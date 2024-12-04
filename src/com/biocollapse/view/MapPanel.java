@@ -10,18 +10,14 @@ import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Rectangle2D;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.EnumMap;
 import java.util.List;
-import java.util.Random;
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import src.com.biocollapse.model.Block;
 import src.com.biocollapse.model.Human;
-import src.com.biocollapse.model.MapPosition;
-import src.com.biocollapse.util.GlobalRandom;
 
 public class MapPanel extends JPanel {
 
@@ -32,8 +28,8 @@ public class MapPanel extends JPanel {
     private List<Human> humanData;
     private java.util.Map<Block, Color> legend;
 
-    private static final Color COLOR_INFECTED = Color.RED;
-    private static final Color COLOR_HEALTHY = Color.MAGENTA;
+    private static final Color COLOR_INFECTED = new Color(220, 38, 38);
+    private static final Color COLOR_HEALTHY = new Color(248, 250, 252);
 
     private static final String STATUS_INFECTED = "Infected";
     private static final String STATUS_HEALTHY = "Healthy";
@@ -49,12 +45,6 @@ public class MapPanel extends JPanel {
                 calculateCellSize();
             }
         });
-
-        if (DEBUG_MAP) {
-            setMap(doFakeMap());
-            update(doFakeHumans());
-            System.out.println("DEBUG_MAP=" + DEBUG_MAP);
-        }
     }
 
     /**
@@ -107,29 +97,35 @@ public class MapPanel extends JPanel {
         JPanel layoutPanel = new JPanel(new BorderLayout());
         JPanel legendPanel = new JPanel();
         for (Block b : Block.values()) {
-            legendPanel.add(createLegendItem(b.name(), legend.get(b)));
+            legendPanel.add(createLegendItem(b.name(), legend.get(b), true));
         }
 
-        legendPanel.add(createLegendItem(STATUS_HEALTHY, COLOR_HEALTHY));
-        legendPanel.add(createLegendItem(STATUS_INFECTED, COLOR_INFECTED));
+        legendPanel.add(createLegendItem(STATUS_HEALTHY, COLOR_HEALTHY, false));
+        legendPanel.add(createLegendItem(STATUS_INFECTED, COLOR_INFECTED, false));
 
         layoutPanel.add(legendPanel, BorderLayout.WEST);
         return layoutPanel;
     }
 
-    public void initLegend() {
-        legend = new HashMap<Block, Color>();
-        legend.put(Block.Grass, Color.GREEN);
-        legend.put(Block.Path, Color.GRAY);
-        legend.put(Block.Hospital, Color.PINK);
-        legend.put(Block.House, Color.YELLOW);
-        legend.put(Block.Workplace, new Color(135, 206, 235));
+    private void initLegend() {
+        legend = new EnumMap<>(Block.class);
+        legend.put(Block.Grass, new Color(27, 48, 10));
+        legend.put(Block.Path, new Color(113, 113, 122));
+        legend.put(Block.Hospital, new Color(232, 78, 251));
+        legend.put(Block.House, new Color(217, 119, 6));
+        legend.put(Block.Workplace, new Color(30, 64, 175));
     }
 
-    private JPanel createLegendItem(String name, Color c) {
+    private JPanel createLegendItem(String name, Color c, boolean drawBackground) {
         JPanel item = new JPanel();
         item.add(new JLabel(name));
-        item.setBorder(BorderFactory.createLineBorder(c, 3));
+        if (drawBackground) {
+            item.setBackground(c);
+            item.setBorder(BorderFactory.createLineBorder(Color.BLACK, 3));
+        } else {
+            item.setBorder(BorderFactory.createLineBorder(c, 3));
+            item.setBackground(new Color(c.getRed(), c.getGreen(), c.getBlue(), 50));
+        }
         return item;
     }
 
@@ -155,7 +151,9 @@ public class MapPanel extends JPanel {
     private void drawHumans(Graphics2D g2d) {
         if (humanData != null) {
             for (Human human : humanData) {
-                drawHuman(human, g2d);
+                if (human.isAlive()) {
+                    drawHuman(human, g2d);
+                }
             }
         }
     }
@@ -188,36 +186,5 @@ public class MapPanel extends JPanel {
 
     public static Dimension getMapDimension() {
         return new Dimension((int) (width * CELL_SIZE), (int) (height * CELL_SIZE));
-    }
-
-    // ----- DEBUGGING CODE ONLY TODO: Remove -----
-    public static boolean DEBUG_MAP = false;
-
-    public static Block[][] doFakeMap() {
-        Block[][] map = new Block[height][width];
-
-        Random random = GlobalRandom.getInstance();
-        for (int y = 0; y < height; y++) {
-            for (int x = 0; x < width; x++) {
-                map[y][x] = Block.values()[random.nextInt(Block.values().length)];
-            }
-        }
-        return map;
-    }
-
-    public static List<Human> doFakeHumans() {
-        List<Human> humanData = new ArrayList<>();
-
-        Random random = GlobalRandom.getInstance();
-        for (int y = 0; y < height; y++) {
-            for (int x = 0; x < width; x++) {
-                int rand = random.nextInt(5);
-                if (!(rand > 0)) {
-                    int randInfected = random.nextInt(3);
-                    humanData.add(new Human((randInfected > 1), false, new MapPosition(x, y), null, null));
-                }
-            }
-        }
-        return humanData;
     }
 }
