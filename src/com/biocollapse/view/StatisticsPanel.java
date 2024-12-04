@@ -119,7 +119,7 @@ public class StatisticsPanel extends JPanel {
      * Export the statistics in JSON format.
      */
     private void exportJSON() {
-        try {controller.showHomeScreen();
+        try {
             try (FileWriter writer = new FileWriter(EXPORT_FILE_NAME)) {
                 writer.write("[\n");
                 for (int i = 0; i < timelineStats.size(); i++) {
