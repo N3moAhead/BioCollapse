@@ -98,7 +98,7 @@ public class StatisticsPanel extends JPanel {
         graph.setDrawPoints(!(graphs.get(LiveStatistics.STAT_ALIVE).size() > 100));
         graph.setBackground(Color.WHITE);
         layoutPanel.add(graph, BorderLayout.CENTER);
-        layoutPanel.setBorder(new TitledBorder("Ergebniss"));
+        layoutPanel.setBorder(new TitledBorder("Verlauf"));
         targetpanel.add(layoutPanel, BorderLayout.CENTER);
     }
 
