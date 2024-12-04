@@ -61,17 +61,24 @@ public class StatisticsPanel extends JPanel {
 
         centerPanel.add(Box.createRigidArea(new Dimension(10, 0)));
 
-        JButton exportGraph = new JButton("Graphen als Bild exportieren");
-        exportGraph.setAlignmentX(Component.CENTER_ALIGNMENT);
-        exportGraph.addActionListener(e -> exportImage());
-        centerPanel.add(exportGraph);
+        JButton button = new JButton("Graphen als Bild exportieren");
+        button.setAlignmentX(Component.CENTER_ALIGNMENT);
+        button.addActionListener(e -> exportImage());
+        centerPanel.add(button);
 
         centerPanel.add(Box.createRigidArea(new Dimension(10, 0)));
 
-        JButton home = new JButton("Zum Startbildschirm");
-        home.setAlignmentX(Component.CENTER_ALIGNMENT);
-        home.addActionListener(e -> homeScreen());
-        centerPanel.add(home);
+        button = new JButton("Wiederholung abspielen");
+        button.setAlignmentX(Component.CENTER_ALIGNMENT);
+        button.addActionListener(e -> replay());
+        centerPanel.add(button);
+
+        centerPanel.add(Box.createRigidArea(new Dimension(10, 0)));
+
+        button = new JButton("Zum Startbildschirm");
+        button.setAlignmentX(Component.CENTER_ALIGNMENT);
+        button.addActionListener(e -> homeScreen());
+        centerPanel.add(button);
 
         centerPanel.setBorder(new TitledBorder("Optionen"));
         layoutPanel.add(centerPanel, BorderLayout.NORTH);
@@ -135,5 +142,12 @@ public class StatisticsPanel extends JPanel {
      */
     private void homeScreen() {
         controller.showHomeScreen();
+    }
+
+    /**
+     * Show replay.
+     */
+    private void replay() {
+        controller.showSimulationScreen();
     }
 }
