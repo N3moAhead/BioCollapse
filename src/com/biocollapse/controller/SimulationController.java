@@ -15,7 +15,6 @@ import src.com.biocollapse.model.LiveStatistics;
 import src.com.biocollapse.model.Map;
 import src.com.biocollapse.service.HospitalService;
 import src.com.biocollapse.service.InfectionService;
-import src.com.biocollapse.service.MovementService;
 import src.com.biocollapse.service.SimulationService;
 import src.com.biocollapse.view.SimulationPanel;
 
@@ -30,7 +29,6 @@ public class SimulationController {
 
     // Services
     private final InfectionService infectionService = new InfectionService();
-    private final MovementService movementService = new MovementService(map);
     private final SimulationService simulationService = new SimulationService();
     private final HospitalService hospitalService = new HospitalService(map);
 
@@ -97,8 +95,8 @@ public class SimulationController {
         for (Human currentHuman : humans) {
             if (currentHuman.isAlive()) {
                 infectionService.updateInfectedPositions(currentHuman);
-                movementService.updateHumanGoal(currentHuman, tick);
-                movementService.move(currentHuman);
+                currentHuman.updateHumanGoal(map, tick);
+                currentHuman.move(map);
                 hospitalService.updateHospitals(hospitals, currentHuman);
             }
         }
