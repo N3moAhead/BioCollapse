@@ -12,6 +12,7 @@ import src.com.biocollapse.controller.WindowController;
 import static src.com.biocollapse.controller.WindowController.BIO_COLLAPSE_LOGO_TEXT_PATH;
 import src.com.biocollapse.model.Graph;
 import src.com.biocollapse.model.LiveStatistics;
+import src.com.biocollapse.util.GlobalConfig;
 import src.com.biocollapse.util.HelperUtils;
 
 public class StatisticsPanel extends JPanel {
@@ -71,6 +72,13 @@ public class StatisticsPanel extends JPanel {
         button = new JButton("Wiederholen");
         button.setAlignmentX(Component.CENTER_ALIGNMENT);
         button.addActionListener(e -> replay());
+        centerPanel.add(button);
+
+        centerPanel.add(Box.createRigidArea(new Dimension(10, 0)));
+
+        button = new JButton("Aktuelle Parameter anpassen");
+        button.setAlignmentX(Component.CENTER_ALIGNMENT);
+        button.addActionListener(e -> configScreen());
         centerPanel.add(button);
 
         centerPanel.add(Box.createRigidArea(new Dimension(10, 0)));
@@ -142,7 +150,15 @@ public class StatisticsPanel extends JPanel {
      * Navigate to home screen.
      */
     private void homeScreen() {
+        GlobalConfig.resetToDefault();
         controller.showHomeScreen();
+    }
+
+    /**
+     * Navigate to config screen.
+     */
+    private void configScreen() {
+        controller.showConfigScreen();
     }
 
     /**
