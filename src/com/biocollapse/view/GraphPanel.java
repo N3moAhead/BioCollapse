@@ -36,8 +36,11 @@ public class GraphPanel extends JPanel {
 
     private static final int PADDING_TOP = 20;
     private static final int PADDING_BOTTOM = 20;
-    private static int PADDING_LEFT = 10;
     private static final int PADDING_RIGHT = 20;
+    private static int PADDING_LEFT = 10;
+
+    private static final int LEGEND_FONT_SIZE = 8;
+    private static final int LEGEND_MARGIN = 10;
 
     public GraphPanel(Map<String, Graph> graphs) {
         this.graphs = graphs;
@@ -164,9 +167,6 @@ public class GraphPanel extends JPanel {
         }
     }
     
-    private static final int LEGEND_FONT_SIZE = 8;
-    private static final int LEGEND_MARGIN = 10;
-
     /**
      * Draw a legends text.
      */
