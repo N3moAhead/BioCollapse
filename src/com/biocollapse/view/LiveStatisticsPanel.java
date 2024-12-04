@@ -221,14 +221,14 @@ public class LiveStatisticsPanel extends JPanel {
      */
     private void setSpeed(JLabel value, boolean isUp) {
         if (isUp && speedButton.isEnabled()) {
-            SIMULATION_MULTIPLIER += 0.25;
-            if (SIMULATION_MULTIPLIER >= 2) {
+            SIMULATION_MULTIPLIER -= 0.25;
+            if (SIMULATION_MULTIPLIER <= 0.25) {
                 speedButton.setEnabled(false);
             }
             slowButton.setEnabled(true);
         } else if (!isUp && slowButton.isEnabled()) {
-            SIMULATION_MULTIPLIER -= 0.25;
-            if (SIMULATION_MULTIPLIER <= 0.25) {
+            SIMULATION_MULTIPLIER += 0.25;
+            if (SIMULATION_MULTIPLIER >= 2) {
                 slowButton.setEnabled(false);
             }
             speedButton.setEnabled(true);

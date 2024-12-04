@@ -120,14 +120,16 @@ public class MapPanel extends JPanel {
 
     private JPanel createLegendItem(String name, Color c, boolean drawBackground) {
         JPanel item = new JPanel();
-        item.add(new JLabel(name));
+        JLabel label = new JLabel(name);
         if (drawBackground) {
+            label.setForeground(Color.WHITE);
             item.setBackground(c);
             item.setBorder(BorderFactory.createLineBorder(Color.BLACK, 3));
         } else {
-            item.setBorder(BorderFactory.createLineBorder(c, 3));
-            item.setBackground(new Color(c.getRed(), c.getGreen(), c.getBlue(), 50));
+            item.setBorder(BorderFactory.createLineBorder(Color.BLACK, 3));
+            item.setBackground(new Color(c.getRed(), c.getGreen(), c.getBlue(), 90));
         }
+        item.add(label);
         return item;
     }
 

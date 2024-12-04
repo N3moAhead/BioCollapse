@@ -67,7 +67,7 @@ public class SimulationController {
 
                 updateSimulation(tick);
                 try {
-                    TimeUnit.MILLISECONDS.sleep((long)(SIMULATION_FRAME_DELAY*SIMULATION_MULTIPLIER));
+                    TimeUnit.MILLISECONDS.sleep((long)(SIMULATION_FRAME_DELAY/SIMULATION_MULTIPLIER));
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
