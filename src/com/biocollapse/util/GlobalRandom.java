@@ -17,18 +17,27 @@ public class GlobalRandom {
     return instance;
   }
 
-  // Returns a random integer between the given min and max number
+  /**
+   * Returns a random integer between the given min and max number
+   * 
+   * @param min
+   * @param max
+   * @return
+   */
   public static int getRandIntBetween(int min, int max) {
-    int n = instance.nextInt((max - min) + 1) + min;
-    return n;
+    return instance.nextInt((max - min) + 1) + min;
   }
 
-  // Returns true if the given probability has occurred and 
-  // returns false if the given probability has not occurred.
+  /**
+   * Returns true if the given probability has occurred and
+   * returns false if the given probability has not occurred.
+   * 
+   * @param probability
+   * @return
+   */
   public static boolean checkProbability(int probability) {
-    if (getRandIntBetween(0, 100) <= probability) {
-      return true;
-    }
-    return false;
+    if (probability == 0)
+      return false;
+    return (getRandIntBetween(0, 100) <= probability);
   }
 }
