@@ -272,14 +272,7 @@ public class GraphPanel extends JPanel {
                 double x = i * cellSize + PADDING_LEFT;
                 double y = (height- PADDING_BOTTOM) - ((double)(height - 2*  PADDING_BOTTOM) / (double) highestVisibleNum * graph.get(j).getValue());
     
-                if (drawPoints) {
-                    Ellipse2D.Float oval = new Ellipse2D.Float();
-                    oval.setFrame(x - 3, y - 3, 6, 6);
-                    g2d.fill(oval);
-                }
-                if (drawConnections && i != 0) {
-                    g2d.draw(new Line2D.Double(prevX, prevY, x, y));
-                }
+                drawPoint(prevX, prevY, x, y, g2d, i);
                 prevX = x;
                 prevY = y;
                 i++;
@@ -293,18 +286,26 @@ public class GraphPanel extends JPanel {
                 double x = i * cellSize + PADDING_LEFT;
                 double y = (height- PADDING_BOTTOM) - ((double)(height - 2*  PADDING_BOTTOM) / (double) highestVisibleNum * graph.get(j).getValue());
     
-                if (drawPoints) {
-                    Ellipse2D.Float oval = new Ellipse2D.Float();
-                    oval.setFrame(x - 3, y - 3, 6, 6);
-                    g2d.fill(oval);
-                }
-                if (drawConnections && i != 0) {
-                    g2d.draw(new Line2D.Double(prevX, prevY, x, y));
-                }
+                drawPoint(prevX, prevY, x, y, g2d, i);
                 prevX = x;
                 prevY = y;
                 i++;
             }
         }
     }
+
+    /**
+     * Draw the actual point and connection lines.
+     */
+    private void drawPoint(double prevX, double prevY, double x, double y, Graphics2D g2d, int i) {
+        if (drawPoints) {
+            Ellipse2D.Float oval = new Ellipse2D.Float();
+            oval.setFrame(x - 3, y - 3, 6, 6);
+            g2d.fill(oval);
+        }
+        if (drawConnections && i != 0) {
+            g2d.draw(new Line2D.Double(prevX, prevY, x, y));
+        }
+    }
+    
 }
