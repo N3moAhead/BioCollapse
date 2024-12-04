@@ -154,8 +154,11 @@ public class LiveStatisticsPanel extends JPanel {
 
         JPanel speedLayout = new JPanel();
 
-        JLabel label = new JLabel(SIMULATION_MULTIPLIER + "X");
+        JLabel label = new JLabel();
         label.setFont(new Font("Arial", Font.BOLD, 16));
+
+        SIMULATION_MULTIPLIER = 1.0;
+        label.setText(SIMULATION_MULTIPLIER + "X");
 
         speedButton = new JButton("--");
         speedButton.setBorder(BorderFactory.createCompoundBorder());
@@ -213,6 +216,7 @@ public class LiveStatisticsPanel extends JPanel {
         layoutPanel.add(innerLayoutPanel, BorderLayout.WEST);
         layoutPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 5, 5));
         layoutPanel.setBorder(new TitledBorder("Visualisation"));
+
         return layoutPanel;
     }
 
