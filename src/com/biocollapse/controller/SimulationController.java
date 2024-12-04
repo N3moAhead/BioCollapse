@@ -118,7 +118,7 @@ public class SimulationController {
             complete = true;
         } else if (tick > (Config.SIMULATION_ONE_DAY_TICKS * Config.SIMULATION_MAX_DAYS)) {
             complete = true;
-            b.append("Die Simulation wurde am Tag ").append(day).append(" beendet, da noch einige Menschen leben. Die Population scheint trotz Virus stabil zu sein. Gut gemacht!");
+            b.append("Die Simulation wurde am Tag ").append(day).append(" beendet da die maximale Simulationsdauer erreicht wurde. Es haben noch einige Menschen überlebt. Die Population scheint also trotz Virus stabil zu sein. Gut gemacht!");
         }
         if (tick > (Config.SIMULATION_ONE_DAY_TICKS * Config.SIMULATION_MAX_DAYS) || currenStatistics.getInfected() == 0) {
             if (currenStatistics.getAlive() == 1) {

@@ -68,11 +68,11 @@ public class LiveStatistics {
      */
     public List<GraphItem> toGraph(){
         List<GraphItem> items = new ArrayList<>();
-        items.add(new GraphItem(STAT_ALIVE, alive, true, false, COLOR_ALIVE));
         items.add(new GraphItem(STAT_INFECTED, infected, true, false, COLOR_INFECTED));
         items.add(new GraphItem(STAT_HEALTHY, healthy, true, false, COLOR_HEALTHY));
         items.add(new GraphItem(STAT_IMMUNE, immune, true, false, COLOR_IMMUNE));
         items.add(new GraphItem(STAT_DEATHS, deaths, true, false, COLOR_DEATHS));
+        items.add(new GraphItem(STAT_ALIVE, alive, true, false, COLOR_ALIVE));
         items.add(new GraphItem(STAT_HOSPITAL_CAPACITY_RATIO, hospitalCapacityRatio, true, false, COLOR_HOSPITAL_CAPACITY_RATIO));
         return items;
     }
