@@ -25,6 +25,8 @@ public class Config {
   private int isolationEffect = 2; // how much the isolationMandate increases the isolationProbability
   private int lockdownEffect = 75;
   private int ticksAtLocation = 50; // how many ticks does a person stay at home or at work after reaching the goal
+  public final static int SIMULATION_ONE_DAY_TICKS = 250;
+  public final static int SIMULATION_MAX_DAYS = 14;
 
   /**
    * @param infectionRadius      The radius in which an infected person can infect

@@ -90,17 +90,7 @@ public class SimulationService {
             hospitalCapacity += hospital.getCapacity();
             usedHospitalCapacity += hospital.getUsedCapacity();
         }
-
-        if (hospitalCapacity > 0) {
-            hospitalCapacityRatio = usedHospitalCapacity / hospitalCapacity;
-        } else {
-            // System.err.println("There was an Error in Calculating the hospital capacity: " + hospitalCapacity);
-            hospitalCapacityRatio = -1;
-        }
-
-        LiveStatistics current = new LiveStatistics(aliveCounter, infectedCounter, healthyCounter, immuneCounter,
-                deathCounter, hospitalCapacityRatio);
-
-        return current;
+        hospitalCapacityRatio = hospitalCapacity > 0 ? (usedHospitalCapacity / hospitalCapacity) : -1;
+        return new LiveStatistics(aliveCounter, infectedCounter, aliveCounter, immuneCounter, deathCounter, hospitalCapacityRatio, day);
     }
 }
