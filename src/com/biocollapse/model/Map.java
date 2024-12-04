@@ -28,12 +28,14 @@ public class Map {
         updateMapList();
     }
 
-    /*
-     * Creates a Map based on a name.
-     * The file extension .txt is not needed as this references the HashMap of all
-     * "loaded" files.
+    /**
+     * Creates a Map based on a fileName.
+     * The file extension is needed as this only supports files with .txt or .bmp
+     * extension.
      * 
-     * Valid filenames/keys are provided by getMapNames();
+     * Valid filenames are provided by `getMapNames();`
+     * 
+     * @param fileName
      */
     public Map(String fileName) {
         try {
@@ -49,10 +51,10 @@ public class Map {
             // Use correct function for given file extension
             switch (fileExtension.toLowerCase()) {
                 case ".txt":
-                    parseTxtMap(fileName);
+                    this.map = parseTxtMap(fileName);
                     break;
                 case ".bmp":
-                    parseBmpMap(fileName);
+                    this.map = parseBmpMap(fileName);
                     break;
                 default:
                     throw new IOException("File extension not supported: " + fileExtension);
@@ -63,12 +65,27 @@ public class Map {
         }
     }
 
-    private void parseTxtMap(String fileName) {
+    /**
+     * Chooses the first map from the maps folder to be used.
+     */
+    public Map() {
+        this(getSomeMapName());
+    }
+
+    /**
+     * Parses a .txt file into a Block[][]
+     * 
+     * @param fileName
+     * @return a map as Block[][]
+     */
+    private static Block[][] parseTxtMap(String fileName) {
+        Block[][] map = new Block[MAP_HEIGHT][MAP_WIDTH];
         try {
-            this.map = new Block[MAP_HEIGHT][MAP_WIDTH];
+            // Load file.
             File mapFile = new File("maps/" + fileName);
             int row;
             int col;
+            // Scan text.
             Scanner mapReader = new Scanner(mapFile);
             for (row = 0; mapReader.hasNextLine() && row < MAP_HEIGHT; row++) {
                 String line = mapReader.nextLine();
@@ -76,84 +93,108 @@ public class Map {
                 for (col = 0; col < chars.length && col < MAP_WIDTH; col++) {
                     switch (chars[col]) {
                         case 'g':
-                            this.map[row][col] = Block.Grass;
+                            map[row][col] = Block.Grass;
                             break;
                         case 'p':
-                            this.map[row][col] = Block.Path;
+                            map[row][col] = Block.Path;
                             break;
                         case 'h':
-                            this.map[row][col] = Block.House;
+                            map[row][col] = Block.House;
                             break;
                         case 'H':
-                            this.map[row][col] = Block.Hospital;
+                            map[row][col] = Block.Hospital;
                             break;
                         case 'w':
-                            this.map[row][col] = Block.Workplace;
+                            map[row][col] = Block.Workplace;
                             break;
 
                         default:
-                            this.map[row][col] = Block.Grass;
-                            System.out.println("Invalid character '" + chars[col] + "' found at row: " + (row+1) + ", col: " + (col+1) + ". Set to Grass.");
+                            map[row][col] = Block.Grass;
+                            System.out.println("Invalid character '" + chars[col] + "' found at row: " + (row + 1)
+                                    + ", col: " + (col + 1) + ". Set to Grass.");
                     }
                 }
                 if (col < MAP_WIDTH) {
                     System.out.println("Map too slim. Filling up empty spaces with Grass.");
-                    for (;col < MAP_WIDTH;col++) {
-                        this.map[row][col] = Block.Grass;
+                    for (; col < MAP_WIDTH; col++) {
+                        map[row][col] = Block.Grass;
                     }
                 }
             }
             if (row < MAP_HEIGHT) {
                 System.out.println("Map too short. Filling up empty spaces with Grass.");
-                for (;row < MAP_HEIGHT;row++) {
-                    for (col = 0 ; col < MAP_WIDTH ; col++) {
-                        this.map[row][col] = Block.Grass;
+                for (; row < MAP_HEIGHT; row++) {
+                    for (col = 0; col < MAP_WIDTH; col++) {
+                        map[row][col] = Block.Grass;
                     }
                 }
             }
             mapReader.close();
         } catch (FileNotFoundException e) {
+            for (int row = 0; row < MAP_HEIGHT; row++) {
+                for (int col = 0; col < MAP_WIDTH; col++) {
+                    map[row][col] = Block.Grass;
+                }
+            }
             System.out.println("File not found: maps/" + fileName);
             e.printStackTrace();
         }
-        
+        return map;
     }
 
-    private void parseBmpMap(String fileName) {
-
-    }
-
-    /*
-     * Chooses one map File from the maps folder to be used
+    /**
+     * Parses a .bmp file into a Block[][]
      * 
-     * As the file list is a set there is no first map and as such this might give
-     * different results if not specified.
+     * @param fileName
+     * @return a map as Block[][]
      */
-    public Map() {
-        this(getSomeMapName());
+    private Block[][] parseBmpMap(String fileName) {
+        Block[][] map = new Block[MAP_HEIGHT][MAP_WIDTH];
+        return map;
     }
 
+    /**
+     * Update the list of valid map files from the map folder.
+     * 
+     * Creates a map folfer if not present.
+     */
     public static void updateMapList() {
+        // Reset list to make sure old names are deleted
         mapList.clear();
         final File mapFolder = new File("maps");
+        // Create the folder if it doesn't exist.
         if (!mapFolder.exists()) {
             mapFolder.mkdir();
         }
         final File[] mapFileArray = mapFolder.listFiles();
         if (mapFileArray.length > 0) {
-            for (final File fileEntry : mapFolder.listFiles()) {
-                mapList.add(fileEntry.getName());
-                System.out.println("Found file: " + fileEntry.getName());
+            for (int i = 0; i < mapFileArray.length; i++) {
+                mapList.add(mapFileArray[i].getName());
+                // Ouput the filenames for debugging purposes.
+                System.out.println("Found file: " + mapFileArray[i].getName());
             }
+            mapList.sort(null);
         } else {
             System.out.println("Error: No maps found.");
         }
     }
 
+    /**
+     * Get a list of map names.
+     * 
+     * Map names are sorted alphabetically.
+     * 
+     * @return an Arraylist of valid file names.
+     */
     public static ArrayList<String> getMapNames() {
         return mapList;
     }
 
+    /**
+     * Get the first map name.
+     * 
+     * @return a map name
+     */
     public static String getSomeMapName() {
         if (mapList.isEmpty()) {
             throw new NoSuchElementException("List of maps is empty.");
@@ -161,6 +202,13 @@ public class Map {
         return mapList.get(0);
     }
 
+    /**
+     * Function for printing the map in the terminal.
+     * 
+     * Used for Debugging purposes only.
+     * 
+     * Note: there is a problem, where Hospitals and Homes lookthe same.
+     */
     public void printMap() {
         for (int row = 0; row < MAP_HEIGHT; row++) {
             for (int col = 0; col < MAP_WIDTH; col++) {
@@ -214,6 +262,13 @@ public class Map {
         return null;
     }
 
+    /**
+     * Get a 2d Array to determine best path between two points.
+     * 
+     * @param from MapPosition
+     * @param to   MapPosition
+     * @return
+     */
     public Integer[][] getStepMatrix(MapPosition from, MapPosition to) {
         Queue<MapPosition> queue = new LinkedList<>();
         Integer[][] stepMatrix = new Integer[MAP_HEIGHT][MAP_WIDTH];
