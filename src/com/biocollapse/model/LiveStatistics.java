@@ -7,7 +7,7 @@ import java.util.List;
 
 public class LiveStatistics {
 
-    private static final String STAT_ALIVE = "Lebendig";
+    public static final String STAT_ALIVE = "Lebendig";
     private static final String STAT_INFECTED = "Infiziert";
     private static final String STAT_RECOVERED = "Erholt";
     private static final String STAT_HEALTHY = "Gesund";

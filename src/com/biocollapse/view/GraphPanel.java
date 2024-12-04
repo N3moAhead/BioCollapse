@@ -69,7 +69,7 @@ public class GraphPanel extends JPanel {
      */
     public void setVisiblePoints(int visiblePoints) {
         this.visiblePoints = visiblePoints;
-        cellSize = (width - PADDING_LEFT - PADDING_RIGHT) / visiblePoints;
+        cellSize = ((double)(width - PADDING_LEFT - PADDING_RIGHT)) / visiblePoints;
     }
 
     /**

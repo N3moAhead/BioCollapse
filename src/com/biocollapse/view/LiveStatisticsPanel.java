@@ -42,6 +42,9 @@ public class LiveStatisticsPanel extends JPanel {
         setupLayout();
     }
 
+    /**
+     * Updates the graph with the new statistics.
+     */
     public void update(LiveStatistics currentStats) {
         timelineStats.add(currentStats);
         for (GraphItem graph : currentStats.toGraph()) {
@@ -49,6 +52,9 @@ public class LiveStatisticsPanel extends JPanel {
         }
     }
 
+    /**
+     * Adds a point to the graph.
+     */
     private void addPoint(GraphItem point) {
         Graph graph;
         if (!graphs.containsKey(point.getName())) {
@@ -77,6 +83,9 @@ public class LiveStatisticsPanel extends JPanel {
         return (timelineStats == null) ? new ArrayList<>() : timelineStats;
     }
 
+    /**
+     * Configure the layout.
+     */
     private void setupLayout() {
         JSplitPane pane = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
         pane.setResizeWeight(0.5);
@@ -120,6 +129,11 @@ public class LiveStatisticsPanel extends JPanel {
         repaint();
     }
 
+    /**
+     * The configuration panel for the user to configure the graph.
+     * @param graph
+     * @return the layout panel with the configuration options.
+     */
     private JPanel graphConfigPanel(GraphPanel graph) {
         JPanel layoutPanel = new JPanel(new BorderLayout());
         JPanel innerLayoutPanel = new JPanel(new BorderLayout());
@@ -170,11 +184,21 @@ public class LiveStatisticsPanel extends JPanel {
         return layoutPanel;
     }
 
+    /**
+     * Create layout constraints.
+     */
     private GridBagConstraints makeGbc(int x, JComponent comp) {
         return new GridBagConstraints(x, row, 1, 1, 0, 0, GridBagConstraints.WEST, 0, comp.getInsets(), 0, 0);
     }
 
+    /**
+     * Create layout constraints.
+     */
     private GridBagConstraints makeConfigGbc(int x, JComponent comp, int configRow) {
         return new GridBagConstraints(x, configRow, 1, 1, 0, 0, GridBagConstraints.WEST, 0, comp.getInsets(), 0, 0);
+    }
+
+    public Map<String, Graph> getGraphs() {
+        return graphs;
     }
 }

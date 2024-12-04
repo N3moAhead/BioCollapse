@@ -62,11 +62,10 @@ public class SimulationPanel extends JPanel {
         JLabel icon = new JLabel();
         try {
             Image originalImage = new ImageIcon(BIO_COLLAPSE_LOGO_TEXT_PATH).getImage();
-            int maxTextSize =  16; // Replace with the desired max text size
+            int maxTextSize =  16;
             int maxIconHeight = maxTextSize;
             int maxIconWidth = (originalImage.getWidth(null) * maxIconHeight) / originalImage.getHeight(null);
-            Image scaledImage = originalImage.getScaledInstance(maxIconWidth, maxIconHeight, Image.SCALE_SMOOTH);
-            icon.setIcon(new ImageIcon(scaledImage));
+            icon.setIcon(new ImageIcon(originalImage.getScaledInstance(maxIconWidth, maxIconHeight, Image.SCALE_SMOOTH)));
         } catch (Exception ignored) {
         }
         topBar.add(icon, BorderLayout.WEST);
@@ -109,6 +108,6 @@ public class SimulationPanel extends JPanel {
      * Call when the simulation ended to display the statistics.
      */
     public void simulationComplete() {
-        controller.showStatisticsScreen(stats.getTimelineStats());
+        controller.showStatisticsScreen(stats.getTimelineStats(), stats.getGraphs());
     }
 }

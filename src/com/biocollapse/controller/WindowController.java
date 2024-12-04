@@ -5,9 +5,11 @@ import java.awt.Dimension;
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.util.List;
+import java.util.Map;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
+import src.com.biocollapse.model.Graph;
 import src.com.biocollapse.model.LiveStatistics;
 import src.com.biocollapse.view.ConfigPanel;
 import src.com.biocollapse.view.HomePanel;
@@ -80,8 +82,8 @@ public class WindowController extends JFrame {
 
     }
 
-    public void showStatisticsScreen(List<LiveStatistics> timelineStats) {
-        statisticsScreen = new StatisticsPanel(this, timelineStats);
+    public void showStatisticsScreen(List<LiveStatistics> timelineStats, Map<String, Graph> graphs) {
+        statisticsScreen = new StatisticsPanel(this, timelineStats, graphs);
         setContentPane(statisticsScreen);
         revalidate();
     }
