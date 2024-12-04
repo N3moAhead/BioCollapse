@@ -17,7 +17,7 @@ public class SimulationService {
         final List<MapPosition> workplacePositions = extractPositions(map, Block.Workplace);
         final List<MapPosition> housePositions = extractPositions(map, Block.House);
         final List<MapPosition> hospitalPositions = extractPositions(map, Block.House);
-        createEntities(map, workplacePositions, housePositions, hospitalPositions, humans, hospitals);
+        createEntities(workplacePositions, housePositions, hospitalPositions, humans, hospitals);
     }
 
     private List<MapPosition> extractPositions(Block[][] map, Block targetBlock) {
@@ -32,11 +32,11 @@ public class SimulationService {
         return positions;
     }
 
-    private void createEntities(Block[][] map, List<MapPosition> workplacePositions, List<MapPosition> housePositions,
+    private void createEntities(List<MapPosition> workplacePositions, List<MapPosition> housePositions,
             List<MapPosition> hospitalPositions, List<Human> humans, List<Hospital> hospitals) {
         for (int i = 0; i < 100; i++) {
             humans.add(new Human(
-                    i % 5 == 0 ? true : false,
+                    (i % 5 == 0),
                     false,
                     housePositions.get(i % housePositions.size()).copy(),
                     getRandomPosition(workplacePositions).copy(),
@@ -52,7 +52,14 @@ public class SimulationService {
         return positions.get(GlobalRandom.getRandIntBetween(0, positions.size() - 1));
     }
 
-    public LiveStatistics calculateLiveStatistics(List<Human> humans, List<Hospital> hospitals) {
+    /**
+     * Calulates the current simulation statistics based on the following parameters:
+     * @param humans
+     * @param hospitals
+     * @param day
+     * @return a live statistics object.
+     */
+    public LiveStatistics calculateLiveStatistics(List<Human> humans, List<Hospital> hospitals, int day) {
         int infectedCounter = 0;
         int healthyCounter = humans.size();
         int immuneCounter = 0;
@@ -70,10 +77,11 @@ public class SimulationService {
             if (!human.isAlive()) {
                 deathCounter++;
                 aliveCounter = (aliveCounter > 0) ? aliveCounter -= 1 : aliveCounter;
+                healthyCounter = (healthyCounter > 0) ? healthyCounter -= 1 : healthyCounter;
                 infectedCounter = (infectedCounter > 0) ? infectedCounter -= 1 : infectedCounter;
             }
             // This case can only occur after someone was infected
-            if (human.isImmune()) {
+            if (human.isImmune() && human.isAlive()) {
                 immuneCounter++;
             }
         }
@@ -82,17 +90,7 @@ public class SimulationService {
             hospitalCapacity += hospital.getCapacity();
             usedHospitalCapacity += hospital.getUsedCapacity();
         }
-
-        if (hospitalCapacity > 0) {
-            hospitalCapacityRatio = usedHospitalCapacity / hospitalCapacity;
-        } else {
-            // System.err.println("There was an Error in Calculating the hospital capacity: " + hospitalCapacity);
-            hospitalCapacityRatio = -1;
-        }
-
-        LiveStatistics current = new LiveStatistics(aliveCounter, infectedCounter, aliveCounter, immuneCounter,
-                deathCounter, hospitalCapacityRatio);
-
-        return current;
+        hospitalCapacityRatio = hospitalCapacity > 0 ? (usedHospitalCapacity / hospitalCapacity) : -1;
+        return new LiveStatistics(aliveCounter, infectedCounter, aliveCounter, immuneCounter, deathCounter, hospitalCapacityRatio, day);
     }
 }

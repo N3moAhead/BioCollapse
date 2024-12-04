@@ -22,7 +22,11 @@ public class Config {
   private boolean schoolClosure;
   private int maskEffect = 2; // how much the maskMandate decreases the infectionProbability
   private int ageEffect = 3; // how much the age of a human increases mortalityRisk
+  private int isolationEffect = 2; // how much the isolationMandate increases the isolationProbability
+  private int lockdownEffect = 75;
   private int ticksAtLocation = 50; // how many ticks does a person stay at home or at work after reaching the goal
+  public final static int SIMULATION_ONE_DAY_TICKS = 250;
+  public final static int SIMULATION_MAX_DAYS = 14;
 
   /**
    * @param infectionRadius      The radius in which an infected person can infect
@@ -263,6 +267,22 @@ public class Config {
 
   public void setAgeEffect(int ageEffect) {
     this.ageEffect = ageEffect;
+  }
+
+  public int getIsolationEffect() {
+    return isolationEffect;
+  }
+
+  public void setIsolationEffect(int isolationEffect) {
+    this.isolationEffect = isolationEffect;
+  }
+
+  public int getLockdownEffect() {
+    return lockdownEffect;
+  }
+
+  public void setLockdownEffect(int lockdownEffect) {
+    this.lockdownEffect = lockdownEffect;
   }
 
   @Override

@@ -8,6 +8,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.swing.SwingUtilities;
 import src.com.biocollapse.model.Block;
+import src.com.biocollapse.model.Config;
 import src.com.biocollapse.model.Hospital;
 import src.com.biocollapse.model.Human;
 import src.com.biocollapse.model.LiveStatistics;
@@ -20,8 +21,7 @@ import src.com.biocollapse.view.SimulationPanel;
 
 public class SimulationController {
 
-    public static int SIMULATION_FRAME_DELAY = 50;
-    private int tick = 0;
+    public static int SIMULATION_FRAME_DELAY = 25;
 
     // Models
     private final List<Hospital> hospitals = new ArrayList<>();
@@ -37,6 +37,10 @@ public class SimulationController {
     // Display
     private final SimulationPanel visualisation;
 
+    /**
+     * The controller takes care of the main simulation loop.
+     * The simulation is displayed in the @param visualisation panel.
+     */
     public SimulationController(SimulationPanel visualisation) {
         this.visualisation = visualisation;
         final Block[][] initMap = map.getMap();
@@ -44,19 +48,23 @@ public class SimulationController {
         simulationService.initializeSimulation(initMap, humans, hospitals);
     }
 
-    // Main Simulation Loop
+    /**
+     * Start the main loop of the simulation.
+     */
     public void runMainLoop() {
         AtomicBoolean isRunning = new AtomicBoolean(true);
 
         new Thread(() -> {
             double lastFps = 0.0;
-
+            int tick = 0;
 
             while (isRunning.get()) {
-                long startTime = System.nanoTime(); // Start time for this frame
-; 
-                updateSimulation();
-                LiveStatistics currentStats = simulationService.calculateLiveStatistics(humans, hospitals);
+                long tickStartTime = System.nanoTime();
+                int tickToDay = tick / Config.SIMULATION_ONE_DAY_TICKS;
+                int day = tickToDay < 1 ? 1 : (tickToDay + 1);
+                LiveStatistics currentStats = simulationService.calculateLiveStatistics(humans, hospitals, day);
+
+                updateSimulation(tick);
 
                 try {
                     // TODO: Find sweet spot. And let user fast forward or slow down (x2 / x0.5)
@@ -68,34 +76,40 @@ public class SimulationController {
                 double fps = lastFps; // Needed for swingutilities to access scope.
                 SwingUtilities.invokeLater(() -> visualisation.update(humans, currentStats, fps));
 
-                long frameTimeNano = System.nanoTime() - startTime; // Time taken for this frame in nanoseconds
-                double frameTimeSeconds = frameTimeNano / 1_000_000_000.0; // Convert to seconds
-                lastFps = 1.0 / frameTimeSeconds;
+                long tickEndTime = System.nanoTime() - tickStartTime; // Time taken for this frame in nanoseconds
+                double tickTimeSeconds = tickEndTime / 1_000_000_000.0; // Convert to seconds
+                lastFps = 1.0 / tickTimeSeconds;
                 tick++;
 
-                isRunning.set(!isSimulationComplete(currentStats));
+                isRunning.set(!isSimulationComplete(currentStats, tick));
             }
 
             visualisation.simulationComplete();
         }).start();
     }
 
-    private void updateSimulation() {
+    /**
+     * Updates the simulation state for the next tick.
+     */
+    private void updateSimulation(int tick) {
         infectionService.initInfectionUpdates();
         for (Human currentHuman : humans) {
-            infectionService.updateInfectedPositions(currentHuman);
-            movementService.updateHumanGoal(currentHuman, tick);
-            movementService.move(currentHuman);
-            hospitalService.updateHospitals(hospitals, currentHuman);
+            if (currentHuman.isAlive()) {
+                infectionService.updateInfectedPositions(currentHuman);
+                movementService.updateHumanGoal(currentHuman, tick);
+                movementService.move(currentHuman);
+                hospitalService.updateHospitals(hospitals, currentHuman);
+            }
         }
         infectionService.updateHumansStatus(humans, tick);
     }
 
-    private boolean isSimulationComplete(LiveStatistics currenStatistics){
+    private boolean isSimulationComplete(LiveStatistics currenStatistics, int tick) {
         boolean result = false;
-        
+
         // Check for: Max Days, No one infected, all dead
-        if (currenStatistics.getInfected() == 0 || currenStatistics.getAlive() == 0 || tick > (250 * 14)) {
+        if (currenStatistics.getInfected() == 0 || currenStatistics.getAlive() == 0
+                || tick > (Config.SIMULATION_ONE_DAY_TICKS * Config.SIMULATION_MAX_DAYS)) {
             result = true;
         }
         return result;

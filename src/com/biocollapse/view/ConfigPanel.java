@@ -7,6 +7,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import src.com.biocollapse.controller.WindowController;
+import src.com.biocollapse.model.Config;
 import src.com.biocollapse.util.GlobalConfig;
 
 public class ConfigPanel extends JTabbedPane {
@@ -38,8 +39,6 @@ public class ConfigPanel extends JTabbedPane {
     private JButton backButton;
     private WindowController controller;
     private JPanel mainPanel;
-
-    private final int TICK = 250;
 
     public ConfigPanel(WindowController controller) {
         this.controller = controller;
@@ -206,9 +205,9 @@ public class ConfigPanel extends JTabbedPane {
         // Save Config parameters
         int infectionRadius = infectionRadiusSlider.getValue();
         int infectionProbability = infectionProbabilitySlider.getValue();
-        int incubationTime = incubationTimeSlider.getValue() * TICK;
+        int incubationTime = incubationTimeSlider.getValue() * Config.SIMULATION_ONE_DAY_TICKS;
         int mortalityRate = mortalityRateSlider.getValue();
-        int timeToDeath = timeToDeathSlider.getValue() * TICK;
+        int timeToDeath = timeToDeathSlider.getValue() * Config.SIMULATION_ONE_DAY_TICKS;
         int immunityChance = immunityChanceSlider.getValue();
 
         int hospitalCapacity = hospitalCapacitySlider.getValue();
