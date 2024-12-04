@@ -2,13 +2,18 @@
 package src.com.biocollapse.view;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
+import java.awt.Font;
+import java.awt.Image;
 import java.util.List;
 import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.SwingConstants;
 import src.com.biocollapse.controller.SimulationController;
 import src.com.biocollapse.controller.WindowController;
+import static src.com.biocollapse.controller.WindowController.BIO_COLLAPSE_LOGO_PAINTING_PATH;
+import static src.com.biocollapse.controller.WindowController.BIO_COLLAPSE_LOGO_TEXT_PATH;
 import src.com.biocollapse.model.Block;
 import src.com.biocollapse.model.Human;
 import src.com.biocollapse.model.LiveStatistics;
@@ -18,7 +23,11 @@ public class SimulationPanel extends JPanel {
     private final WindowController controller;
     private MapPanel map;
     private LiveStatisticsPanel stats;
+    private JLabel dayText;
 
+    /**
+     * This panel is the screen for the simulation content, taking care of the layout and simulation updates.
+     */
     public SimulationPanel(WindowController controller) {
         this.controller = controller;
         setupLayout();
@@ -30,14 +39,38 @@ public class SimulationPanel extends JPanel {
         repaint();
     }
 
+    /**
+     * Set the layout of the simulation screen.
+     */
     private void setupLayout() {
         setLayout(new BorderLayout());
-        
+
         JPanel topBar = new JPanel(new BorderLayout());
-        topBar.setBackground(new Color(201, 218, 234));
         topBar.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 0));
-        JLabel title = new JLabel("SIMULATION");
-        topBar.add(title, BorderLayout.WEST);
+
+        dayText = new JLabel("[ LIVE ]", SwingConstants.CENTER);
+
+        try {
+            dayText.setIcon(new ImageIcon(new ImageIcon(BIO_COLLAPSE_LOGO_PAINTING_PATH).getImage().getScaledInstance(16, 16, Image.SCALE_SMOOTH)));
+        } catch (Exception ignored) {
+        }
+
+        dayText.setFont(new Font("Arial", Font.BOLD, 16));
+        topBar.add(dayText, BorderLayout.EAST);
+
+
+        JLabel icon = new JLabel();
+        try {
+            Image originalImage = new ImageIcon(BIO_COLLAPSE_LOGO_TEXT_PATH).getImage();
+            int maxTextSize =  16; // Replace with the desired max text size
+            int maxIconHeight = maxTextSize;
+            int maxIconWidth = (originalImage.getWidth(null) * maxIconHeight) / originalImage.getHeight(null);
+            Image scaledImage = originalImage.getScaledInstance(maxIconWidth, maxIconHeight, Image.SCALE_SMOOTH);
+            icon.setIcon(new ImageIcon(scaledImage));
+        } catch (Exception ignored) {
+        }
+        topBar.add(icon, BorderLayout.WEST);
+
         add(topBar, BorderLayout.NORTH);
 
         JPanel centerContent = new JPanel(new BorderLayout());
@@ -57,9 +90,9 @@ public class SimulationPanel extends JPanel {
      * Call each frame to update the human position and statistics.
      */
     public void update(List<Human> humanData, LiveStatistics liveStatistics, double fps) {
-        // this.fps.setText(String.format("%.1f", fps) + " FPS (" + SIMULATION_FRAME_DELAY + " ms delay active)");
         map.update(humanData);
         stats.update(liveStatistics);
+        dayText.setText("Tag " + liveStatistics.getDay()+" ");
 
         revalidate();
         repaint();

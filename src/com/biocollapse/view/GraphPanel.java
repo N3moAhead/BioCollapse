@@ -39,7 +39,7 @@ public class GraphPanel extends JPanel {
     private static final int PADDING_RIGHT = 20;
     private static int PADDING_LEFT = 10;
 
-    private static final int LEGEND_FONT_SIZE = 8;
+    private static final int LEGEND_FONT_SIZE = 10;
     private static final int LEGEND_MARGIN = 10;
 
     public GraphPanel(Map<String, Graph> graphs) {
@@ -148,6 +148,7 @@ public class GraphPanel extends JPanel {
             drawPoints(entry.getValue(), g2d);
         }
 
+        g2d.setFont(new Font("Arial", Font.PLAIN, LEGEND_FONT_SIZE));
         int legendSize = getLongestLegendLength(g2d);
         drawLegendBackground(g2d, legendSize);
         drawLegend(g2d, legendSize);
@@ -158,7 +159,6 @@ public class GraphPanel extends JPanel {
      * @param g2d
      */
     private void drawLegend(Graphics2D g2d, int legendSize) {
-        g2d.setFont(new Font("Arial", Font.PLAIN, LEGEND_FONT_SIZE));
         for (Entry<String, Graph> entry : graphs.entrySet()) {
             if (entry.getValue().isAlwaysHidden() || !entry.getValue().isVisible()) {
                 return;
@@ -176,7 +176,7 @@ public class GraphPanel extends JPanel {
         int lineEnd = width - legendSize;
 
         g2d.drawLine(lineStart, LEGEND_MARGIN + legendY, lineEnd, LEGEND_MARGIN + legendY);
-        legendY += g2d.getFontMetrics().getHeight();
+        legendY += LEGEND_FONT_SIZE;
 
         g2d.setColor(Color.BLACK);
         g2d.drawString(text, lineEnd+5, legendY+4);
@@ -188,7 +188,7 @@ public class GraphPanel extends JPanel {
     private void drawLegendBackground(Graphics2D g2d, int legendSize) {
         g2d.setColor(Color.WHITE);
         int startX = width - legendSize -30;
-        int endY = graphs.size()*LEGEND_FONT_SIZE+5;
+        int endY = graphs.size()*LEGEND_FONT_SIZE+10;
         g2d.fill(new Rectangle2D.Double(startX, 10, legendSize +LEGEND_MARGIN * 2, endY));
 
         g2d.setColor(Color.BLACK);
@@ -208,7 +208,7 @@ public class GraphPanel extends JPanel {
                 legendWidth = textWidth;
             }
         }
-        return legendWidth;
+        return legendWidth + LEGEND_MARGIN * 2;
     }
 
     /**

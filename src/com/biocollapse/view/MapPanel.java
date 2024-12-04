@@ -16,6 +16,7 @@ import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
+import javax.swing.border.TitledBorder;
 import src.com.biocollapse.model.Block;
 import src.com.biocollapse.model.Human;
 
@@ -104,6 +105,7 @@ public class MapPanel extends JPanel {
         legendPanel.add(createLegendItem(STATUS_INFECTED, COLOR_INFECTED, false));
 
         layoutPanel.add(legendPanel, BorderLayout.WEST);
+        layoutPanel.setBorder(new TitledBorder("Legende"));
         return layoutPanel;
     }
 

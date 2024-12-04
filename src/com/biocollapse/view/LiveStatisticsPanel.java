@@ -20,6 +20,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
 import javax.swing.JSplitPane;
+import javax.swing.border.TitledBorder;
 import javax.swing.event.ChangeEvent;
 import src.com.biocollapse.model.Graph;
 import src.com.biocollapse.model.GraphItem;
@@ -100,15 +101,12 @@ public class LiveStatisticsPanel extends JPanel {
         innerLegendPanelHolder.add(legendPanel, BorderLayout.WEST);
         legendPanelHolder.add(innerLegendPanelHolder, BorderLayout.NORTH);
         legendPanelHolder.setBorder(BorderFactory.createEmptyBorder(10, 10, 5, 5));
-        JLabel text = new JLabel("Live Daten");
-        text.setFont(new Font("Arial", Font.BOLD, 15));
-        legendPanel.add(text, makeGbc(0, text));
-        row++;
 
         GraphPanel graph = new GraphPanel(graphs);
         graph.setBackground(Color.WHITE);
         pane.setRightComponent(graph);
 
+        legendPanelHolder.setBorder(new TitledBorder("Live Daten"));
         topPanel.add(legendPanelHolder, BorderLayout.NORTH);
         topPanel.add(graphConfigPanel(graph), BorderLayout.CENTER);
 
@@ -129,11 +127,6 @@ public class LiveStatisticsPanel extends JPanel {
         int configRow = 0;
         GridBagLayout configGbl = new GridBagLayout();
         JPanel panel = new JPanel(configGbl);
-
-        JLabel text = new JLabel("Visualisation");
-        text.setFont(new Font("Arial", Font.BOLD, 15));
-        panel.add(text, makeConfigGbc(0, text, configRow));
-        configRow++;
 
         JLabel sliderLabel = new JLabel("Sichtbare Punkte ("+graph.getVisiblePoints()+")");
         sliderLabel.setFont(new Font("Arial", Font.PLAIN, 12));
@@ -173,6 +166,7 @@ public class LiveStatisticsPanel extends JPanel {
         innerLayoutPanel.add(panel, BorderLayout.NORTH);
         layoutPanel.add(innerLayoutPanel, BorderLayout.WEST);
         layoutPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 5, 5));
+        layoutPanel.setBorder(new TitledBorder("Visualisation"));
         return layoutPanel;
     }
 

@@ -48,6 +48,10 @@ public class LiveStatistics {
         this.timestamp = System.currentTimeMillis();
     }
 
+    /**
+     * Create a JSON entry of this object.
+     * @return JSON entry String
+     */
     public String toJSON() {
         return "{ \"alive\": " + alive +
                 ", \"infected\": " + infected +
@@ -59,6 +63,9 @@ public class LiveStatistics {
                 " }";
     }
 
+    /**
+     * Add to graph and set visibility, color and name.
+     */
     public List<GraphItem> toGraph(){
         List<GraphItem> items = new ArrayList<>();
         items.add(new GraphItem(STAT_ALIVE, alive, true, false, COLOR_ALIVE));
@@ -67,7 +74,6 @@ public class LiveStatistics {
         items.add(new GraphItem(STAT_IMMUNE, immune, true, false, COLOR_IMMUNE));
         items.add(new GraphItem(STAT_DEATHS, deaths, true, false, COLOR_DEATHS));
         items.add(new GraphItem(STAT_HOSPITAL_CAPACITY_RATIO, hospitalCapacityRatio, true, false, COLOR_HOSPITAL_CAPACITY_RATIO));
-        items.add(new GraphItem(STAT_DAY, day, true, true, COLOR_HOSPITAL_CAPACITY_RATIO));
         return items;
     }
 
@@ -97,5 +103,9 @@ public class LiveStatistics {
 
     public long getTimestamp() {
         return timestamp;
+    }
+
+    public int getDay() {
+        return day;
     }
 }
