@@ -48,24 +48,24 @@ public class SimulationService {
                     getRandomPosition(workplacePositions).copy(),
                     housePositions.get(i % housePositions.size()).copy()));
         }
-        int numberOfChildren = GlobalConfig.config.getChildrenRatio()/100 * populationSize;
-        int numberOfElderly = GlobalConfig.config.getElderlyRatio()/100 * populationSize;
-        
+        int totalChildren = GlobalConfig.config.getChildrenRatio()/100 * populationSize;
+        int childrenCreated = 0;
+        int totalElderly = GlobalConfig.config.getElderlyRatio()/100 * populationSize;
+
         // The size of this List is how many adults there are while its values are their indeces in the humans List
         // When an item is removed from this List the other associated values inside don't change.
         List<Integer> adultIndeces = IntStream.range(0, populationSize)
                                               .boxed()
                                               .collect(Collectors.toList());
-        for (int i=0 ; i < numberOfChildren + numberOfElderly ; i++) {
+        for (int i=0 ; i < totalChildren + totalElderly ; i++) {
             int randomIndex = GlobalRandom.getRandIntBetween(0, adultIndeces.size());
             int associatedIndex = adultIndeces.get(randomIndex);
 
-            if (numberOfChildren > 0) {
+            if (childrenCreated < totalChildren) {
                 humans.get(associatedIndex).setAge(Age.Child);
-                numberOfChildren--;
+                childrenCreated++;
             } else {
                 humans.get(associatedIndex).setAge(Age.Elder);
-                numberOfElderly--;
             }
             adultIndeces.remove(randomIndex);
         }
