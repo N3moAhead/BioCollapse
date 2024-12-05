@@ -64,7 +64,6 @@ public class SimulationController {
 
                 updateSimulation(tick);
 
-                updateSimulation(tick);
                 try {
                     // TODO: Find sweet spot. And let user fast forward or slow down (x2 / x0.5)
                     TimeUnit.MILLISECONDS.sleep(SIMULATION_FRAME_DELAY);
