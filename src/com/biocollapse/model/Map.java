@@ -1,17 +1,21 @@
 // Authors: Lukas, Sebastian, Johann
 package src.com.biocollapse.model;
 
-import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedList;
+import java.util.NoSuchElementException;
 import java.util.Queue;
-import java.util.Set;
-
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.Scanner;
 
+import javax.imageio.ImageIO;
+
 public class Map {
-    private static HashMap<String, File> mapList = new HashMap<String, File>();
+    private static ArrayList<String> mapList = new ArrayList<String>();
     public static final int MAP_WIDTH = 100;
     public static final int MAP_HEIGHT = 100;
 
@@ -27,96 +31,139 @@ public class Map {
         updateMapList();
     }
 
-    /*
-     * Creates a Map based on a name.
-     * The file extension .txt is not needed as this references the HashMap of all
-     * "loaded" files.
+    /**
+     * Creates a Map based on a fileName.
+     * The file extension is needed as this only supports files with .txt or .bmp
+     * extension.
      * 
-     * Valid filenames/keys are provided by getMapNames();
+     * Valid filenames are provided by `getMapNames();`
+     * 
+     * @param fileName
      */
-    public Map(String name) {
+    public Map(String fileName) {
+        // Initialize default map.
+        this.map = new Block[MAP_HEIGHT][MAP_WIDTH];
+        for (int row = 0 ; row < MAP_HEIGHT ; row++) {
+            Arrays.fill(this.map[row], Block.Grass);
+        }
+        // Try to read a map from a file
         try {
-            this.map = new Block[MAP_HEIGHT][MAP_WIDTH];
-            File mapFile = mapList.get(name);
-            Scanner mapReader = new Scanner(mapFile);
-            for (int row = 0; mapReader.hasNextLine() && row < MAP_HEIGHT; row++) {
-                String line = mapReader.nextLine();
-                char[] chars = line.toCharArray();
-                for (int col = 0; col < chars.length && col < MAP_WIDTH; col++) {
-                    if (isValidPosition(row, col)) {
-                        switch (chars[col]) {
-                            case 'g':
-                                this.map[row][col] = Block.Grass;
-                                break;
-                            case 'p':
-                                this.map[row][col] = Block.Path;
-                                break;
-                            case 'h':
-                                this.map[row][col] = Block.House;
-                                break;
-                            case 'H':
-                                this.map[row][col] = Block.Hospital;
-                                break;
-                            case 'w':
-                                this.map[row][col] = Block.Workplace;
-                                break;
+            if (mapList.contains(fileName)) {
+                // Determine file extension
+                int fileExtensionDot = fileName.lastIndexOf(".");
+                if (fileExtensionDot > 0) {
+                    String fileExtension = fileName.substring(fileExtensionDot, fileName.length());
 
-                            default:
-                                System.out.println("Invalid character found: " + chars[col]);
-                                break;
-                        }
-                    } else {
-                        System.out.printf("Invalid Position: row=%i, col=%i.\n", row, col);
+                    // Use correct function for given file extension
+                    File mapFile = new File("maps/" + fileName);
+                    switch (fileExtension.toLowerCase()) {
+                        case ".txt":
+                            Scanner mapReader = new Scanner(mapFile);
+                            for (int row = 0; mapReader.hasNextLine() && row < MAP_HEIGHT; row++) {
+                                char[] chars = mapReader.nextLine().toCharArray();
+                                for (int col = 0; col < chars.length && col < MAP_WIDTH; col++) {
+                                    this.map[row][col] = Block.fromChar(chars[col]);
+                                }
+                            }
+                            mapReader.close();
+                            break;
+                        case ".bmp":
+                            BufferedImage image = ImageIO.read(mapFile);
+                            for (int row = 0; row < image.getWidth() && row < MAP_HEIGHT; row++) {
+                                for (int col = 0; col < image.getHeight() && col < MAP_WIDTH; col++) {
+                                    this.map[row][col] = Block.fromColor(image.getRGB(row, col));
+                                }
+                            }
+                            break;
+                        default:
+                            throw new IOException("File extension '" + fileExtension + "' is not supported.");
                     }
+                } else {
+                    throw new IOException("Could not determine file type.");
                 }
+            } else {
+                throw new FileNotFoundException("File is not valid: " + fileName);
             }
-            mapReader.close();
         } catch (FileNotFoundException e) {
-            System.out.println("File not Found: maps/" + name + ".txt");
+            updateMapList();
+            System.out.println("Error: File not found.");
+            System.out.print("Valid map files are: ");
+            for (String mapName : mapList) {
+                System.out.print("'" + mapName + "', ");
+            }
+            System.out.println();
+            e.printStackTrace();
+
+        } catch (IOException e) {
+            System.out.println("Error while reading map: " + fileName);
             e.printStackTrace();
         }
     }
 
-    /*
-     * Chooses one map File from the maps folder to be used
-     * 
-     * As the file list is a set there is no first map and as such this might give
-     * different results if not specified.
+    /**
+     * Chooses the first map from the maps folder to be used.
      */
     public Map() {
         this(getSomeMapName());
     }
 
+    /**
+     * Update the list of valid map files from the map folder.
+     */
     public static void updateMapList() {
+        // Reset list to make sure old names are deleted
         mapList.clear();
-        final File mapFolder = new File("maps");
-        if (!mapFolder.exists()) {
-            mapFolder.mkdir();
-        } else {
-            final File[] mapFileArray = mapFolder.listFiles();
-            if (mapFileArray.length > 0) {
-                for (final File fileEntry : mapFolder.listFiles()) {
-                    mapList.put(fileEntry.getName().substring(0, fileEntry.getName().length() - 4), fileEntry);
-                    System.out.println(
-                            "Found file :" + fileEntry.getName().substring(0, fileEntry.getName().length() - 4));
+        try {
+            final File mapFolder = new File("maps");
+            if (mapFolder.exists()) {
+                final File[] mapFileArray = mapFolder.listFiles();
+                if (mapFileArray.length > 0) {
+                    for (int i = 0; i < mapFileArray.length; i++) {
+                        mapList.add(mapFileArray[i].getName());
+                    }
+                    mapList.sort(null);
+                } else {
+                    throw new FileNotFoundException("Error: No maps found.");
                 }
+            } else {
+                throw new FileNotFoundException("Error: 'maps' folder doesn't exist.");
             }
+        } catch (FileNotFoundException e) {
+            System.out.println("Error while updating list of valid map names.");
+            e.printStackTrace();
         }
     }
 
-    public static Set<String> getMapNames() {
-        return mapList.keySet();
+    /**
+     * Get a list of map names.
+     * 
+     * Map names are sorted alphabetically.
+     * 
+     * @return an Arraylist of valid file names.
+     */
+    public static ArrayList<String> getMapNames() {
+        return mapList;
     }
 
+    /**
+     * Get the first map name.
+     * 
+     * @return a valid map name
+     */
     public static String getSomeMapName() {
-        String someMapName = "";
-        for (String mapName : getMapNames()) {
-            someMapName = mapName;
-            break;
+        if (mapList.isEmpty()) {
+            throw new NoSuchElementException("List of maps is empty.");
         }
-        return someMapName;
+        return mapList.get(0);
     }
 
+    /**
+     * Function for printing the map in the terminal.
+     * 
+     * Used for Debugging purposes only.
+     * 
+     * Note: there is a problem, where Hospitals and Homes lookthe same.
+     */
     public void printMap() {
         for (int row = 0; row < MAP_HEIGHT; row++) {
             for (int col = 0; col < MAP_WIDTH; col++) {
@@ -170,6 +217,13 @@ public class Map {
         return null;
     }
 
+    /**
+     * Get a 2d Array to determine best path between two points.
+     * 
+     * @param from MapPosition
+     * @param to   MapPosition
+     * @return
+     */
     public Integer[][] getStepMatrix(MapPosition from, MapPosition to) {
         Queue<MapPosition> queue = new LinkedList<>();
         Integer[][] stepMatrix = new Integer[MAP_HEIGHT][MAP_WIDTH];
@@ -227,11 +281,4 @@ public class Map {
     public Block getBlock(MapPosition pos) {
         return getBlock(pos.getCol(), pos.getRow());
     }
-
-    // ! Just for debugging. Can be removed
-    public static void main(String[] args) {
-        Map test = new Map(getSomeMapName());
-        test.printMap();
-    }
-
 }

@@ -109,11 +109,11 @@ public class MapPanel extends JPanel {
 
     private void initLegend() {
         legend = new EnumMap<>(Block.class);
-        legend.put(Block.Grass, new Color(27, 48, 10));
-        legend.put(Block.Path, new Color(113, 113, 122));
-        legend.put(Block.Hospital, new Color(232, 78, 251));
-        legend.put(Block.House, new Color(217, 119, 6));
-        legend.put(Block.Workplace, new Color(30, 64, 175));
+        legend.put(Block.Grass, new Color(Block.Grass.getArgb()));
+        legend.put(Block.Path, new Color(Block.Path.getArgb()));
+        legend.put(Block.Hospital, new Color(Block.Hospital.getArgb()));
+        legend.put(Block.House, new Color(Block.House.getArgb()));
+        legend.put(Block.Workplace, new Color(Block.Workplace.getArgb()));
     }
 
     private JPanel createLegendItem(String name, Color c, boolean drawBackground) {
