@@ -32,6 +32,7 @@ public class Human {
 		this.pos = pos;
 		this.workPos = workPos;
 		this.homePos = homePos;
+		this.age = Age.Adult;
 
 		// On init a human spwans at an unknown
 		// location and his first action will be to walk home.
