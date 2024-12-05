@@ -106,44 +106,44 @@ public class SimulationController {
     /**
      * Returns true and a generates a summary if the simulation is complete.
      */
-    private boolean isSimulationComplete(LiveStatistics currenStatistics, int tick, int day) {
+    private boolean isSimulationComplete(LiveStatistics currentStatistics, int tick, int day) {
         boolean complete = false;
         StringBuilder b = new StringBuilder();
         b.append("<HTML><span style='font-weight: normal; font-size: 9px;'>");
-        if (currenStatistics.getAlive() == 0) {
+        if (currentStatistics.getAlive() == 0) {
             b.append("Die Simulation wurde am Tag ").append(day).append(" beendet, da alle Menschen an dem Virus gestorben sind.");
             complete = true;
-        } else if (currenStatistics.getInfected() == 0) {
+        } else if (currentStatistics.getInfected() == 0) {
             b.append("Die Simulation wurde am Tag ").append(day).append(" beendet, da es keine infizierten Personen mehr gab. Dank dir wurde die Menschheit gerettet!");
             complete = true;
         } else if (tick > (Config.SIMULATION_ONE_DAY_TICKS * Config.SIMULATION_MAX_DAYS)) {
             complete = true;
             b.append("Die Simulation wurde am Tag ").append(day).append(" beendet da die maximale Simulationsdauer erreicht wurde. Es haben noch einige Menschen überlebt. Die Population scheint also trotz Virus stabil zu sein. Gut gemacht!");
         }
-        if (tick > (Config.SIMULATION_ONE_DAY_TICKS * Config.SIMULATION_MAX_DAYS) || currenStatistics.getInfected() == 0) {
-            if (currenStatistics.getAlive() == 1) {
+        if (tick > (Config.SIMULATION_ONE_DAY_TICKS * Config.SIMULATION_MAX_DAYS) || currentStatistics.getInfected() == 0) {
+            if (currentStatistics.getAlive() == 1) {
                 b.append("<br>Nur ein einsamer Mensch hat überlebt.");
             } else {
                 b.append("<br>Es haben ")
-                .append(currenStatistics.getAlive())
+                .append(currentStatistics.getAlive())
                 .append(" Menschen ")
                 .append("(")
-                .append(humans.size()*currenStatistics.getAlive()/100)
+                .append((double) currentStatistics.getAlive() / humans.size()*100)
                 .append("%)")
                 .append(" überlebt.");
             }
             b
             .append("<br>Insgesamt sind ")
-            .append(currenStatistics.getImmune())
+            .append(currentStatistics.getImmune())
             .append(" Menschen ")
             .append("(")
-            .append(humans.size()*currenStatistics.getImmune()/100)
+            .append((double) currentStatistics.getImmune() / humans.size()*100)
             .append("%)")
             .append(" immun geworden und ")
-            .append(currenStatistics.getDeaths())
+            .append(currentStatistics.getDeaths())
             .append(" Menschen ")
             .append("(")
-            .append(humans.size()*currenStatistics.getDeaths()/100)
+            .append((double) currentStatistics.getDeaths() / humans.size() * 100)
             .append("%)")
             .append(" gestorben");
         }

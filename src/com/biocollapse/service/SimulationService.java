@@ -9,6 +9,7 @@ import src.com.biocollapse.model.Human;
 import src.com.biocollapse.model.LiveStatistics;
 import src.com.biocollapse.model.Map;
 import src.com.biocollapse.model.MapPosition;
+import src.com.biocollapse.util.GlobalConfig;
 import src.com.biocollapse.util.GlobalRandom;
 
 public class SimulationService {
@@ -34,7 +35,7 @@ public class SimulationService {
 
     private void createEntities(List<MapPosition> workplacePositions, List<MapPosition> housePositions,
             List<MapPosition> hospitalPositions, List<Human> humans, List<Hospital> hospitals) {
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < GlobalConfig.config.getPopulationSize(); i++) {
             humans.add(new Human(
                     (i % 5 == 0),
                     false,
