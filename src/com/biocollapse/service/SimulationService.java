@@ -3,6 +3,8 @@ package src.com.biocollapse.service;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import src.com.biocollapse.model.Age;
 import src.com.biocollapse.model.Block;
 import src.com.biocollapse.model.Hospital;
 import src.com.biocollapse.model.Human;
@@ -35,13 +37,33 @@ public class SimulationService {
 
     private void createEntities(List<MapPosition> workplacePositions, List<MapPosition> housePositions,
             List<MapPosition> hospitalPositions, List<Human> humans, List<Hospital> hospitals) {
-        for (int i = 0; i < GlobalConfig.config.getPopulationSize(); i++) {
+        int populationSize = GlobalConfig.config.getPopulationSize();
+        for (int i = 0; i < populationSize; i++) {
             humans.add(new Human(
                     (i % 5 == 0),
                     false,
                     housePositions.get(i % housePositions.size()).copy(),
                     getRandomPosition(workplacePositions).copy(),
                     housePositions.get(i % housePositions.size()).copy()));
+        }
+        // Default is Adult
+        // Children
+        int numberOfChildren = GlobalConfig.config.getChildrenRatio()/100 * populationSize;
+        for (int child=0 ; child < numberOfChildren ; child++) {
+            Human human = humans.get(GlobalRandom.getRandIntBetween(0, populationSize));
+            while (human.getAge() == Age.Adult) {
+                human = humans.get(GlobalRandom.getRandIntBetween(0, populationSize));
+            }
+            human.setAge(Age.Child);
+        }
+        // Elderly
+        int numberOfElderly = GlobalConfig.config.getElderlyRatio()/100 * populationSize;
+        for (int child=0 ; child < numberOfElderly ; child++) {
+            Human human = humans.get(GlobalRandom.getRandIntBetween(0, populationSize));
+            while (human.getAge() == Age.Adult) {
+                human = humans.get(GlobalRandom.getRandIntBetween(0, populationSize));
+            }
+            human.setAge(Age.Elder);
         }
         // Creating hospitals
         for (MapPosition hospitalPosition : hospitalPositions) {
