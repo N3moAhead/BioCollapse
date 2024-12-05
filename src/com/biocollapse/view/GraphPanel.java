@@ -75,7 +75,7 @@ public class GraphPanel extends JPanel {
     }
 
     /**
-     * Wheter to draw or not draw round points for each point. Setting to false will activate connections.
+     * Whether to draw or not draw round points for each point. Setting to false will activate connections.
      * @param drawPoints
      */
     public void setDrawPoints(boolean drawPoints) {
@@ -143,7 +143,7 @@ public class GraphPanel extends JPanel {
         g.drawString(TEXT_TIME, width - 20 - PADDING_RIGHT, height - 7);
         g.drawString("0", 2, height - 7);
 
-        // Draws the value indications for each quater.
+        // Draws the value indications for each quatre.
         drawLeftString(String.valueOf(highestVisibleNum), g2d, 2, PADDING_TOP + 5);
         drawLeftString(String.valueOf((float) highestVisibleNum / 2), g2d, 2, height / 2 + 5);
         drawLeftString(String.valueOf((float) highestVisibleNum / 4 + highestVisibleNum / 2), g2d, 2, height / 4 + 5);

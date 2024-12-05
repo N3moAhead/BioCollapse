@@ -115,8 +115,6 @@ public class Config {
     this.isolationMandate = isolationMandate;
     this.maskMandate = maskMandate;
     this.schoolClosure = schoolClosure;
-
-    System.out.println("AAA "+incubationTime);
   }
 
   public int getTicksAtLocation() {
