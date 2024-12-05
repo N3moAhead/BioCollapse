@@ -6,7 +6,6 @@ import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import src.com.biocollapse.controller.WindowController;
-import src.com.biocollapse.model.Config;
 import src.com.biocollapse.util.GlobalConfig;
 
 public class ConfigPanel extends JTabbedPane {
@@ -121,9 +120,9 @@ public class ConfigPanel extends JTabbedPane {
         // Virus Sliders
         infectionRadiusSlider = new JSlider(1, 10, GlobalConfig.config.getInfectionRadius());
         infectionProbabilitySlider = new JSlider(0, 100, GlobalConfig.config.getInfectionProbability());
-        incubationTimeSlider = new JSlider(0, 5, (int) (GlobalConfig.config.getIncubationTime() / Config.SIMULATION_ONE_DAY_TICKS));
+        incubationTimeSlider = new JSlider(0, 5, GlobalConfig.config.getConfiguredIncubationTime());
         mortalityRateSlider = new JSlider(0, 100, GlobalConfig.config.getMortalityRisk());
-        timeToDeathSlider = new JSlider(1, 20, (int) (GlobalConfig.config.getIncubationTime() / Config.SIMULATION_ONE_DAY_TICKS) > 0 ? (int) (GlobalConfig.config.getIncubationTime() / Config.SIMULATION_ONE_DAY_TICKS) : 1);
+        timeToDeathSlider = new JSlider(1, 20, GlobalConfig.config.getConfiguredInfectionTime());
         immunityChanceSlider = new JSlider(0, 100, GlobalConfig.config.getImmunityChance());
 
         // Population Sliders
@@ -205,9 +204,9 @@ public class ConfigPanel extends JTabbedPane {
         // Save Config parameters
         int infectionRadius = infectionRadiusSlider.getValue();
         int infectionProbability = infectionProbabilitySlider.getValue();
-        int incubationTime = incubationTimeSlider.getValue() * Config.SIMULATION_ONE_DAY_TICKS;
+        int incubationTime = incubationTimeSlider.getValue();
         int mortalityRate = mortalityRateSlider.getValue();
-        int timeToDeath = timeToDeathSlider.getValue() * Config.SIMULATION_ONE_DAY_TICKS;
+        int timeToDeath = timeToDeathSlider.getValue();
         int immunityChance = immunityChanceSlider.getValue();
 
         int hospitalCapacity = hospitalCapacitySlider.getValue();
