@@ -3,6 +3,10 @@ package src.com.biocollapse.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+
+import src.com.biocollapse.model.Age;
 import src.com.biocollapse.model.Block;
 import src.com.biocollapse.model.Hospital;
 import src.com.biocollapse.model.Human;
@@ -35,13 +39,35 @@ public class SimulationService {
 
     private void createEntities(List<MapPosition> workplacePositions, List<MapPosition> housePositions,
             List<MapPosition> hospitalPositions, List<Human> humans, List<Hospital> hospitals) {
-        for (int i = 0; i < GlobalConfig.config.getPopulationSize(); i++) {
+        int populationSize = GlobalConfig.config.getPopulationSize();
+        for (int i = 0; i < populationSize; i++) {
             humans.add(new Human(
                     (i % 5 == 0),
                     false,
                     housePositions.get(i % housePositions.size()).copy(),
                     getRandomPosition(workplacePositions).copy(),
                     housePositions.get(i % housePositions.size()).copy()));
+        }
+        int totalChildren = GlobalConfig.config.getChildrenRatio()/100 * populationSize;
+        int childrenCreated = 0;
+        int totalElderly = GlobalConfig.config.getElderlyRatio()/100 * populationSize;
+
+        // The size of this List is how many adults there are while its values are their indeces in the humans List
+        // When an item is removed from this List the other associated values inside don't change.
+        List<Integer> adultIndeces = IntStream.range(0, populationSize)
+                                              .boxed()
+                                              .collect(Collectors.toList());
+        for (int i=0 ; i < totalChildren + totalElderly ; i++) {
+            int randomIndex = GlobalRandom.getRandIntBetween(0, adultIndeces.size());
+            int associatedIndex = adultIndeces.get(randomIndex);
+
+            if (childrenCreated < totalChildren) {
+                humans.get(associatedIndex).setAge(Age.Child);
+                childrenCreated++;
+            } else {
+                humans.get(associatedIndex).setAge(Age.Elder);
+            }
+            adultIndeces.remove(randomIndex);
         }
         // Creating hospitals
         for (MapPosition hospitalPosition : hospitalPositions) {

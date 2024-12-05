@@ -119,7 +119,9 @@ public class Map {
                 final File[] mapFileArray = mapFolder.listFiles();
                 if (mapFileArray.length > 0) {
                     for (int i = 0; i < mapFileArray.length; i++) {
-                        mapList.add(mapFileArray[i].getName());
+                        if (!mapFileArray[i].getName().equals("pallete.bmp")) {
+                            mapList.add(mapFileArray[i].getName());
+                        }
                     }
                     mapList.sort(null);
                 } else {
