@@ -52,7 +52,7 @@ public class SimulationService {
         int numberOfElderly = GlobalConfig.config.getElderlyRatio()/100 * populationSize;
         
         // The size of this List is how many adults there are while its values are their indeces in the humans List
-        // When an item is removed from this List the other values inside don,t change.
+        // When an item is removed from this List the other associated values inside don't change.
         List<Integer> adultIndeces = IntStream.range(0, populationSize)
                                               .boxed()
                                               .collect(Collectors.toList());
