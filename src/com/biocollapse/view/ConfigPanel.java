@@ -5,12 +5,12 @@ import java.awt.*;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-
 import src.com.biocollapse.controller.WindowController;
 import src.com.biocollapse.model.Config;
 import src.com.biocollapse.util.GlobalConfig;
 
 public class ConfigPanel extends JTabbedPane {
+
     private JPanel virusPanel;
     private JPanel populationPanel;
     private JPanel measuresPanel;
@@ -37,7 +37,7 @@ public class ConfigPanel extends JTabbedPane {
 
     private JButton saveButton;
     private JButton backButton;
-    private WindowController controller;
+    private final WindowController controller;
     private JPanel mainPanel;
 
     public ConfigPanel(WindowController controller) {
@@ -119,36 +119,37 @@ public class ConfigPanel extends JTabbedPane {
         buttonPanel = new JPanel();
 
         // Virus Sliders
-        infectionRadiusSlider = new JSlider(1, 10, 6);
-        infectionProbabilitySlider = new JSlider(0, 100, 50);
-        incubationTimeSlider = new JSlider(0, 5, 3);
-        mortalityRateSlider = new JSlider(0, 100, 3);
-        timeToDeathSlider = new JSlider(1, 20, 14);
-        immunityChanceSlider = new JSlider(0, 100, 90);
+        infectionRadiusSlider = new JSlider(1, 10, GlobalConfig.config.getInfectionRadius());
+        infectionProbabilitySlider = new JSlider(0, 100, GlobalConfig.config.getInfectionProbability());
+        incubationTimeSlider = new JSlider(0, 5, (int) (GlobalConfig.config.getIncubationTime() / Config.SIMULATION_ONE_DAY_TICKS));
+        mortalityRateSlider = new JSlider(0, 100, GlobalConfig.config.getMortalityRisk());
+        timeToDeathSlider = new JSlider(1, 20, (int) (GlobalConfig.config.getIncubationTime() / Config.SIMULATION_ONE_DAY_TICKS) > 0 ? (int) (GlobalConfig.config.getIncubationTime() / Config.SIMULATION_ONE_DAY_TICKS) : 1);
+        immunityChanceSlider = new JSlider(0, 100, GlobalConfig.config.getImmunityChance());
 
         // Population Sliders
-        hospitalCapacitySlider = new JSlider(100, 1000, 300);
-        homeIsolationProbabilitySlider = new JSlider(0, 100, 50);
-        hospitalizationProbabilitySlider = new JSlider(0, 100, 80);
-        childrenRatioSlider = new JSlider(0, 100, 25);
-        adultRatioSlider = new JSlider(0, 100, 50);
-        elderlyRatioSlider = new JSlider(0, 100, 25);
+        hospitalCapacitySlider = new JSlider(100, 1000, GlobalConfig.config.getHospitalCapacity());
+        homeIsolationProbabilitySlider = new JSlider(0, 100, GlobalConfig.config.getIsolationProbability());
+        hospitalizationProbabilitySlider = new JSlider(0, 100, GlobalConfig.config.getHospitalProbability());
+        childrenRatioSlider = new JSlider(0, 100, GlobalConfig.config.getChildrenRatio());
+        adultRatioSlider = new JSlider(0, 100, GlobalConfig.config.getAdultRatio());
+        elderlyRatioSlider = new JSlider(0, 100, GlobalConfig.config.getElderlyRatio());
 
         // Measures Checkboxes
         lockdownCheckBox = new JCheckBox("Ausgangssperre");
+        lockdownCheckBox.setSelected(GlobalConfig.config.getLockdown());
         isolationCheckBox = new JCheckBox("Isolation");
+        isolationCheckBox.setSelected(GlobalConfig.config.getIsolationMandate());
         maskMandateCheckBox = new JCheckBox("Maskenpflicht");
+        maskMandateCheckBox.setSelected(GlobalConfig.config.getMaskMandate());
         schoolClosureCheckBox = new JCheckBox("Schulschließung");
+        schoolClosureCheckBox.setSelected(GlobalConfig.config.getSchoolClosure());
 
         saveButton = new JButton("Speichern");
         backButton = new JButton("Zurück");
 
-        ChangeListener sliderListener = new ChangeListener() {
-            @Override
-            public void stateChanged(ChangeEvent e) {
-                JSlider sourcSlider = (JSlider) e.getSource();
-                adjustSlider(sourcSlider);
-            }
+        ChangeListener sliderListener = (ChangeEvent e) -> {
+            JSlider sourcSlider = (JSlider) e.getSource();
+            adjustSlider(sourcSlider);
         };
 
         childrenRatioSlider.addChangeListener(sliderListener);
@@ -162,8 +163,7 @@ public class ConfigPanel extends JTabbedPane {
 
         // virus sliders with captions
         virusPanel.add(createSliderWithLabels(infectionRadiusSlider, "Infektionsradius:    ", 1, 10));
-        virusPanel
-                .add(createSliderWithLabels(infectionProbabilitySlider, "Ansteckungswahrscheinlichkeit:    ", 0, 100));
+        virusPanel.add(createSliderWithLabels(infectionProbabilitySlider, "Ansteckungswahrscheinlichkeit:    ", 0, 100));
         virusPanel.add(createSliderWithLabels(incubationTimeSlider, "Inkubationszeit:    ", 0, 5));
         virusPanel.add(createSliderWithLabels(mortalityRateSlider, "Mortalitätsrate:    ", 0, 100));
         virusPanel.add(createSliderWithLabels(timeToDeathSlider, "Zeit bis Tod möglich:    ", 1, 20));

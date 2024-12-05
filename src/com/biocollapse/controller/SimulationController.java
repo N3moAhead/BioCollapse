@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
-
 import javax.swing.SwingUtilities;
 import src.com.biocollapse.model.Block;
 import src.com.biocollapse.model.Config;
@@ -21,6 +20,7 @@ import src.com.biocollapse.view.SimulationPanel;
 public class SimulationController {
 
     public static int SIMULATION_FRAME_DELAY = 25;
+    public static double SIMULATION_MULTIPLIER = 1.0;
 
     // Models
     private final List<Hospital> hospitals = new ArrayList<>();
@@ -34,6 +34,7 @@ public class SimulationController {
 
     // Display
     private final SimulationPanel visualisation;
+    private String simulationCompleteReason;
 
     /**
      * The controller takes care of the main simulation loop.
@@ -41,6 +42,7 @@ public class SimulationController {
      */
     public SimulationController(SimulationPanel visualisation) {
         this.visualisation = visualisation;
+        SIMULATION_MULTIPLIER = 1.0;
         final Block[][] initMap = map.getMap();
         visualisation.setMap(initMap);
         simulationService.initializeSimulation(initMap, humans, hospitals);
@@ -65,10 +67,8 @@ public class SimulationController {
                 updateSimulation(tick);
 
                 try {
-                    // TODO: Find sweet spot. And let user fast forward or slow down (x2 / x0.5)
-                    TimeUnit.MILLISECONDS.sleep(SIMULATION_FRAME_DELAY);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+                    TimeUnit.MILLISECONDS.sleep((long)(SIMULATION_FRAME_DELAY/SIMULATION_MULTIPLIER));
+                } catch (Exception ignored) {
                 }
 
                 double fps = lastFps; // Needed for swingutilities to access scope.
@@ -79,10 +79,10 @@ public class SimulationController {
                 lastFps = 1.0 / tickTimeSeconds;
                 tick++;
 
-                isRunning.set(!isSimulationComplete(currentStats, tick));
+                isRunning.set(!isSimulationComplete(currentStats, tick, day));
             }
 
-            visualisation.simulationComplete();
+            visualisation.simulationComplete(simulationCompleteReason);
         }).start();
     }
 
@@ -102,14 +102,52 @@ public class SimulationController {
         infectionService.updateHumansStatus(humans, tick);
     }
 
-    private boolean isSimulationComplete(LiveStatistics currenStatistics, int tick) {
-        boolean result = false;
-
-        // Check for: Max Days, No one infected, all dead
-        if (currenStatistics.getInfected() == 0 || currenStatistics.getAlive() == 0
-                || tick > (Config.SIMULATION_ONE_DAY_TICKS * Config.SIMULATION_MAX_DAYS)) {
-            result = true;
+    /**
+     * Returns true and a generates a summary if the simulation is complete.
+     */
+    private boolean isSimulationComplete(LiveStatistics currentStatistics, int tick, int day) {
+        boolean complete = false;
+        StringBuilder b = new StringBuilder();
+        b.append("<HTML><span style='font-weight: normal; font-size: 9px;'>");
+        if (currentStatistics.getAlive() == 0) {
+            b.append("Die Simulation wurde am Tag ").append(day).append(" beendet, da alle Menschen an dem Virus gestorben sind.");
+            complete = true;
+        } else if (currentStatistics.getInfected() == 0) {
+            b.append("Die Simulation wurde am Tag ").append(day).append(" beendet, da es keine infizierten Personen mehr gab. Dank dir wurde die Menschheit gerettet!");
+            complete = true;
+        } else if (tick > (Config.SIMULATION_ONE_DAY_TICKS * Config.SIMULATION_MAX_DAYS)) {
+            complete = true;
+            b.append("Die Simulation wurde am Tag ").append(day).append(" beendet da die maximale Simulationsdauer erreicht wurde. Es haben noch einige Menschen überlebt. Die Population scheint also trotz Virus stabil zu sein. Gut gemacht!");
         }
-        return result;
+        if (tick > (Config.SIMULATION_ONE_DAY_TICKS * Config.SIMULATION_MAX_DAYS) || currentStatistics.getInfected() == 0) {
+            if (currentStatistics.getAlive() == 1) {
+                b.append("<br>Nur ein einsamer Mensch hat überlebt.");
+            } else {
+                b.append("<br>Es haben ")
+                .append(currentStatistics.getAlive())
+                .append(" Menschen ")
+                .append("(")
+                .append((double) currentStatistics.getAlive() / humans.size()*100)
+                .append("%)")
+                .append(" überlebt.");
+            }
+            b
+            .append("<br>Insgesamt sind ")
+            .append(currentStatistics.getImmune())
+            .append(" Menschen ")
+            .append("(")
+            .append((double) currentStatistics.getImmune() / humans.size()*100)
+            .append("%)")
+            .append(" immun geworden und ")
+            .append(currentStatistics.getDeaths())
+            .append(" Menschen ")
+            .append("(")
+            .append((double) currentStatistics.getDeaths() / humans.size() * 100)
+            .append("%)")
+            .append(" gestorben");
+        }
+        b.append("</span></HTML>");
+        simulationCompleteReason = b.toString();
+        return complete;
     }
 }
