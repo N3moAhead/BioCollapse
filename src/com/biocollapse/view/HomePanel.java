@@ -26,12 +26,17 @@ public class HomePanel extends JPanel{
         } catch (Exception e) {
             logoLabel = new JLabel(BIO_COLLAPSE_TITLE, SwingConstants.CENTER); // Fallback
         }
-        centerPanel.add(logoLabel, BorderLayout.CENTER);
+        logoLabel.setBorder(BorderFactory.createEmptyBorder(20, 0, 0, 0));
+        centerPanel.add(logoLabel, BorderLayout.NORTH);
 
-        JButton startSimulationButton = new JButton("Simulation starten");
+        JButton startSimulationButton = new JButton("Konfiguration starten");
         startSimulationButton.addActionListener(e -> {
             this.controller.showConfigScreen();
         });
+
+        JLabel credits = new JLabel("<html><div style='text-align: center;'>BioCollapse<br><span style='font-weight: normal;'>Die Virus Simulationssoftware um Auswirkungen eines potenziellen Virusausbruches,<br>sowie die Effektivität von Maßnahmen zur Eindämmung der Verbreitung zu analysieren.</span><br><br>Entwickelt von<br><span style='font-weight: normal;'>Lars, Lukas, Johann<br>Ina & Sebastian</span></div></html>", SwingConstants.CENTER);
+        centerPanel.add(credits, BorderLayout.CENTER);
+
 
         centerPanel.add(startSimulationButton, BorderLayout.SOUTH);
 
