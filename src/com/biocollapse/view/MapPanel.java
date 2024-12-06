@@ -32,8 +32,8 @@ public class MapPanel extends JPanel {
     private static final Color COLOR_INFECTED = new Color(220, 38, 38);
     private static final Color COLOR_HEALTHY = new Color(248, 250, 252);
 
-    private static final String STATUS_INFECTED = "Infected";
-    private static final String STATUS_HEALTHY = "Healthy";
+    private static final String STATUS_INFECTED = "Infiziert";
+    private static final String STATUS_HEALTHY = "Gesund";
 
     /**
      * This panel is responsible for displaying the map.
@@ -91,48 +91,6 @@ public class MapPanel extends JPanel {
         setPreferredSize(d);
     }
 
-    public JPanel legendPanel() {
-        if (legend == null) {
-            return new JPanel();
-        }
-        JPanel layoutPanel = new JPanel(new BorderLayout());
-        JPanel legendPanel = new JPanel();
-        for (Block b : Block.values()) {
-            legendPanel.add(createLegendItem(b.name(), legend.get(b), true));
-        }
-
-        legendPanel.add(createLegendItem(STATUS_HEALTHY, COLOR_HEALTHY, false));
-        legendPanel.add(createLegendItem(STATUS_INFECTED, COLOR_INFECTED, false));
-
-        layoutPanel.add(legendPanel, BorderLayout.WEST);
-        layoutPanel.setBorder(new TitledBorder("Legende"));
-        return layoutPanel;
-    }
-
-    private void initLegend() {
-        legend = new EnumMap<>(Block.class);
-        legend.put(Block.Grass, new Color(Block.Grass.getArgb()));
-        legend.put(Block.Path, new Color(Block.Path.getArgb()));
-        legend.put(Block.Hospital, new Color(Block.Hospital.getArgb()));
-        legend.put(Block.House, new Color(Block.House.getArgb()));
-        legend.put(Block.Workplace, new Color(Block.Workplace.getArgb()));
-    }
-
-    private JPanel createLegendItem(String name, Color c, boolean drawBackground) {
-        JPanel item = new JPanel();
-        JLabel label = new JLabel(name);
-        if (drawBackground) {
-            label.setForeground(Color.WHITE);
-            item.setBackground(c);
-            item.setBorder(BorderFactory.createLineBorder(Color.BLACK, 3));
-        } else {
-            item.setBorder(BorderFactory.createLineBorder(Color.BLACK, 3));
-            item.setBackground(new Color(c.getRed(), c.getGreen(), c.getBlue(), 90));
-        }
-        item.add(label);
-        return item;
-    }
-
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -188,7 +146,52 @@ public class MapPanel extends JPanel {
         g2d.fill(oval);
     }
 
-    public static Dimension getMapDimension() {
+    /**
+     * Returns a legend for the map.
+     */
+    public JPanel legendPanel() {
+        if (legend == null) {
+            return new JPanel();
+        }
+        JPanel layoutPanel = new JPanel(new BorderLayout());
+        JPanel legendPanel = new JPanel();
+        for (Block b : Block.values()) {
+            legendPanel.add(createLegendItem(b.getTitle(), legend.get(b), true));
+        }
+
+        legendPanel.add(createLegendItem(STATUS_HEALTHY, COLOR_HEALTHY, false));
+        legendPanel.add(createLegendItem(STATUS_INFECTED, COLOR_INFECTED, false));
+
+        layoutPanel.add(legendPanel, BorderLayout.WEST);
+        layoutPanel.setBorder(new TitledBorder("Legende"));
+        return layoutPanel;
+    }
+
+    private void initLegend() {
+        legend = new EnumMap<>(Block.class);
+        legend.put(Block.Grass, new Color(Block.Grass.getArgb()));
+        legend.put(Block.Path, new Color(Block.Path.getArgb()));
+        legend.put(Block.Hospital, new Color(Block.Hospital.getArgb()));
+        legend.put(Block.House, new Color(Block.House.getArgb()));
+        legend.put(Block.Workplace, new Color(Block.Workplace.getArgb()));
+    }
+
+    private JPanel createLegendItem(String name, Color c, boolean drawBackground) {
+        JPanel item = new JPanel();
+        JLabel label = new JLabel(name);
+        if (drawBackground) {
+            label.setForeground(Color.WHITE);
+            item.setBackground(c);
+            item.setBorder(BorderFactory.createLineBorder(Color.BLACK, 3));
+        } else {
+            item.setBorder(BorderFactory.createLineBorder(Color.BLACK, 3));
+            item.setBackground(new Color(c.getRed(), c.getGreen(), c.getBlue(), 90));
+        }
+        item.add(label);
+        return item;
+    }
+
+    private Dimension getMapDimension() {
         return new Dimension((int) (width * CELL_SIZE), (int) (height * CELL_SIZE));
     }
 }

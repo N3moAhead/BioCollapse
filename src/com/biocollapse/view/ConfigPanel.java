@@ -6,6 +6,7 @@ import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import src.com.biocollapse.controller.WindowController;
+import static src.com.biocollapse.controller.WindowController.BIO_COLLAPSE_LOGO_TEXT_PATH;
 import src.com.biocollapse.util.GlobalConfig;
 
 public class ConfigPanel extends JTabbedPane {
@@ -143,8 +144,8 @@ public class ConfigPanel extends JTabbedPane {
         schoolClosureCheckBox = new JCheckBox("Schulschließung");
         schoolClosureCheckBox.setSelected(GlobalConfig.config.getSchoolClosure());
 
-        saveButton = new JButton("Speichern");
-        backButton = new JButton("Zurück");
+        saveButton = new JButton("Virus freisetzen");
+        backButton = new JButton("Zum Startbildschirm");
 
         ChangeListener sliderListener = (ChangeEvent e) -> {
             JSlider sourcSlider = (JSlider) e.getSource();
@@ -191,8 +192,34 @@ public class ConfigPanel extends JTabbedPane {
         buttonPanel.add(backButton);
         buttonPanel.add(saveButton);
 
+        mainPanel.add(headerPanel(), BorderLayout.NORTH);
         mainPanel.add(this, BorderLayout.CENTER);
         mainPanel.add(buttonPanel, BorderLayout.SOUTH);
+    }
+
+    /**
+     * The header panel in the layout.
+     */
+    private JPanel headerPanel() {
+        JPanel header = new JPanel(new BorderLayout());
+
+        header.setBorder(BorderFactory.createEmptyBorder(5, 5, 0, 2));
+        JLabel label = new JLabel("Konfiguration");
+        label.setFont(new Font("Arial",Font.BOLD,16));
+        header.add(label, BorderLayout.WEST);
+
+        JLabel icon = new JLabel();
+        try {
+            Image originalImage = new ImageIcon(BIO_COLLAPSE_LOGO_TEXT_PATH).getImage();
+            int maxTextSize =  16;
+            int maxIconHeight = maxTextSize;
+            int maxIconWidth = (originalImage.getWidth(null) * maxIconHeight) / originalImage.getHeight(null);
+            icon.setIcon(new ImageIcon(originalImage.getScaledInstance(maxIconWidth, maxIconHeight, Image.SCALE_SMOOTH)));
+        } catch (Exception ignored) {
+        }
+        header.add(icon, BorderLayout.EAST);
+
+        return header;
     }
 
     private void addEventListener() {
