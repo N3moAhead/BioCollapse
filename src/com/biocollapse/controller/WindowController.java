@@ -52,7 +52,7 @@ public class WindowController extends JFrame {
 
     public void showSplashScreen() {
         splashScreen = new SplashPanel(this);
-        setContentPane(splashScreen.getPanel());
+        setContentPane(splashScreen);
         setVisible(true);
 
         splashScreen.startLoadingAnimation();
@@ -60,7 +60,7 @@ public class WindowController extends JFrame {
 
     public void showHomeScreen() {
         homeScreen = new HomePanel(this);
-        setContentPane(homeScreen.getPanel());
+        setContentPane(homeScreen);
         revalidate();
     }
 

@@ -6,6 +6,7 @@ import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import src.com.biocollapse.controller.WindowController;
+import static src.com.biocollapse.controller.WindowController.BIO_COLLAPSE_LOGO_TEXT_PATH;
 import src.com.biocollapse.util.GlobalConfig;
 
 public class ConfigPanel extends JTabbedPane {
@@ -201,10 +202,23 @@ public class ConfigPanel extends JTabbedPane {
      */
     private JPanel headerPanel() {
         JPanel header = new JPanel(new BorderLayout());
+
+        header.setBorder(BorderFactory.createEmptyBorder(5, 5, 0, 2));
         JLabel label = new JLabel("Konfiguration");
         label.setFont(new Font("Arial",Font.BOLD,16));
-        label.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
         header.add(label, BorderLayout.WEST);
+
+        JLabel icon = new JLabel();
+        try {
+            Image originalImage = new ImageIcon(BIO_COLLAPSE_LOGO_TEXT_PATH).getImage();
+            int maxTextSize =  16;
+            int maxIconHeight = maxTextSize;
+            int maxIconWidth = (originalImage.getWidth(null) * maxIconHeight) / originalImage.getHeight(null);
+            icon.setIcon(new ImageIcon(originalImage.getScaledInstance(maxIconWidth, maxIconHeight, Image.SCALE_SMOOTH)));
+        } catch (Exception ignored) {
+        }
+        header.add(icon, BorderLayout.EAST);
+
         return header;
     }
 
