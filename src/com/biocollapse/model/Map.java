@@ -1,21 +1,20 @@
 // Authors: Lukas, Sebastian, Johann
 package src.com.biocollapse.model;
 
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.NoSuchElementException;
 import java.util.Queue;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.Scanner;
-
 import javax.imageio.ImageIO;
 
 public class Map {
-    private static ArrayList<String> mapList = new ArrayList<String>();
+    private static ArrayList<String> mapList = new ArrayList<>();
     public static final int MAP_WIDTH = 100;
     public static final int MAP_HEIGHT = 100;
 
@@ -57,26 +56,26 @@ public class Map {
                     // Use correct function for given file extension
                     File mapFile = new File("maps/" + fileName);
                     switch (fileExtension.toLowerCase()) {
-                        case ".txt":
-                            Scanner mapReader = new Scanner(mapFile);
-                            for (int row = 0; mapReader.hasNextLine() && row < MAP_HEIGHT; row++) {
-                                char[] chars = mapReader.nextLine().toCharArray();
-                                for (int col = 0; col < chars.length && col < MAP_WIDTH; col++) {
-                                    this.map[row][col] = Block.fromChar(chars[col]);
+                        case ".txt" -> {
+                            try (Scanner mapReader = new Scanner(mapFile)) {
+                                for (int row = 0; mapReader.hasNextLine() && row < MAP_HEIGHT; row++) {
+                                    char[] chars = mapReader.nextLine().toCharArray();
+                                    for (int col = 0; col < chars.length && col < MAP_WIDTH; col++) {
+                                        this.map[row][col] = Block.fromChar(chars[col]);
+                                    }
                                 }
                             }
-                            mapReader.close();
-                            break;
-                        case ".bmp":
+                        }
+
+                        case ".bmp" -> {
                             BufferedImage image = ImageIO.read(mapFile);
                             for (int row = 0; row < image.getWidth() && row < MAP_HEIGHT; row++) {
                                 for (int col = 0; col < image.getHeight() && col < MAP_WIDTH; col++) {
                                     this.map[row][col] = Block.fromColor(image.getRGB(row, col));
                                 }
                             }
-                            break;
-                        default:
-                            throw new IOException("File extension '" + fileExtension + "' is not supported.");
+                        }
+                        default -> throw new IOException("File extension '" + fileExtension + "' is not supported.");
                     }
                 } else {
                     throw new IOException("Could not determine file type.");
@@ -92,11 +91,9 @@ public class Map {
                 System.out.print("'" + mapName + "', ");
             }
             System.out.println();
-            e.printStackTrace();
 
         } catch (IOException e) {
             System.out.println("Error while reading map: " + fileName);
-            e.printStackTrace();
         }
     }
 
@@ -118,9 +115,9 @@ public class Map {
             if (mapFolder.exists()) {
                 final File[] mapFileArray = mapFolder.listFiles();
                 if (mapFileArray.length > 0) {
-                    for (int i = 0; i < mapFileArray.length; i++) {
-                        if (!mapFileArray[i].getName().equals("pallete.bmp")) {
-                            mapList.add(mapFileArray[i].getName());
+                    for (File mapFileArray1 : mapFileArray) {
+                        if (!mapFileArray1.getName().equals("pallete.bmp")) {
+                            mapList.add(mapFileArray1.getName());
                         }
                     }
                     mapList.sort(null);
@@ -132,7 +129,6 @@ public class Map {
             }
         } catch (FileNotFoundException e) {
             System.out.println("Error while updating list of valid map names.");
-            e.printStackTrace();
         }
     }
 

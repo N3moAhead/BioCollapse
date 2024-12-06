@@ -38,7 +38,6 @@ public class WindowController extends JFrame {
     public WindowController() {
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         setBounds(0, 10, screenSize.width, screenSize.height);
-        setVisible(true);
 
         setTitle(BIO_COLLAPSE_TITLE);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -47,6 +46,8 @@ public class WindowController extends JFrame {
             setIconImage(new ImageIcon(BIO_COLLAPSE_LOGO_PAINTING_PATH).getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH));
         } catch (Exception ignored) {
         }
+
+        setVisible(true);
     }
 
     public void showSplashScreen() {

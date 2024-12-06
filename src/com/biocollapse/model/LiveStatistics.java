@@ -9,16 +9,13 @@ public class LiveStatistics {
 
     public static final String STAT_ALIVE = "Lebendig";
     private static final String STAT_INFECTED = "Infiziert";
-    private static final String STAT_RECOVERED = "Erholt";
     private static final String STAT_HEALTHY = "Gesund";
     private static final String STAT_IMMUNE = "Immun";
     private static final String STAT_DEATHS = "Tod";
     private static final String STAT_HOSPITAL_CAPACITY_RATIO = "Krankenhausauslastung";
-    private static final String STAT_DAY = "Tag";
 
     private static final Color COLOR_ALIVE = Color.BLUE;
     private static final Color COLOR_INFECTED = Color.RED;
-    private static final Color COLOR_RECOVERED = Color.YELLOW;
     private static final Color COLOR_HEALTHY = Color.GREEN;
     private static final Color COLOR_IMMUNE = Color.ORANGE;
     private static final Color COLOR_DEATHS = Color.BLACK;

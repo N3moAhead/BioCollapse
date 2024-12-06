@@ -143,8 +143,8 @@ public class ConfigPanel extends JTabbedPane {
         schoolClosureCheckBox = new JCheckBox("Schulschließung");
         schoolClosureCheckBox.setSelected(GlobalConfig.config.getSchoolClosure());
 
-        saveButton = new JButton("Speichern");
-        backButton = new JButton("Zurück");
+        saveButton = new JButton("Virus freisetzen");
+        backButton = new JButton("Zum Startbildschirm");
 
         ChangeListener sliderListener = (ChangeEvent e) -> {
             JSlider sourcSlider = (JSlider) e.getSource();
@@ -191,8 +191,21 @@ public class ConfigPanel extends JTabbedPane {
         buttonPanel.add(backButton);
         buttonPanel.add(saveButton);
 
+        mainPanel.add(headerPanel(), BorderLayout.NORTH);
         mainPanel.add(this, BorderLayout.CENTER);
         mainPanel.add(buttonPanel, BorderLayout.SOUTH);
+    }
+
+    /**
+     * The header panel in the layout.
+     */
+    private JPanel headerPanel() {
+        JPanel header = new JPanel(new BorderLayout());
+        JLabel label = new JLabel("Konfiguration");
+        label.setFont(new Font("Arial",Font.BOLD,16));
+        label.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+        header.add(label, BorderLayout.WEST);
+        return header;
     }
 
     private void addEventListener() {
