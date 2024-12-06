@@ -31,10 +31,10 @@ public class InfectionService {
      * @param humans
      * @param infectedPos
      */
-    public void updateInfectedPositions(Human human) {
+    public void updateInfectedPositions(Human human, int currentTick) {
         int infectionRadius = GlobalConfig.config.getInfectionRadius();
         MapPosition pos = human.getPos();
-        if (human.isInfected() && human.isAlive() && !human.isHospitalized()) {
+        if (human.isContagious(currentTick) && human.isAlive() && !human.isHospitalized()) {
             // Check if we have to infect only one field or a radius
             if (infectionRadius > 1) {
                 markInfectedRadius(pos, infectionRadius);
@@ -113,29 +113,38 @@ public class InfectionService {
             Age humanAge = human.getAge();
 
             // being an elder or a child increases mortality risk and infection time
-            int effectiveMortalityRisk = humanAge == Age.Adult ? mortalityRisk
+            int effectiveMortalityRisk = humanAge == Age.Adult
+                    ? mortalityRisk
                     : mortalityRisk + mortalityRisk / GlobalConfig.config.getAgeEffect();
-            int effectiveinfectionTime = humanAge == Age.Adult ? infectionTime
+            int effectiveinfectionTime = humanAge == Age.Adult
+                    ? infectionTime
                     : infectionTime + infectionTime / GlobalConfig.config.getAgeEffect();
 
             // hospitalization decreases mortality risk and infection time
             effectiveMortalityRisk = human.isHospitalized() ? effectiveMortalityRisk / 4 : effectiveMortalityRisk;
             effectiveinfectionTime = human.isHospitalized() ? effectiveinfectionTime / 2 : effectiveinfectionTime;
 
-            // if still within infectionTime a human has a probability to die
-            if (currentTick - human.getInfectedAt() <= effectiveinfectionTime) {
+            int ticksSinceInfection = currentTick - human.getInfectedAt();
+
+            int incubationTime = GlobalConfig.config.getIncubationTime();
+            int infectionTime = incubationTime + GlobalConfig.config.getInfectionTime();
+
+            // After the infection time is over, the probability of the user dying will be
+            // called once
+            if (ticksSinceInfection > infectionTime) {
                 if (GlobalRandom.checkProbability(effectiveMortalityRisk)) {
                     human.setAlive(false);
-                }
-            } else { // otherwise they are healed and have a chance to become immune
-                human.setInfected(false);
+                } else {
+                    human.setInfected(false);
 
-                // Adults have a better chance at becoming immune than children and the elderly
-                int effectiveImmunityChance = humanAge == Age.Adult ? immunityChance + immunityChance / 2
-                        : immunityChance;
+                    // Adults have a better chance at becoming immune than children and the elderly
+                    int effectiveImmunityChance = humanAge == Age.Adult
+                            ? immunityChance + immunityChance / 2
+                            : immunityChance;
 
-                if (GlobalRandom.checkProbability(effectiveImmunityChance)) {
-                    human.setImmune(true);
+                    if (GlobalRandom.checkProbability(effectiveImmunityChance)) {
+                        human.setImmune(true);
+                    }
                 }
             }
         }

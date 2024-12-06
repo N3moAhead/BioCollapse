@@ -47,7 +47,7 @@ public class Human {
 	 */
 	public void updateHumanGoal(Map map, int tick) {
 		Block blockGoal = map.getBlock(this.goalPos);
-		if (this.infected) {
+		if (isContagious(tick)) {
 			int hospitalProbability = GlobalConfig.config.getHospitalProbability();
 			int isolationProbability = GlobalConfig.config.getIsolationProbability();
 			// If the person is infected, they have a chance to change their destination to
@@ -161,6 +161,19 @@ public class Human {
 
 	public void setAge(Age age) {
 		this.age = age;
+	}
+
+	public boolean isContagious(int currentTick) {
+		if (!infected)
+			return false;
+
+		int ticksSinceInfection = currentTick - infectedAt;
+		int incubationTime = GlobalConfig.config.getIncubationTime();
+
+		if (ticksSinceInfection > incubationTime) {
+			return true;
+		}
+		return false;
 	}
 
 	public boolean isInfected() {
