@@ -264,6 +264,8 @@ public class GraphPanel extends JPanel {
 
         int i = 0;
         int size = 0;
+        double percentageValue = (double)(height - 2*  PADDING_BOTTOM) / 100;
+        double defaultValue = (double)(height - 2*  PADDING_BOTTOM) / (double) highestVisibleNum;
 
         if (reverseFinalState) {
             for (int j = 0; j <= graph.size()-1; j++) {
@@ -274,9 +276,9 @@ public class GraphPanel extends JPanel {
                 double x = i * cellSize + PADDING_LEFT;
                 double y;
                 if (graph.getType() == GraphType.PERCENTAGE) {
-                    y = (height- PADDING_BOTTOM) - ((double)(height - 2*  PADDING_BOTTOM) / 100 * graph.get(j).getValue());
+                    y = (height- PADDING_BOTTOM) - (percentageValue * graph.get(j).getValue());
                 } else {
-                    y = (height- PADDING_BOTTOM) - ((double)(height - 2*  PADDING_BOTTOM) / (double) highestVisibleNum * graph.get(j).getValue());
+                    y = (height- PADDING_BOTTOM) - (defaultValue * graph.get(j).getValue());
                 }
 
                 drawPoint(prevX, prevY, x, y, g2d, i);
@@ -293,9 +295,9 @@ public class GraphPanel extends JPanel {
                 double x = i * cellSize + PADDING_LEFT;
                 double y;
                 if (graph.getType() == GraphType.PERCENTAGE) {
-                    y = (height- PADDING_BOTTOM) - ((double)(height - 2*  PADDING_BOTTOM) / 100 * graph.get(j).getValue());
+                    y = (height- PADDING_BOTTOM) - (percentageValue * graph.get(j).getValue());
                 } else {
-                    y = (height- PADDING_BOTTOM) - ((double)(height - 2*  PADDING_BOTTOM) / (double) highestVisibleNum * graph.get(j).getValue());
+                    y = (height- PADDING_BOTTOM) - (defaultValue * graph.get(j).getValue());
                 }
 
                 drawPoint(prevX, prevY, x, y, g2d, i);
