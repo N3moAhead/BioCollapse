@@ -136,7 +136,7 @@ public class InfectionService {
                     human.setAlive(false);
                 } else {
                     human.setInfected(false);
-
+                    human.setInfectedDecisionMade(false);
                     // Adults have a better chance at becoming immune than children and the elderly
                     int effectiveImmunityChance = humanAge == Age.Adult
                             ? immunityChance + immunityChance / 2

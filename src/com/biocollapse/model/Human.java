@@ -15,16 +15,11 @@ public class Human {
 	private MapPosition goalPos;
 	private MapPosition workPos;
 	private MapPosition homePos;
-	private MapPosition previouPosition;
 	private Integer reachedLocationAt = null;
-
-	public MapPosition getPreviouPosition() {
-		return previouPosition;
-	}
-
-	public void setPreviouPosition(MapPosition previouPosition) {
-		this.previouPosition = previouPosition;
-	}
+	// Represents whether a person has already made a decision whether to go home or
+	// go to hospital once they have been infected
+	private boolean infectedDecisionMade = false;
+	private boolean pretendsToBeHealthy = false;
 
 	public Human(boolean infected, boolean immune, MapPosition pos, MapPosition workPos, MapPosition homePos) {
 		this.infected = infected;
@@ -40,7 +35,7 @@ public class Human {
 	}
 
 	/**
-	 * updates the destination of the human according to different probabilites
+	 * Updates the destination of the human according to different probabilites
 	 * 
 	 * @param map  the map where a human walks
 	 * @param tick current tick
@@ -48,57 +43,90 @@ public class Human {
 	public void updateHumanGoal(Map map, int tick) {
 		Block blockGoal = map.getBlock(this.goalPos);
 		if (isContagious(tick)) {
-			int hospitalProbability = GlobalConfig.config.getHospitalProbability();
-			int isolationProbability = GlobalConfig.config.getIsolationProbability();
-			// If the person is infected, they have a chance to change their destination to
-			// a hospital or stay at home.
-			if (GlobalConfig.config.getIsolationMandate()) {
-				isolationProbability = isolationProbability * GlobalConfig.config.getIsolationEffect();
-			}
-			// If human is not on its way to a hospital and the hospitalProbability checks
-			// the human will go to the hospital
-			if (blockGoal != Block.Hospital && GlobalRandom.checkProbability(hospitalProbability)) {
-				MapPosition nearestHospital = map.findNearest(Block.Hospital, this.pos.copy());
-				if (nearestHospital != null) {
-					this.setGoalPos(nearestHospital);
-				}
-			} else if (blockGoal != Block.Hospital && GlobalRandom.checkProbability(isolationProbability)) {
-				// Todo ensure that the isolation does not get revoked in the next
-				this.setGoalPos(homePos);
-			}
+			setGoalWhenInfected(blockGoal, map, tick);
 		} else {
-			// When a person reaches their destination, they return home or go to work.
-			if (this.pos.equals(this.goalPos)) {
-				// let them stay at home for a while
-				if (this.reachedLocationAt == null) {
-					this.setReachedLocationAt(tick);
-				} else {
-					// If the human has not stayed long enough at one specific location he will stay
-					// there for a while
-					if (tick - reachedLocationAt < GlobalConfig.config.getTicksAtLocation())
-						return;
-					// There is a chance that a person will stay at home which can be increased when
-					// the lockdownMandate is true
-					int lockdownProbability = 0;
-					int effectiveLockdownProbability;
-					if (GlobalConfig.config.getLockdown() || GlobalConfig.config.getSchoolClosure()) {
-						effectiveLockdownProbability = GlobalConfig.config.getLockdownEffect();
-					} else {
-						effectiveLockdownProbability = lockdownProbability;
-					}
+			// When we reach this code, the person is truly healthy, and the person can stop
+			// pretending to be healthy if they were. See the setGoalWhenInfected function
+			// for more information.
+			pretendsToBeHealthy = false;
+			setGoalWhenHealthy(blockGoal, map, tick);
+		}
+	}
+
+	/**
+	 * Once a person is infected, three things can happen. Either the person goes to
+	 * hospital. Or they isolate themselves at home. Or, finally, the person
+	 * pretends to be healthy and goes on living as before.
+	 * 
+	 * @param blockGoal
+	 * @param map
+	 */
+	private void setGoalWhenInfected(Block blockGoal, Map map, int tick) {
+		int hospitalProbability = GlobalConfig.config.getHospitalProbability();
+
+		// If human is not on its way to a hospital and the hospitalProbability checks
+		// the human will go to the hospital
+		if (!infectedDecisionMade) {
+			if (GlobalRandom.checkProbability(hospitalProbability)) {
+				setGoalToNearestHospital(map);
+			} else if (GlobalConfig.config.getIsolationMandate()
+					|| GlobalRandom.checkProbability(GlobalConfig.config.getIsolationProbability())) {
+				// Theres a chance a human isolates himself at home
+				setGoalPos(homePos);
+			} else {
+				pretendsToBeHealthy = true;
+				// If a human does not go into the hospital or isolates himself at home he just
+				// goes on living life as usual
+				setGoalWhenHealthy(blockGoal, map, tick);
+			}
+			infectedDecisionMade = true;
+		}
+
+		if (pretendsToBeHealthy) {
+			setGoalWhenHealthy(blockGoal, map, tick);
+		}
+	}
+
+	/**
+	 * Sets the goal to the nearest Hospital. If there is no hospital in reach the
+	 * function has a fallback to the home position
+	 * 
+	 * @param map
+	 */
+	private void setGoalToNearestHospital(Map map) {
+		MapPosition nearestHospital = map.findNearest(Block.Hospital, pos.copy());
+		if (nearestHospital != null) {
+			setGoalPos(nearestHospital);
+		} else {
+			// It should not be the case that there is no hospital within reach, but in the
+			// event that it happens, the person will simply go home.
+			setGoalPos(homePos);
+		}
+	}
+
+	private void setGoalWhenHealthy(Block blockGoal, Map map, int tick) {
+		// When the lockdown mandate is active healty humans want to stay at home
+		if (blockGoal != Block.House && (GlobalConfig.config.getLockdown() || GlobalConfig.config.getSchoolClosure())) {
+			setGoalPos(homePos);
+		}
+
+		// When a person reaches their destination, they return home or go to work.
+		if (pos.equals(goalPos)) {
+			// let them stay at home for a while
+			if (reachedLocationAt == null) {
+				setReachedLocationAt(tick);
+			} else {
+				// If the human has not stayed long enough at one specific location he will stay
+				// there for a while
+				if (tick - reachedLocationAt > GlobalConfig.config.getTicksAtLocation()) {
 					if (blockGoal == Block.Workplace) {
 						// set it to null because we left the current location
-						this.setReachedLocationAt(null);
-						this.setGoalPos(this.homePos);
+						setReachedLocationAt(null);
+						setGoalPos(homePos);
 					} else {
-						// There is a chance that a person will stay at home
-						if (GlobalRandom.checkProbability(effectiveLockdownProbability)) {
-							this.setReachedLocationAt(tick);
-						} else {
-							// Set it to null because we left the current location
-							this.setReachedLocationAt(null);
-							this.setGoalPos(workPos);
-						}
+						// Set it to null because we left the current location
+						setReachedLocationAt(null);
+						setGoalPos(workPos);
 					}
 				}
 			}
@@ -115,11 +143,11 @@ public class Human {
 		MovementAction bestDirection = MovementAction.NONE;
 		int smallestSteps = Integer.MAX_VALUE;
 
-		if (this.pos.equals(this.goalPos)) {
+		if (pos.equals(goalPos)) {
 			return;
 		}
 
-		Integer[][] stepMatrix = map.getStepMatrix(this.goalPos, this.pos);
+		Integer[][] stepMatrix = map.getStepMatrix(goalPos, pos);
 		if (stepMatrix == null) {
 			return;
 		}
@@ -128,11 +156,11 @@ public class Human {
 		for (MovementAction direction : MovementAction.values()) {
 			if (direction != MovementAction.NONE) { // Skip "NONE" direction
 				try {
-					MapPosition newPos = this.pos.getByMove(direction);
+					MapPosition newPos = pos.getByMove(direction);
 					Block blockAtNewPos = map.getBlock(newPos);
 
 					// Only consider positions that are walkable
-					if (blockAtNewPos == Block.Path || newPos.equals(this.goalPos)) {
+					if (blockAtNewPos == Block.Path || newPos.equals(goalPos)) {
 						Integer currentSteps = stepMatrix[newPos.getRow()][newPos.getCol()];
 						if (currentSteps != null && currentSteps < smallestSteps) {
 							smallestSteps = currentSteps;
@@ -149,6 +177,14 @@ public class Human {
 
 	public Integer getReachedLocationAt() {
 		return reachedLocationAt;
+	}
+
+	public void setInfectedDecisionMade(boolean infectedDecisionMade) {
+		this.infectedDecisionMade = infectedDecisionMade;
+	}
+
+	public boolean getInfectedDecisionMade() {
+		return this.infectedDecisionMade;
 	}
 
 	public void setReachedLocationAt(Integer reachedLocationAt) {
