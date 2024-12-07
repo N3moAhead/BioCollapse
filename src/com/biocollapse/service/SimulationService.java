@@ -59,7 +59,7 @@ public class SimulationService {
                 .boxed()
                 .collect(Collectors.toList());
         for (int i = 0; i < totalChildren + totalElderly; i++) {
-            int randomIndex = GlobalRandom.getRandIntBetween(0, adultIndeces.size()-1);
+            int randomIndex = GlobalRandom.getRandIntBetween(0, adultIndeces.size() - 1);
             int associatedIndex = adultIndeces.get(randomIndex);
 
             if (childrenCreated < totalChildren) {
@@ -91,24 +91,24 @@ public class SimulationService {
      */
     public LiveStatistics calculateLiveStatistics(List<Human> humans, List<Hospital> hospitals, int day) {
         int infectedCounter = 0;
-        int healthyCounter = humans.size();
+        int healthyCounter = 0;
         int immuneCounter = 0;
-        int aliveCounter = humans.size();
+        int aliveCounter = 0;
         int deathCounter = 0;
         int hospitalCapacity = 0;
         int usedHospitalCapacity = 0;
         Integer hospitalCapacityRatio = 0;
 
         for (Human human : humans) {
-            if (human.isInfected()) {
+            if (!human.isInfected() && human.isAlive()) {
+                healthyCounter++;
+            } else if (human.isInfected() && human.isAlive()) {
                 infectedCounter++;
-                healthyCounter = (healthyCounter > 0) ? healthyCounter -= 1 : healthyCounter;
             }
-            if (!human.isAlive()) {
+            if (human.isAlive()) {
+                aliveCounter++;
+            } else {
                 deathCounter++;
-                aliveCounter = (aliveCounter > 0) ? aliveCounter -= 1 : aliveCounter;
-                healthyCounter = (healthyCounter > 0) ? healthyCounter -= 1 : healthyCounter;
-                infectedCounter = (infectedCounter > 0) ? infectedCounter -= 1 : infectedCounter;
             }
             // This case can only occur after someone was infected
             if (human.isImmune() && human.isAlive()) {

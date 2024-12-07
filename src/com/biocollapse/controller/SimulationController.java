@@ -114,16 +114,16 @@ public class SimulationController {
         StringBuilder b = new StringBuilder();
         b.append("<HTML><span style='font-weight: normal; font-size: 9px;'>");
         if (currentStatistics.getAlive() == 0) {
-            b.append("Die Simulation wurde am Tag ").append(day)
+            b.append("Die Simulation wurde in Woche ").append(day)
                     .append(" beendet, da alle Menschen an dem Virus gestorben sind.");
             complete = true;
         } else if (currentStatistics.getInfected() == 0) {
-            b.append("Die Simulation wurde am Tag ").append(day).append(
+            b.append("Die Simulation wurde in Woche ").append(day).append(
                     " beendet, da es keine infizierten Personen mehr gab. Dank dir wurde die Menschheit gerettet!");
             complete = true;
         } else if (tick > (Config.SIMULATION_ONE_DAY_TICKS * Config.SIMULATION_MAX_DAYS)) {
             complete = true;
-            b.append("Die Simulation wurde am Tag ").append(day).append(
+            b.append("Die Simulation wurde in Woche ").append(day).append(
                     " beendet da die maximale Simulationsdauer erreicht wurde. Es haben noch einige Menschen überlebt. Die Population scheint also trotz Virus stabil zu sein. Gut gemacht!");
         }
         if (tick > (Config.SIMULATION_ONE_DAY_TICKS * Config.SIMULATION_MAX_DAYS)
