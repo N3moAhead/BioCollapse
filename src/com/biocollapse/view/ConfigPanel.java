@@ -179,7 +179,7 @@ public class ConfigPanel extends JTabbedPane {
         virusPanel.add(createSliderWithLabels(immunityChanceSlider, "Immunitätschance nach Genesung:    ", 0, 100));
 
         // population sliders with captions
-        populationPanel.add(createSliderWithLabels(hospitalCapacitySlider, "Krankenhauskapazität:    ", 100, 1000));
+        populationPanel.add(createSliderWithLabels(hospitalCapacitySlider, "Krankenhauskapazität:    ", 50, 500));
         populationPanel.add(createSliderWithLabels(homeIsolationProbabilitySlider,
                 "Wahrscheinlichkeit für Heimquarantäne:    ", 0, 100));
         populationPanel.add(createSliderWithLabels(hospitalizationProbabilitySlider,
