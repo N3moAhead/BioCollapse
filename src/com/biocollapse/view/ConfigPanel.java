@@ -126,7 +126,7 @@ public class ConfigPanel extends JTabbedPane {
         infectionProbabilitySlider = new JSlider(0, 100, GlobalConfig.config.getInfectionProbability());
         incubationTimeSlider = new JSlider(0, 5, GlobalConfig.config.getConfiguredIncubationTime());
         mortalityRateSlider = new JSlider(0, 100, GlobalConfig.config.getMortalityRisk());
-        timeToDeathSlider = new JSlider(1, 20, GlobalConfig.config.getConfiguredInfectionTime());
+        timeToDeathSlider = new JSlider(1, 10, GlobalConfig.config.getConfiguredInfectionTime());
         immunityChanceSlider = new JSlider(0, 100, GlobalConfig.config.getImmunityChance());
 
         // Population Sliders
@@ -171,7 +171,8 @@ public class ConfigPanel extends JTabbedPane {
 
         // virus sliders with captions
         virusPanel.add(createSliderWithLabels(infectionRadiusSlider, "Infektionsradius:    ", 1, 10));
-        virusPanel.add(createSliderWithLabels(infectionProbabilitySlider, "Ansteckungswahrscheinlichkeit:    ", 0, 100));
+        virusPanel
+                .add(createSliderWithLabels(infectionProbabilitySlider, "Ansteckungswahrscheinlichkeit:    ", 0, 100));
         virusPanel.add(createSliderWithLabels(incubationTimeSlider, "Inkubationszeit:    ", 0, 5));
         virusPanel.add(createSliderWithLabels(mortalityRateSlider, "Mortalitätsrate:    ", 0, 100));
         virusPanel.add(createSliderWithLabels(timeToDeathSlider, "Zeit bis Tod möglich:    ", 1, 20));
@@ -220,16 +221,17 @@ public class ConfigPanel extends JTabbedPane {
 
         header.setBorder(BorderFactory.createEmptyBorder(5, 5, 0, 2));
         JLabel label = new JLabel("Konfiguration");
-        label.setFont(new Font("Arial",Font.BOLD,16));
+        label.setFont(new Font("Arial", Font.BOLD, 16));
         header.add(label, BorderLayout.WEST);
 
         JLabel icon = new JLabel();
         try {
             Image originalImage = new ImageIcon(BIO_COLLAPSE_LOGO_TEXT_PATH).getImage();
-            int maxTextSize =  16;
+            int maxTextSize = 16;
             int maxIconHeight = maxTextSize;
             int maxIconWidth = (originalImage.getWidth(null) * maxIconHeight) / originalImage.getHeight(null);
-            icon.setIcon(new ImageIcon(originalImage.getScaledInstance(maxIconWidth, maxIconHeight, Image.SCALE_SMOOTH)));
+            icon.setIcon(
+                    new ImageIcon(originalImage.getScaledInstance(maxIconWidth, maxIconHeight, Image.SCALE_SMOOTH)));
         } catch (Exception ignored) {
         }
         header.add(icon, BorderLayout.EAST);

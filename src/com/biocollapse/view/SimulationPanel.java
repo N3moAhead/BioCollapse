@@ -26,7 +26,8 @@ public class SimulationPanel extends JPanel {
     private JLabel dayText;
 
     /**
-     * This panel is the screen for the simulation content, taking care of the layout and simulation updates.
+     * This panel is the screen for the simulation content, taking care of the
+     * layout and simulation updates.
      */
     public SimulationPanel(WindowController controller) {
         this.controller = controller;
@@ -51,7 +52,8 @@ public class SimulationPanel extends JPanel {
         dayText = new JLabel("[ LIVE ]", SwingConstants.CENTER);
 
         try {
-            dayText.setIcon(new ImageIcon(new ImageIcon(BIO_COLLAPSE_LOGO_PAINTING_PATH).getImage().getScaledInstance(16, 16, Image.SCALE_SMOOTH)));
+            dayText.setIcon(new ImageIcon(new ImageIcon(BIO_COLLAPSE_LOGO_PAINTING_PATH).getImage()
+                    .getScaledInstance(16, 16, Image.SCALE_SMOOTH)));
         } catch (Exception ignored) {
         }
 
@@ -61,10 +63,11 @@ public class SimulationPanel extends JPanel {
         JLabel icon = new JLabel();
         try {
             Image originalImage = new ImageIcon(BIO_COLLAPSE_LOGO_TEXT_PATH).getImage();
-            int maxTextSize =  16;
+            int maxTextSize = 16;
             int maxIconHeight = maxTextSize;
             int maxIconWidth = (originalImage.getWidth(null) * maxIconHeight) / originalImage.getHeight(null);
-            icon.setIcon(new ImageIcon(originalImage.getScaledInstance(maxIconWidth, maxIconHeight, Image.SCALE_SMOOTH)));
+            icon.setIcon(
+                    new ImageIcon(originalImage.getScaledInstance(maxIconWidth, maxIconHeight, Image.SCALE_SMOOTH)));
         } catch (Exception ignored) {
         }
         topBar.add(icon, BorderLayout.WEST);
@@ -90,7 +93,7 @@ public class SimulationPanel extends JPanel {
     public void update(List<Human> humanData, LiveStatistics liveStatistics, double fps) {
         map.update(humanData);
         stats.update(liveStatistics);
-        dayText.setText("Tag " + liveStatistics.getDay()+" ");
+        dayText.setText("Woche " + liveStatistics.getDay() + " ");
 
         revalidate();
         repaint();

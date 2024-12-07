@@ -21,7 +21,7 @@ public class SimulationService {
     public void initializeSimulation(Block map[][], List<Human> humans, List<Hospital> hospitals) {
         final List<MapPosition> workplacePositions = extractPositions(map, Block.Workplace);
         final List<MapPosition> housePositions = extractPositions(map, Block.House);
-        final List<MapPosition> hospitalPositions = extractPositions(map, Block.House);
+        final List<MapPosition> hospitalPositions = extractPositions(map, Block.Hospital);
         createEntities(workplacePositions, housePositions, hospitalPositions, humans, hospitals);
     }
 
@@ -48,16 +48,18 @@ public class SimulationService {
                     getRandomPosition(workplacePositions).copy(),
                     housePositions.get(i % housePositions.size()).copy()));
         }
-        int totalChildren = GlobalConfig.config.getChildrenRatio()/100 * populationSize;
+        int totalChildren = GlobalConfig.config.getChildrenRatio() / 100 * populationSize;
         int childrenCreated = 0;
-        int totalElderly = GlobalConfig.config.getElderlyRatio()/100 * populationSize;
+        int totalElderly = GlobalConfig.config.getElderlyRatio() / 100 * populationSize;
 
-        // The size of this List is how many adults there are while its values are their indeces in the humans List
-        // When an item is removed from this List the other associated values inside don't change.
+        // The size of this List is how many adults there are while its values are their
+        // indeces in the humans List
+        // When an item is removed from this List the other associated values inside
+        // don't change.
         List<Integer> adultIndeces = IntStream.range(0, populationSize)
-                                              .boxed()
-                                              .collect(Collectors.toList());
-        for (int i=0 ; i < totalChildren + totalElderly ; i++) {
+                .boxed()
+                .collect(Collectors.toList());
+        for (int i = 0; i < totalChildren + totalElderly; i++) {
             int randomIndex = GlobalRandom.getRandIntBetween(0, adultIndeces.size());
             int associatedIndex = adultIndeces.get(randomIndex);
 
@@ -80,7 +82,9 @@ public class SimulationService {
     }
 
     /**
-     * Calulates the current simulation statistics based on the following parameters:
+     * Calulates the current simulation statistics based on the following
+     * parameters:
+     * 
      * @param humans
      * @param hospitals
      * @param day
@@ -117,7 +121,11 @@ public class SimulationService {
             hospitalCapacity += hospital.getCapacity();
             usedHospitalCapacity += hospital.getUsedCapacity();
         }
-        hospitalCapacityRatio = hospitalCapacity > 0 ? (usedHospitalCapacity / hospitalCapacity) : -1;
-        return new LiveStatistics(aliveCounter, infectedCounter, healthyCounter, immuneCounter, deathCounter, hospitalCapacityRatio, day);
+        // float ratio = hospitalCapacity > 0 ? (usedHospitalCapacity /
+        // hospitalCapacity) : -1;
+        float ratio = (float) usedHospitalCapacity / hospitalCapacity;
+        hospitalCapacityRatio = Math.round(ratio * 100);
+        return new LiveStatistics(aliveCounter, infectedCounter, healthyCounter, immuneCounter, deathCounter,
+                hospitalCapacityRatio, day);
     }
 }
