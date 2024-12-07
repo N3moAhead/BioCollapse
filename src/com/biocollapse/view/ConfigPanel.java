@@ -6,9 +6,8 @@ import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import src.com.biocollapse.controller.WindowController;
-import src.com.biocollapse.model.Map;
-
 import static src.com.biocollapse.controller.WindowController.BIO_COLLAPSE_LOGO_TEXT_PATH;
+import src.com.biocollapse.model.Map;
 import src.com.biocollapse.util.GlobalConfig;
 
 public class ConfigPanel extends JTabbedPane {
@@ -187,7 +186,13 @@ public class ConfigPanel extends JTabbedPane {
         populationPanel.add(createSliderWithLabels(childrenRatioSlider, "Bevölkerungsanteil Kinder:    ", 0, 100));
         populationPanel.add(createSliderWithLabels(adultRatioSlider, "Bevölkerungsanteil Erwachsene:    ", 0, 100));
         populationPanel.add(createSliderWithLabels(elderlyRatioSlider, "Bevölkerungsanteil Alte:    ", 0, 100));
-        populationPanel.add(mapNameComboBox);
+
+        JPanel layoutPanel = new JPanel(new BorderLayout());
+        JPanel innerLayoutPanel = new JPanel();
+        innerLayoutPanel.add(new JLabel("Karte:"));
+        innerLayoutPanel.add(mapNameComboBox);
+        layoutPanel.add(innerLayoutPanel,BorderLayout.WEST);
+        populationPanel.add(layoutPanel);
 
         measuresPanel.add(lockdownCheckBox);
         measuresPanel.add(isolationCheckBox);
