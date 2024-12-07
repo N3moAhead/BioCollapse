@@ -4,6 +4,7 @@ package src.com.biocollapse.model;
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
+import src.com.biocollapse.model.GraphItem.GraphType;
 
 public class LiveStatistics {
 
@@ -19,7 +20,7 @@ public class LiveStatistics {
     private static final Color COLOR_HEALTHY = Color.GREEN;
     private static final Color COLOR_IMMUNE = Color.ORANGE;
     private static final Color COLOR_DEATHS = Color.BLACK;
-    private static final Color COLOR_HOSPITAL_CAPACITY_RATIO = Color.DARK_GRAY;
+    private static final Color COLOR_HOSPITAL_CAPACITY_RATIO = Color.MAGENTA;
 
     private final int alive;
     private final int infected;
@@ -70,7 +71,7 @@ public class LiveStatistics {
         items.add(new GraphItem(STAT_IMMUNE, immune, true, false, COLOR_IMMUNE));
         items.add(new GraphItem(STAT_DEATHS, deaths, true, false, COLOR_DEATHS));
         items.add(new GraphItem(STAT_ALIVE, alive, true, false, COLOR_ALIVE));
-        items.add(new GraphItem(STAT_HOSPITAL_CAPACITY_RATIO, hospitalCapacityRatio, true, false, COLOR_HOSPITAL_CAPACITY_RATIO));
+        items.add(new GraphItem(STAT_HOSPITAL_CAPACITY_RATIO, hospitalCapacityRatio, true, false, COLOR_HOSPITAL_CAPACITY_RATIO, GraphType.PERCENTAGE));
         return items;
     }
 

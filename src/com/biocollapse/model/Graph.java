@@ -6,6 +6,7 @@ import java.awt.Font;
 import java.util.ArrayList;
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
+import src.com.biocollapse.model.GraphItem.GraphType;
 
 public class Graph extends ArrayList<GraphItem> {
 
@@ -14,6 +15,7 @@ public class Graph extends ArrayList<GraphItem> {
     private Color color;
     private String name;
     private int highestValue;
+    private GraphType type;
     private final JLabel nameLabel = new JLabel();
     private final JLabel valueLabel = new JLabel("0");
 
@@ -22,7 +24,11 @@ public class Graph extends ArrayList<GraphItem> {
             highestValue = item.getValue();
         }
         super.add(item);
-        valueLabel.setText(String.valueOf(item.getValue()));
+        if (item.getType() == GraphType.PERCENTAGE) {
+            valueLabel.setText(String.valueOf(item.getValue())+"%");
+        } else {
+            valueLabel.setText(String.valueOf(item.getValue()));
+        }
         valueLabel.revalidate();
         valueLabel.repaint();
     }
@@ -77,5 +83,13 @@ public class Graph extends ArrayList<GraphItem> {
 
     public JLabel getValueLabel() {
         return valueLabel;
+    }
+
+    public GraphType getType() {
+        return type;
+    }
+
+    public void setType(GraphType type) {
+        this.type = type;
     }
 }
