@@ -117,10 +117,6 @@ public class SimulationService {
             }
         }
 
-        if (day == 5) {
-            System.out.println("I want to stop here");
-        }
-
         for (Hospital hospital : hospitals) {
             hospitalCapacity += hospital.getCapacity();
             usedHospitalCapacity += hospital.getUsedCapacity();
