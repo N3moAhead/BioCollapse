@@ -134,6 +134,7 @@ public class InfectionService {
             if (ticksSinceInfection > infectionTime) {
                 if (GlobalRandom.checkProbability(effectiveMortalityRisk)) {
                     human.setAlive(false);
+                    human.setInfected(false);
                 } else {
                     human.setInfected(false);
 
