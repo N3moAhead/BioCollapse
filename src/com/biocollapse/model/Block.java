@@ -8,7 +8,8 @@ public enum Block {
     Path(0xFF71717A, 'p',"Weg"),
     Hospital(0xFFE84EFB, 'H',"Krankenhaus"),
     House(0xFFD97706, 'h',"Haus"),
-    Workplace(0xFF1E40AF, 'w',"Arbeitsplatz"),;
+    Workplace(0xFF1E40AF, 'w',"Arbeitsplatz"),
+    Water(0xFF006E82,'W',"Wasser");
 
     // Centralized mapping
     private static final HashMap<Integer, Block> COLOR_MAP = new HashMap<>();
