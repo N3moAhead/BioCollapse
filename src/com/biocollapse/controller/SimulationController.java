@@ -93,7 +93,10 @@ public class SimulationController {
         infectionService.initInfectionUpdates();
         for (Human currentHuman : humans) {
             if (currentHuman.isAlive()) {
-                infectionService.updateInfectedPositions(currentHuman, tick);
+                // Only update infection every second tick to make virus less potent
+                if (tick % 2 == 0) {
+                    infectionService.updateInfectedPositions(currentHuman, tick);
+                }
                 currentHuman.updateHumanGoal(map, tick);
                 currentHuman.move(map);
                 hospitalService.updateHospitals(hospitals, currentHuman);

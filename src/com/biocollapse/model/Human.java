@@ -50,10 +50,12 @@ public class Human {
 		if (isContagious(tick)) {
 			int hospitalProbability = GlobalConfig.config.getHospitalProbability();
 			int isolationProbability = GlobalConfig.config.getIsolationProbability();
+			System.out.println("Isolation Prob: " + isolationProbability);
 			// If the person is infected, they have a chance to change their destination to
 			// a hospital or stay at home.
 			if (GlobalConfig.config.getIsolationMandate()) {
 				isolationProbability = isolationProbability * GlobalConfig.config.getIsolationEffect();
+				System.out.println("New Isolation Prob: " + isolationProbability);
 			}
 			// If human is not on its way to a hospital and the hospitalProbability checks
 			// the human will go to the hospital
