@@ -6,7 +6,7 @@ import java.io.Serializable;
 
 public class Config implements Serializable {
 
-    private static final long serialVersionUID = 1L; // For versioning
+    private static final long serialVersionUID = 2L; // For versioning
 
     private int infectionRadius;
     private int infectionProbability;

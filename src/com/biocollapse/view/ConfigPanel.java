@@ -88,6 +88,9 @@ public class ConfigPanel extends JPanel {
         // Map Name ComboBox
         mapNameComboBox.setSelectedItem(GlobalConfig.config.getMapName());
 
+        // Seed Textfield
+        seedFormattedTextField.setValue(GlobalConfig.config.getSeed());
+
         revalidate();
         repaint();
     }
@@ -242,19 +245,19 @@ public class ConfigPanel extends JPanel {
         populationPanel.add(createSliderWithLabels(adultRatioSlider, "Bevölkerungsanteil Erwachsene:    ", 0, 100));
         populationPanel.add(createSliderWithLabels(elderlyRatioSlider, "Bevölkerungsanteil Alte:    ", 0, 100));
 
-        JPanel layoutPanel = new JPanel(new BorderLayout());
-        JPanel innerLayoutPanel = new JPanel();
-        innerLayoutPanel.add(new JLabel("Karte:"));
-        innerLayoutPanel.add(mapNameComboBox);
-        layoutPanel.add(innerLayoutPanel, BorderLayout.WEST);
-        populationPanel.add(layoutPanel);
+        JPanel layoutPanelMap = new JPanel(new BorderLayout());
+        JPanel innerLayoutPanelMap = new JPanel();
+        innerLayoutPanelMap.add(new JLabel("Karte:"));
+        innerLayoutPanelMap.add(mapNameComboBox);
+        layoutPanelMap.add(innerLayoutPanelMap, BorderLayout.WEST);
+        populationPanel.add(layoutPanelMap);
 
-        JPanel layoutPanel2 = new JPanel(new BorderLayout());
-        JPanel innerLayoutPanel2 = new JPanel();
-        innerLayoutPanel2.add(new JLabel("Seed:"));
-        innerLayoutPanel2.add(seedFormattedTextField);
-        layoutPanel2.add(innerLayoutPanel2, BorderLayout.WEST);
-        populationPanel.add(layoutPanel2);
+        JPanel layoutPanelSeed = new JPanel(new BorderLayout());
+        JPanel innerLayoutPanelSeed = new JPanel();
+        innerLayoutPanelSeed.add(new JLabel("Seed:"));
+        innerLayoutPanelSeed.add(seedFormattedTextField);
+        layoutPanelSeed.add(innerLayoutPanelSeed, BorderLayout.WEST);
+        populationPanel.add(layoutPanelSeed);
 
         measuresPanel.add(lockdownCheckBox);
         measuresPanel.add(isolationCheckBox);
