@@ -174,6 +174,7 @@ public class MapPanel extends JPanel {
         legend.put(Block.Hospital, new Color(Block.Hospital.getArgb()));
         legend.put(Block.House, new Color(Block.House.getArgb()));
         legend.put(Block.Workplace, new Color(Block.Workplace.getArgb()));
+        legend.put(Block.Water, new Color(Block.Water.getArgb()));
     }
 
     private JPanel createLegendItem(String name, Color c, boolean drawBackground) {
