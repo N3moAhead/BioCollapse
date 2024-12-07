@@ -12,13 +12,12 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.border.TitledBorder;
-
 import src.com.biocollapse.model.Config;
 import src.com.biocollapse.util.GlobalConfig;
 
 public class ConfigHistoryPanel extends JPanel {
 
-    private ConfigPanel configPanel;
+    private final ConfigPanel configPanel;
     private HashMap<String, File> files = new HashMap<>();
     public static final String FOLDER_HISTORY = "history";
     private JButton load;
