@@ -135,7 +135,7 @@ public class SimulationController {
                         .append(currentStatistics.getAlive())
                         .append(" Menschen ")
                         .append("(")
-                        .append((double) currentStatistics.getAlive() / humans.size() * 100)
+                        .append(String.format("%.2f", (double) currentStatistics.getAlive() / humans.size() * 100))
                         .append("%)")
                         .append(" überlebt.");
             }
@@ -144,13 +144,13 @@ public class SimulationController {
                     .append(currentStatistics.getImmune())
                     .append(" Menschen ")
                     .append("(")
-                    .append((double) currentStatistics.getImmune() / humans.size() * 100)
+                    .append(String.format("%.2f", (double) currentStatistics.getImmune() / humans.size() * 100))
                     .append("%)")
                     .append(" immun geworden und ")
                     .append(currentStatistics.getDeaths())
                     .append(" Menschen ")
                     .append("(")
-                    .append((double) currentStatistics.getDeaths() / humans.size() * 100)
+                    .append(String.format("%.2f", (double) currentStatistics.getDeaths() / humans.size() * 100))
                     .append("%)")
                     .append(" gestorben");
         }
