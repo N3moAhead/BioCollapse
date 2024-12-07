@@ -6,6 +6,8 @@ import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import src.com.biocollapse.controller.WindowController;
+import src.com.biocollapse.model.Map;
+
 import static src.com.biocollapse.controller.WindowController.BIO_COLLAPSE_LOGO_TEXT_PATH;
 import src.com.biocollapse.util.GlobalConfig;
 
@@ -34,6 +36,8 @@ public class ConfigPanel extends JTabbedPane {
     private JCheckBox isolationCheckBox;
     private JCheckBox maskMandateCheckBox;
     private JCheckBox schoolClosureCheckBox;
+
+    private JComboBox mapNameComboBox;
 
     private JButton saveButton;
     private JButton backButton;
@@ -144,6 +148,11 @@ public class ConfigPanel extends JTabbedPane {
         schoolClosureCheckBox = new JCheckBox("Schulschließung");
         schoolClosureCheckBox.setSelected(GlobalConfig.config.getSchoolClosure());
 
+        // Map Name ComboBox
+        String[] mapNames = (String[]) Map.getMapNames().toArray(new String[0]);
+        mapNameComboBox = new JComboBox<>(mapNames);
+        mapNameComboBox.setSelectedItem(GlobalConfig.config.getMapName());
+
         saveButton = new JButton("Virus freisetzen");
         backButton = new JButton("Zum Startbildschirm");
 
@@ -178,6 +187,7 @@ public class ConfigPanel extends JTabbedPane {
         populationPanel.add(createSliderWithLabels(childrenRatioSlider, "Bevölkerungsanteil Kinder:    ", 0, 100));
         populationPanel.add(createSliderWithLabels(adultRatioSlider, "Bevölkerungsanteil Erwachsene:    ", 0, 100));
         populationPanel.add(createSliderWithLabels(elderlyRatioSlider, "Bevölkerungsanteil Alte:    ", 0, 100));
+        populationPanel.add(mapNameComboBox);
 
         measuresPanel.add(lockdownCheckBox);
         measuresPanel.add(isolationCheckBox);
@@ -248,10 +258,12 @@ public class ConfigPanel extends JTabbedPane {
         boolean maskMandate = maskMandateCheckBox.isSelected();
         boolean schoolClosure = schoolClosureCheckBox.isSelected();
 
+        String mapName = (String) mapNameComboBox.getSelectedItem();
+
         GlobalConfig.config.setConfig(infectionRadius, infectionProbability, incubationTime, mortalityRate, timeToDeath,
                 immunityChance,
                 hospitalCapacity, isolationProbability, hospitalProbability, childrenRatio, adultRatio, elderlyRatio,
-                lockdown, isolateMandate, maskMandate, schoolClosure);
+                lockdown, isolateMandate, maskMandate, schoolClosure, mapName);
 
         controller.showSimulationScreen();
     }
