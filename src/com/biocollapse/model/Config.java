@@ -29,6 +29,7 @@ public class Config {
     private int lockdownEffect = 75;
     private int ticksAtLocation = 50; // how many ticks does a person stay at home or at work after reaching the goal
     private int populationSize = 500;
+    private String mapName;
     public static final int SIMULATION_ONE_DAY_TICKS = 250;
     public static final int SIMULATION_MAX_DAYS = 14;
 
@@ -60,10 +61,10 @@ public class Config {
     public Config(int infectionRadius, int infectionProbability, int incubationTime, int mortalityRisk, int infectionTime,
             int immunityChance, int hospitalCapacity, int isolationProbability, int hospitalProbability,
             int childrenRatio, int adultRatio, int elderlyRatio, boolean lockdown, boolean isolationMandate,
-            boolean maskMandate, boolean schoolClosure) {
+            boolean maskMandate, boolean schoolClosure, String mapName) {
         setConfig(infectionRadius, infectionProbability, incubationTime, mortalityRisk, infectionTime, immunityChance,
                 hospitalCapacity, isolationProbability, hospitalProbability, childrenRatio, adultRatio, elderlyRatio, lockdown,
-                isolationMandate, maskMandate, schoolClosure);
+                isolationMandate, maskMandate, schoolClosure, mapName);
     }
 
     public Config() {
@@ -100,7 +101,7 @@ public class Config {
             int infectionTime,
             int immunityChance, int hospitalCapacity, int isolationProbability, int hospitalProbability,
             int childrenRatio, int adultRatio, int elderlyRatio, boolean lockdown, boolean isolationMandate,
-            boolean maskMandate, boolean schoolClosure) {
+            boolean maskMandate, boolean schoolClosure, String mapName) {
         this.infectionRadius = infectionRadius;
         this.infectionProbability = infectionProbability;
         this.incubationTime = incubationTime * Config.SIMULATION_ONE_DAY_TICKS;
@@ -119,6 +120,7 @@ public class Config {
         this.isolationMandate = isolationMandate;
         this.maskMandate = maskMandate;
         this.schoolClosure = schoolClosure;
+        this.mapName = mapName;
     }
 
     public int getPopulationSize() {
@@ -313,6 +315,14 @@ public class Config {
         this.configuredInfectionTime = configuredInfectionTime;
     }
 
+    public String getMapName () {
+        return this.mapName;
+    }
+
+    public void setMapName(String mapName) {
+        this.mapName = mapName;
+    }
+
     @Override
     public String toString() {
         return "Config{"
@@ -328,6 +338,7 @@ public class Config {
                 + ", childrenRatio=" + childrenRatio
                 + ", adultRatio=" + adultRatio
                 + ", elderlyRatio=" + elderlyRatio
+                + ", mapName=" + mapName
                 + '}';
     }
 }
