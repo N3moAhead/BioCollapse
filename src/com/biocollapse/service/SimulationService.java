@@ -62,7 +62,7 @@ public class SimulationService {
             int randomIndex = GlobalRandom.getRandIntBetween(0, adultIndeces.size()-1);
             int associatedIndex = adultIndeces.get(randomIndex);
 
-            if (childrenCreated <= totalChildren) {
+            if (childrenCreated < totalChildren) {
                 humans.get(associatedIndex).setAge(Age.Child);
                 childrenCreated++;
             } else {
