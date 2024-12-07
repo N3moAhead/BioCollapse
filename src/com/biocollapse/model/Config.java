@@ -1,7 +1,11 @@
 // Authors: Inaas, Lars, Johann, Lukas
 package src.com.biocollapse.model;
 
-public class Config {
+import java.io.Serializable;
+
+public class Config implements Serializable {
+
+    private static final long serialVersionUID = 1L; // For versioning
 
     private int infectionRadius;
     private int infectionProbability;

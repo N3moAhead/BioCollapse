@@ -34,4 +34,12 @@ public class GlobalConfig {
   public static Config getConfig() {
     return config;
   }
+
+  /**
+   * Set the config.
+   * @param config
+   */
+  public static void setConfig(Config config) {
+    GlobalConfig.config = config;
+  }
 }
