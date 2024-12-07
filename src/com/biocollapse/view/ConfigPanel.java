@@ -130,7 +130,7 @@ public class ConfigPanel extends JTabbedPane {
         immunityChanceSlider = new JSlider(0, 100, GlobalConfig.config.getImmunityChance());
 
         // Population Sliders
-        hospitalCapacitySlider = new JSlider(100, 1000, GlobalConfig.config.getHospitalCapacity());
+        hospitalCapacitySlider = new JSlider(50, 500, GlobalConfig.config.getHospitalCapacity());
         homeIsolationProbabilitySlider = new JSlider(0, 100, GlobalConfig.config.getIsolationProbability());
         hospitalizationProbabilitySlider = new JSlider(0, 100, GlobalConfig.config.getHospitalProbability());
         childrenRatioSlider = new JSlider(0, 100, GlobalConfig.config.getChildrenRatio());
@@ -192,7 +192,7 @@ public class ConfigPanel extends JTabbedPane {
         JPanel innerLayoutPanel = new JPanel();
         innerLayoutPanel.add(new JLabel("Karte:"));
         innerLayoutPanel.add(mapNameComboBox);
-        layoutPanel.add(innerLayoutPanel,BorderLayout.WEST);
+        layoutPanel.add(innerLayoutPanel, BorderLayout.WEST);
         populationPanel.add(layoutPanel);
 
         measuresPanel.add(lockdownCheckBox);
