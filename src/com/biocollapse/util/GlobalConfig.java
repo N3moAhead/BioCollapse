@@ -1,4 +1,4 @@
-// Authors: Lukas
+// Authors: Lukas, Sebastian
 package src.com.biocollapse.util;
 
 import src.com.biocollapse.model.Config;

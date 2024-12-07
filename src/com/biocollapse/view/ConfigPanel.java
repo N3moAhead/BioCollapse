@@ -1,4 +1,4 @@
-// Authors: Lars, Lukas, Johann
+// Authors: Lars, Lukas, Johann, Sebastian
 package src.com.biocollapse.view;
 
 import java.awt.*;

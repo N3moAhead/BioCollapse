@@ -1,4 +1,4 @@
-// Authors: Inaas, Lars, Johann, Lukas
+// Authors: Inaas, Lars, Johann, Lukas, Sebastian
 package src.com.biocollapse.model;
 
 import src.com.biocollapse.util.GlobalRandom;
