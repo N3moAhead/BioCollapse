@@ -15,6 +15,7 @@ import src.com.biocollapse.model.Map;
 import src.com.biocollapse.service.HospitalService;
 import src.com.biocollapse.service.InfectionService;
 import src.com.biocollapse.service.SimulationService;
+import src.com.biocollapse.util.GlobalConfig;
 import src.com.biocollapse.view.SimulationPanel;
 
 public class SimulationController {
@@ -25,7 +26,7 @@ public class SimulationController {
     // Models
     private final List<Hospital> hospitals = new ArrayList<>();
     private final List<Human> humans = new ArrayList<>();
-    private final Map map = new Map("mannheim.bmp");
+    private final Map map = new Map(GlobalConfig.config.getMapName());
 
     // Services
     private final InfectionService infectionService = new InfectionService();

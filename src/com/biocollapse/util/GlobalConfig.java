@@ -25,7 +25,7 @@ public class GlobalConfig {
    * The default values of the simulation.
    */
   private static Config defaultConfig() {
-    return new Config(6, 50, 3, 3, 14, 90, 300, 50, 80, 25, 50, 25, false, false, false, false);
+    return new Config(6, 50, 3, 3, 14, 90, 300, 50, 80, 25, 50, 25, false, false, false, false, "schwetzingen.bmp");
   }
 
   /**
