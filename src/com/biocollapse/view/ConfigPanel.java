@@ -2,9 +2,13 @@
 package src.com.biocollapse.view;
 
 import java.awt.*;
+import java.text.NumberFormat;
+
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.text.NumberFormatter;
+
 import src.com.biocollapse.controller.WindowController;
 import static src.com.biocollapse.controller.WindowController.BIO_COLLAPSE_LOGO_TEXT_PATH;
 import src.com.biocollapse.model.Map;
@@ -37,6 +41,7 @@ public class ConfigPanel extends JTabbedPane {
     private JCheckBox schoolClosureCheckBox;
 
     private JComboBox<String> mapNameComboBox;
+    private JFormattedTextField seedFormattedTextField;
 
     private JButton saveButton;
     private JButton backButton;
@@ -152,6 +157,16 @@ public class ConfigPanel extends JTabbedPane {
         mapNameComboBox = new JComboBox<>(mapNames);
         mapNameComboBox.setSelectedItem(GlobalConfig.config.getMapName());
 
+        // Seed Textfield
+        NumberFormatter numberFormatter = new NumberFormatter(NumberFormat.getIntegerInstance());
+        numberFormatter.setValueClass(Long.class); // Allow long values
+        numberFormatter.setAllowsInvalid(false); // Prevent invalid characters
+        numberFormatter.setMinimum(Long.MIN_VALUE);
+        numberFormatter.setMaximum(Long.MAX_VALUE);
+        seedFormattedTextField = new JFormattedTextField(numberFormatter);
+        seedFormattedTextField.setValue(GlobalConfig.config.getSeed());
+        seedFormattedTextField.setColumns(15);
+
         saveButton = new JButton("Virus freisetzen");
         backButton = new JButton("Zum Startbildschirm");
 
@@ -194,6 +209,13 @@ public class ConfigPanel extends JTabbedPane {
         innerLayoutPanel.add(mapNameComboBox);
         layoutPanel.add(innerLayoutPanel, BorderLayout.WEST);
         populationPanel.add(layoutPanel);
+
+        JPanel layoutPanel2 = new JPanel(new BorderLayout());
+        JPanel innerLayoutPanel2 = new JPanel();
+        innerLayoutPanel2.add(new JLabel("Seed:"));
+        innerLayoutPanel2.add(seedFormattedTextField);
+        layoutPanel2.add(innerLayoutPanel2, BorderLayout.WEST);
+        populationPanel.add(layoutPanel2);
 
         measuresPanel.add(lockdownCheckBox);
         measuresPanel.add(isolationCheckBox);
@@ -266,11 +288,12 @@ public class ConfigPanel extends JTabbedPane {
         boolean schoolClosure = schoolClosureCheckBox.isSelected();
 
         String mapName = (String) mapNameComboBox.getSelectedItem();
+        long seed = (long) seedFormattedTextField.getValue();
 
         GlobalConfig.config.setConfig(infectionRadius, infectionProbability, incubationTime, mortalityRate, timeToDeath,
                 immunityChance,
                 hospitalCapacity, isolationProbability, hospitalProbability, childrenRatio, adultRatio, elderlyRatio,
-                lockdown, isolateMandate, maskMandate, schoolClosure, mapName);
+                lockdown, isolateMandate, maskMandate, schoolClosure, mapName, seed);
 
         controller.showSimulationScreen();
     }
