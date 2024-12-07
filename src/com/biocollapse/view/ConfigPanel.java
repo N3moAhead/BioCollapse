@@ -2,6 +2,10 @@
 package src.com.biocollapse.view;
 
 import java.awt.*;
+import java.io.FileOutputStream;
+import java.io.ObjectOutputStream;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -10,7 +14,7 @@ import static src.com.biocollapse.controller.WindowController.BIO_COLLAPSE_LOGO_
 import src.com.biocollapse.model.Map;
 import src.com.biocollapse.util.GlobalConfig;
 
-public class ConfigPanel extends JTabbedPane {
+public class ConfigPanel extends JPanel {
 
     private JPanel virusPanel;
     private JPanel populationPanel;
@@ -42,6 +46,7 @@ public class ConfigPanel extends JTabbedPane {
     private JButton backButton;
     private final WindowController controller;
     private JPanel mainPanel;
+    private JTabbedPane tabbedPane;
 
     public ConfigPanel(WindowController controller) {
         this.controller = controller;
@@ -49,6 +54,38 @@ public class ConfigPanel extends JTabbedPane {
         initializeComponents();
         setupLayout();
         addEventListener();
+    }
+
+    /**
+     * Revalidates the values of the current config from the GlobalConfig.
+     */
+    public void revalidateConfig() {
+        infectionRadiusSlider.setValue(GlobalConfig.config.getInfectionRadius());
+        infectionProbabilitySlider.setValue(GlobalConfig.config.getInfectionProbability());
+        incubationTimeSlider.setValue(GlobalConfig.config.getConfiguredIncubationTime());
+        mortalityRateSlider.setValue(GlobalConfig.config.getMortalityRisk());
+        timeToDeathSlider.setValue(GlobalConfig.config.getConfiguredInfectionTime());
+        immunityChanceSlider.setValue(GlobalConfig.config.getImmunityChance());
+        
+        // Population sliders
+        hospitalCapacitySlider.setValue(GlobalConfig.config.getHospitalCapacity());
+        homeIsolationProbabilitySlider.setValue(GlobalConfig.config.getIsolationProbability());
+        hospitalizationProbabilitySlider.setValue(GlobalConfig.config.getHospitalProbability());
+        childrenRatioSlider.setValue(GlobalConfig.config.getChildrenRatio());
+        adultRatioSlider.setValue(GlobalConfig.config.getAdultRatio());
+        elderlyRatioSlider.setValue(GlobalConfig.config.getElderlyRatio());
+        
+        // Measures Checkboxes
+        lockdownCheckBox.setSelected(GlobalConfig.config.getLockdown());
+        isolationCheckBox.setSelected(GlobalConfig.config.getIsolationMandate());
+        maskMandateCheckBox.setSelected(GlobalConfig.config.getMaskMandate());
+        schoolClosureCheckBox.setSelected(GlobalConfig.config.getSchoolClosure());
+
+        // Map Name ComboBox
+        mapNameComboBox.setSelectedItem(GlobalConfig.config.getMapName());
+
+        revalidate();
+        repaint();
     }
 
     public JPanel getMainPanel() {
@@ -115,6 +152,9 @@ public class ConfigPanel extends JTabbedPane {
     }
 
     private void initializeComponents() {
+        setLayout(new BorderLayout());
+        tabbedPane = new JTabbedPane();
+
         // Initialize Panels
         virusPanel = new JPanel(new GridLayout(10, 1, 10, 10));
         populationPanel = new JPanel(new GridLayout(10, 1, 10, 10));
@@ -200,9 +240,12 @@ public class ConfigPanel extends JTabbedPane {
         measuresPanel.add(maskMandateCheckBox);
         measuresPanel.add(schoolClosureCheckBox);
 
-        addTab("Populationsdaten", populationPanel);
-        addTab("Maßnahmen", measuresPanel);
-        addTab("Virusparameter", virusPanel);
+        tabbedPane.addTab("Populationsdaten", populationPanel);
+        tabbedPane.addTab("Maßnahmen", measuresPanel);
+        tabbedPane.addTab("Virusparameter", virusPanel);
+
+        add(tabbedPane, BorderLayout.CENTER);
+        add(new ConfigHistoryPanel(this), BorderLayout.EAST);
 
         buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 10));
         buttonPanel.add(backButton);
@@ -272,6 +315,21 @@ public class ConfigPanel extends JTabbedPane {
                 hospitalCapacity, isolationProbability, hospitalProbability, childrenRatio, adultRatio, elderlyRatio,
                 lockdown, isolateMandate, maskMandate, schoolClosure, mapName);
 
+        saveConfig();
         controller.showSimulationScreen();
+    }
+
+    /**
+     * Store the config object as a file.
+     */
+    private void saveConfig() {
+         LocalDateTime now = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss");
+        String formattedTime = now.format(formatter);
+
+        try (FileOutputStream fileOut = new FileOutputStream(ConfigHistoryPanel.FOLDER_HISTORY+"/config "+formattedTime); ObjectOutputStream out = new ObjectOutputStream(fileOut)) {
+            out.writeObject(GlobalConfig.getConfig());
+        } catch (Exception ignored) {
+        }
     }
 }
