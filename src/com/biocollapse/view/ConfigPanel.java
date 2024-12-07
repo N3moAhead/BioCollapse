@@ -36,7 +36,7 @@ public class ConfigPanel extends JTabbedPane {
     private JCheckBox maskMandateCheckBox;
     private JCheckBox schoolClosureCheckBox;
 
-    private JComboBox mapNameComboBox;
+    private JComboBox<String> mapNameComboBox;
 
     private JButton saveButton;
     private JButton backButton;
