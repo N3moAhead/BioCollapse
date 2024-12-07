@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-
 import src.com.biocollapse.model.Age;
 import src.com.biocollapse.model.Block;
 import src.com.biocollapse.model.Hospital;
@@ -60,10 +59,10 @@ public class SimulationService {
                 .boxed()
                 .collect(Collectors.toList());
         for (int i = 0; i < totalChildren + totalElderly; i++) {
-            int randomIndex = GlobalRandom.getRandIntBetween(0, adultIndeces.size());
+            int randomIndex = GlobalRandom.getRandIntBetween(0, adultIndeces.size()-1);
             int associatedIndex = adultIndeces.get(randomIndex);
 
-            if (childrenCreated < totalChildren) {
+            if (childrenCreated <= totalChildren) {
                 humans.get(associatedIndex).setAge(Age.Child);
                 childrenCreated++;
             } else {
