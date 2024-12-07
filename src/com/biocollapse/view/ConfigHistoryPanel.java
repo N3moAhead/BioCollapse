@@ -1,4 +1,3 @@
-// Authors: Johann
 package src.com.biocollapse.view;
 
 import java.awt.BorderLayout;
@@ -19,7 +18,7 @@ import src.com.biocollapse.util.GlobalConfig;
 public class ConfigHistoryPanel extends JPanel {
 
     private final ConfigPanel configPanel;
-    private HashMap<String, File> files = new HashMap<>();
+    private HashMap<String, File> files;
     public static final String FOLDER_HISTORY = "history";
     private JButton load;
     private JButton delete;
