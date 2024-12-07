@@ -144,7 +144,7 @@ public class ConfigPanel extends JTabbedPane {
         isolationCheckBox.setSelected(GlobalConfig.config.getIsolationMandate());
         maskMandateCheckBox = new JCheckBox("Maskenpflicht");
         maskMandateCheckBox.setSelected(GlobalConfig.config.getMaskMandate());
-        schoolClosureCheckBox = new JCheckBox("Schulschließung");
+        schoolClosureCheckBox = new JCheckBox("Geschäftsschließungen");
         schoolClosureCheckBox.setSelected(GlobalConfig.config.getSchoolClosure());
 
         // Map Name ComboBox
