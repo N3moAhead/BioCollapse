@@ -17,6 +17,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import javax.swing.JPanel;
 import src.com.biocollapse.model.Graph;
+import src.com.biocollapse.model.GraphItem.GraphType;
 
 public class GraphPanel extends JPanel {
 
@@ -145,6 +146,7 @@ public class GraphPanel extends JPanel {
 
         // Draws the value indications for each quatre.
         drawLeftString(String.valueOf(highestVisibleNum), g2d, 2, PADDING_TOP + 5);
+        drawLeftString("100%", g2d, 2, PADDING_TOP + LEGEND_FONT_SIZE +LEGEND_FONT_SIZE / 2);
         drawLeftString(String.valueOf((float) highestVisibleNum / 2), g2d, 2, height / 2 + 5);
         drawLeftString(String.valueOf((float) highestVisibleNum / 4 + highestVisibleNum / 2), g2d, 2, height / 4 + 5);
         drawLeftString(String.valueOf((float) highestVisibleNum / 4), g2d, 2, height / 4 * 3 + 5);
@@ -173,7 +175,11 @@ public class GraphPanel extends JPanel {
             if (entry.getValue().isAlwaysHidden() || !entry.getValue().isVisible()) {
                 return;
             }
-            drawLegendString(entry.getKey(), entry.getValue().getColor(), g2d, legendSize);
+            if (entry.getValue().getType() == GraphType.PERCENTAGE) {
+                drawLegendString(entry.getKey()+" %", entry.getValue().getColor(), g2d, legendSize);
+            } else {
+                drawLegendString(entry.getKey(), entry.getValue().getColor(), g2d, legendSize);
+            }
         }
     }
     
@@ -213,7 +219,14 @@ public class GraphPanel extends JPanel {
         int legendWidth = 0;
         for (Entry<String, Graph> entry : graphs.entrySet()) {
             FontMetrics fm = g2d.getFontMetrics();
-            int textWidth = fm.stringWidth(entry.getKey());
+            int textWidth;
+
+            if (entry.getValue().getType() == GraphType.PERCENTAGE) {
+                textWidth = fm.stringWidth(entry.getKey()+" %");
+            } else {
+                textWidth = fm.stringWidth(entry.getKey());
+            }
+
             if (textWidth > legendWidth) {
                 legendWidth = textWidth;
             }
@@ -262,7 +275,9 @@ public class GraphPanel extends JPanel {
 
         int i = 0;
         int size = 0;
-        
+        double percentageValue = (double)(height - 2*  PADDING_BOTTOM) / 100;
+        double defaultValue = (double)(height - 2*  PADDING_BOTTOM) / (double) highestVisibleNum;
+
         if (reverseFinalState) {
             for (int j = 0; j <= graph.size()-1; j++) {
                 size+=cellSize;
@@ -270,8 +285,13 @@ public class GraphPanel extends JPanel {
                     break;
                 }
                 double x = i * cellSize + PADDING_LEFT;
-                double y = (height- PADDING_BOTTOM) - ((double)(height - 2*  PADDING_BOTTOM) / (double) highestVisibleNum * graph.get(j).getValue());
-    
+                double y;
+                if (graph.getType() == GraphType.PERCENTAGE) {
+                    y = (height- PADDING_BOTTOM) - (percentageValue * graph.get(j).getValue());
+                } else {
+                    y = (height- PADDING_BOTTOM) - (defaultValue * graph.get(j).getValue());
+                }
+
                 drawPoint(prevX, prevY, x, y, g2d, i);
                 prevX = x;
                 prevY = y;
@@ -284,8 +304,13 @@ public class GraphPanel extends JPanel {
                     break;
                 }
                 double x = i * cellSize + PADDING_LEFT;
-                double y = (height- PADDING_BOTTOM) - ((double)(height - 2*  PADDING_BOTTOM) / (double) highestVisibleNum * graph.get(j).getValue());
-    
+                double y;
+                if (graph.getType() == GraphType.PERCENTAGE) {
+                    y = (height- PADDING_BOTTOM) - (percentageValue * graph.get(j).getValue());
+                } else {
+                    y = (height- PADDING_BOTTOM) - (defaultValue * graph.get(j).getValue());
+                }
+
                 drawPoint(prevX, prevY, x, y, g2d, i);
                 prevX = x;
                 prevY = y;

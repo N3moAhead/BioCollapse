@@ -67,7 +67,7 @@ public class LiveStatisticsPanel extends JPanel {
             graph.setColor(point.getColor());
             graph.setAlwaysHidden(point.isAlwaysHidden());
             graph.setVisible(point.isVisible());
-
+            graph.setType(point.getType());
             legendPanel.add(graph.getNameLabel(), makeGbc(0, graph.getNameLabel()));
             legendPanel.add(graph.getValueLabel(), makeGbc(1, graph.getValueLabel()));
             row++;
