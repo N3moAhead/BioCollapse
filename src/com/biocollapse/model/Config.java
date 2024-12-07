@@ -1,11 +1,12 @@
-// Authors: Inaas, Lars, Johann, Lukas
+// Authors: Inaas, Lars, Johann, Lukas, Sebastian
 package src.com.biocollapse.model;
 
+import src.com.biocollapse.util.GlobalRandom;
 import java.io.Serializable;
 
 public class Config implements Serializable {
 
-    private static final long serialVersionUID = 1L; // For versioning
+    private static final long serialVersionUID = 2L; // For versioning
 
     private int infectionRadius;
     private int infectionProbability;
@@ -34,6 +35,7 @@ public class Config implements Serializable {
     private int ticksAtLocation = 100; // how many ticks does a person stay at home or at work after reaching the goal
     private int populationSize = 500;
     private String mapName;
+    private long seed;
     public static final int SIMULATION_ONE_DAY_TICKS = 250;
     public static final int SIMULATION_MAX_DAYS = 14;
 
@@ -68,11 +70,11 @@ public class Config implements Serializable {
             int infectionTime,
             int immunityChance, int hospitalCapacity, int isolationProbability, int hospitalProbability,
             int childrenRatio, int adultRatio, int elderlyRatio, boolean lockdown, boolean isolationMandate,
-            boolean maskMandate, boolean schoolClosure, String mapName) {
+            boolean maskMandate, boolean schoolClosure, String mapName, long seed) {
         setConfig(infectionRadius, infectionProbability, incubationTime, mortalityRisk, infectionTime, immunityChance,
                 hospitalCapacity, isolationProbability, hospitalProbability, childrenRatio, adultRatio, elderlyRatio,
                 lockdown,
-                isolationMandate, maskMandate, schoolClosure, mapName);
+                isolationMandate, maskMandate, schoolClosure, mapName, seed);
     }
 
     public Config() {
@@ -111,7 +113,7 @@ public class Config implements Serializable {
             int infectionTime,
             int immunityChance, int hospitalCapacity, int isolationProbability, int hospitalProbability,
             int childrenRatio, int adultRatio, int elderlyRatio, boolean lockdown, boolean isolationMandate,
-            boolean maskMandate, boolean schoolClosure, String mapName) {
+            boolean maskMandate, boolean schoolClosure, String mapName, long seed) {
         this.infectionRadius = infectionRadius;
         this.infectionProbability = infectionProbability;
         this.incubationTime = incubationTime * Config.SIMULATION_ONE_DAY_TICKS;
@@ -131,6 +133,8 @@ public class Config implements Serializable {
         this.maskMandate = maskMandate;
         this.schoolClosure = schoolClosure;
         this.mapName = mapName;
+        this.seed = seed;
+        GlobalRandom.setSeed(seed);
     }
 
     public int getPopulationSize() {
@@ -333,6 +337,14 @@ public class Config implements Serializable {
         this.mapName = mapName;
     }
 
+    public long getSeed() {
+        return this.seed;
+    }
+
+    public void setSeed(long seed) {
+        this.seed = seed;
+    }
+
     @Override
     public String toString() {
         return "Config{"
@@ -349,6 +361,7 @@ public class Config implements Serializable {
                 + ", adultRatio=" + adultRatio
                 + ", elderlyRatio=" + elderlyRatio
                 + ", mapName=" + mapName
+                + ", seed=" + seed
                 + '}';
     }
 }
