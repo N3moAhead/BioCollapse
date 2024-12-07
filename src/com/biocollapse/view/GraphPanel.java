@@ -175,7 +175,11 @@ public class GraphPanel extends JPanel {
             if (entry.getValue().isAlwaysHidden() || !entry.getValue().isVisible()) {
                 return;
             }
-            drawLegendString(entry.getKey(), entry.getValue().getColor(), g2d, legendSize);
+            if (entry.getValue().getType() == GraphType.PERCENTAGE) {
+                drawLegendString(entry.getKey()+" %", entry.getValue().getColor(), g2d, legendSize);
+            } else {
+                drawLegendString(entry.getKey(), entry.getValue().getColor(), g2d, legendSize);
+            }
         }
     }
     
@@ -215,7 +219,14 @@ public class GraphPanel extends JPanel {
         int legendWidth = 0;
         for (Entry<String, Graph> entry : graphs.entrySet()) {
             FontMetrics fm = g2d.getFontMetrics();
-            int textWidth = fm.stringWidth(entry.getKey());
+            int textWidth;
+
+            if (entry.getValue().getType() == GraphType.PERCENTAGE) {
+                textWidth = fm.stringWidth(entry.getKey()+" %");
+            } else {
+                textWidth = fm.stringWidth(entry.getKey());
+            }
+
             if (textWidth > legendWidth) {
                 legendWidth = textWidth;
             }

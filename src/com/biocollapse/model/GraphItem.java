@@ -2,8 +2,6 @@
 package src.com.biocollapse.model;
 
 import java.awt.Color;
-import src.com.biocollapse.model.GraphItem.GraphType;
-
 public class GraphItem {
 
     private final String name;
@@ -23,10 +21,6 @@ public class GraphItem {
     }
 
     public GraphItem(String name, int value, boolean visible, boolean alwaysHidden, Color color, GraphType type) {
-        if (type == GraphType.PERCENTAGE) {
-            name+=" %";
-        }
-        
         this.name = name;
         this.value = value;
         this.visible = visible;
