@@ -2,10 +2,6 @@
 package src.com.biocollapse.view;
 
 import java.awt.*;
-import java.io.FileOutputStream;
-import java.io.ObjectOutputStream;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -66,7 +62,7 @@ public class ConfigPanel extends JPanel {
         mortalityRateSlider.setValue(GlobalConfig.config.getMortalityRisk());
         timeToDeathSlider.setValue(GlobalConfig.config.getConfiguredInfectionTime());
         immunityChanceSlider.setValue(GlobalConfig.config.getImmunityChance());
-        
+
         // Population sliders
         hospitalCapacitySlider.setValue(GlobalConfig.config.getHospitalCapacity());
         homeIsolationProbabilitySlider.setValue(GlobalConfig.config.getIsolationProbability());
@@ -74,7 +70,7 @@ public class ConfigPanel extends JPanel {
         childrenRatioSlider.setValue(GlobalConfig.config.getChildrenRatio());
         adultRatioSlider.setValue(GlobalConfig.config.getAdultRatio());
         elderlyRatioSlider.setValue(GlobalConfig.config.getElderlyRatio());
-        
+
         // Measures Checkboxes
         lockdownCheckBox.setSelected(GlobalConfig.config.getLockdown());
         isolationCheckBox.setSelected(GlobalConfig.config.getIsolationMandate());
@@ -288,6 +284,14 @@ public class ConfigPanel extends JPanel {
     }
 
     private void notifyController() {
+        setConfig();
+        controller.showSimulationScreen();
+    }
+
+    /**
+     * Sets the config in the global config.
+     */
+    public void setConfig() {
         // Save Config parameters
         int infectionRadius = infectionRadiusSlider.getValue();
         int infectionProbability = infectionProbabilitySlider.getValue();
@@ -314,22 +318,5 @@ public class ConfigPanel extends JPanel {
                 immunityChance,
                 hospitalCapacity, isolationProbability, hospitalProbability, childrenRatio, adultRatio, elderlyRatio,
                 lockdown, isolateMandate, maskMandate, schoolClosure, mapName);
-
-        saveConfig();
-        controller.showSimulationScreen();
-    }
-
-    /**
-     * Store the config object as a file.
-     */
-    private void saveConfig() {
-         LocalDateTime now = LocalDateTime.now();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss");
-        String formattedTime = now.format(formatter);
-
-        try (FileOutputStream fileOut = new FileOutputStream(ConfigHistoryPanel.FOLDER_HISTORY+"/config "+formattedTime); ObjectOutputStream out = new ObjectOutputStream(fileOut)) {
-            out.writeObject(GlobalConfig.getConfig());
-        } catch (Exception ignored) {
-        }
     }
 }
