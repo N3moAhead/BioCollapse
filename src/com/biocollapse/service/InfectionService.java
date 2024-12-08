@@ -94,6 +94,7 @@ public class InfectionService {
             if (human.isAlive() && !human.isInfected() && !human.isImmune()) {
                 if (GlobalRandom.checkProbability(effectiveInfectionProbability)) {
                     human.setInfected(true);
+                    human.setRecoveredFromVirus(false);
                     human.setInfectedAt(currentTick);
                 }
             }
@@ -138,6 +139,7 @@ public class InfectionService {
                 } else {
                     human.setInfected(false);
                     human.setInfectedDecisionMade(false);
+                    human.setRecoveredFromVirus(true);
                     // Adults have a better chance at becoming immune than children and the elderly
                     int effectiveImmunityChance = humanAge == Age.Adult
                             ? immunityChance + immunityChance / 2
