@@ -1,10 +1,17 @@
-// Authors: Lars, Lukas, Johann
+// Authors: Lars, Lukas, Johann, Sebastian
 package src.com.biocollapse.view;
 
 import java.awt.*;
+import java.text.NumberFormat;
+import java.io.FileOutputStream;
+import java.io.ObjectOutputStream;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.text.NumberFormatter;
+
 import src.com.biocollapse.controller.WindowController;
 import static src.com.biocollapse.controller.WindowController.BIO_COLLAPSE_LOGO_TEXT_PATH;
 import src.com.biocollapse.model.Map;
@@ -36,7 +43,8 @@ public class ConfigPanel extends JPanel {
     private JCheckBox maskMandateCheckBox;
     private JCheckBox schoolClosureCheckBox;
 
-    private JComboBox mapNameComboBox;
+    private JComboBox<String> mapNameComboBox;
+    private JFormattedTextField seedFormattedTextField;
 
     private JButton saveButton;
     private JButton backButton;
@@ -79,6 +87,9 @@ public class ConfigPanel extends JPanel {
 
         // Map Name ComboBox
         mapNameComboBox.setSelectedItem(GlobalConfig.config.getMapName());
+
+        // Seed Textfield
+        seedFormattedTextField.setValue(GlobalConfig.config.getSeed());
 
         revalidate();
         repaint();
@@ -188,6 +199,16 @@ public class ConfigPanel extends JPanel {
         mapNameComboBox = new JComboBox<>(mapNames);
         mapNameComboBox.setSelectedItem(GlobalConfig.config.getMapName());
 
+        // Seed Textfield
+        NumberFormatter numberFormatter = new NumberFormatter(NumberFormat.getIntegerInstance());
+        numberFormatter.setValueClass(Long.class); // Allow long values
+        numberFormatter.setAllowsInvalid(false); // Prevent invalid characters
+        numberFormatter.setMinimum(Long.MIN_VALUE);
+        numberFormatter.setMaximum(Long.MAX_VALUE);
+        seedFormattedTextField = new JFormattedTextField(numberFormatter);
+        seedFormattedTextField.setValue(GlobalConfig.config.getSeed());
+        seedFormattedTextField.setColumns(15);
+
         saveButton = new JButton("Virus freisetzen");
         backButton = new JButton("Zum Startbildschirm");
 
@@ -224,12 +245,19 @@ public class ConfigPanel extends JPanel {
         populationPanel.add(createSliderWithLabels(adultRatioSlider, "Bevölkerungsanteil Erwachsene:    ", 0, 100));
         populationPanel.add(createSliderWithLabels(elderlyRatioSlider, "Bevölkerungsanteil Alte:    ", 0, 100));
 
-        JPanel layoutPanel = new JPanel(new BorderLayout());
-        JPanel innerLayoutPanel = new JPanel();
-        innerLayoutPanel.add(new JLabel("Karte:"));
-        innerLayoutPanel.add(mapNameComboBox);
-        layoutPanel.add(innerLayoutPanel, BorderLayout.WEST);
-        populationPanel.add(layoutPanel);
+        JPanel layoutPanelMap = new JPanel(new BorderLayout());
+        JPanel innerLayoutPanelMap = new JPanel();
+        innerLayoutPanelMap.add(new JLabel("Karte:"));
+        innerLayoutPanelMap.add(mapNameComboBox);
+        layoutPanelMap.add(innerLayoutPanelMap, BorderLayout.WEST);
+        populationPanel.add(layoutPanelMap);
+
+        JPanel layoutPanelSeed = new JPanel(new BorderLayout());
+        JPanel innerLayoutPanelSeed = new JPanel();
+        innerLayoutPanelSeed.add(new JLabel("Seed:"));
+        innerLayoutPanelSeed.add(seedFormattedTextField);
+        layoutPanelSeed.add(innerLayoutPanelSeed, BorderLayout.WEST);
+        populationPanel.add(layoutPanelSeed);
 
         measuresPanel.add(lockdownCheckBox);
         measuresPanel.add(isolationCheckBox);
@@ -313,10 +341,11 @@ public class ConfigPanel extends JPanel {
         boolean schoolClosure = schoolClosureCheckBox.isSelected();
 
         String mapName = (String) mapNameComboBox.getSelectedItem();
+        long seed = (long) seedFormattedTextField.getValue();
 
         GlobalConfig.config.setConfig(infectionRadius, infectionProbability, incubationTime, mortalityRate, timeToDeath,
                 immunityChance,
                 hospitalCapacity, isolationProbability, hospitalProbability, childrenRatio, adultRatio, elderlyRatio,
-                lockdown, isolateMandate, maskMandate, schoolClosure, mapName);
+                lockdown, isolateMandate, maskMandate, schoolClosure, mapName, seed);
     }
 }
