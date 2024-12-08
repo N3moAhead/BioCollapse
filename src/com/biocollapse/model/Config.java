@@ -33,7 +33,7 @@ public class Config implements Serializable {
     private int isolationEffect = 2; // how much the isolationMandate increases the isolationProbability
     private int lockdownEffect = 75;
     private int ticksAtLocation = 100; // how many ticks does a person stay at home or at work after reaching the goal
-    private int populationSize = 1000;
+    private int populationSize = 500;
     private String mapName;
     private long seed;
     public static final int SIMULATION_ONE_DAY_TICKS = 250;
