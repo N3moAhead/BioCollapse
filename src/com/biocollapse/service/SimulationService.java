@@ -97,6 +97,7 @@ public class SimulationService {
         int deathCounter = 0;
         int hospitalCapacity = 0;
         int usedHospitalCapacity = 0;
+        int recovered = 0;
         Integer hospitalCapacityRatio = 0;
 
         for (Human human : humans) {
@@ -114,6 +115,9 @@ public class SimulationService {
             if (human.isImmune() && human.isAlive()) {
                 immuneCounter++;
             }
+            if (human.getRecoveredFromVirus()) {
+                recovered++;
+            }
         }
 
         for (Hospital hospital : hospitals) {
@@ -125,6 +129,6 @@ public class SimulationService {
         float ratio = (float) usedHospitalCapacity / hospitalCapacity;
         hospitalCapacityRatio = Math.round(ratio * 100);
         return new LiveStatistics(aliveCounter, infectedCounter, healthyCounter, immuneCounter, deathCounter,
-                hospitalCapacityRatio, day);
+                hospitalCapacityRatio, day, recovered);
     }
 }

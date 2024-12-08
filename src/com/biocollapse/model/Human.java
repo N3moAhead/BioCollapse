@@ -20,6 +20,9 @@ public class Human {
 	// go to hospital once they have been infected
 	private boolean infectedDecisionMade = false;
 	private boolean pretendsToBeHealthy = false;
+	// Marks that a person had been infected in the past but has been healed at
+	// least once
+	private boolean recoveredFromVirus = false;
 
 	public Human(boolean infected, boolean immune, MapPosition pos, MapPosition workPos, MapPosition homePos) {
 		this.infected = infected;
@@ -173,6 +176,14 @@ public class Human {
 			}
 		}
 		moveIntoDirection(bestDirection);
+	}
+
+	public boolean getRecoveredFromVirus() {
+		return this.recoveredFromVirus;
+	}
+
+	public void setRecoveredFromVirus(boolean recoveredFromVirus) {
+		this.recoveredFromVirus = recoveredFromVirus;
 	}
 
 	public Integer getReachedLocationAt() {
