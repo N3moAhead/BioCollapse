@@ -29,7 +29,8 @@ public class ConfigHistoryPanel extends JPanel {
     private JButton load;
     private JButton delete;
     private JList list;
-
+    private JLabel emptyLabel;
+    
     public ConfigHistoryPanel(ConfigPanel configPanel) {
         this.configPanel = configPanel;
         initLayout();
@@ -140,8 +141,13 @@ public class ConfigHistoryPanel extends JPanel {
         list = new JList(files.keySet().toArray());
         list.setBorder(new TitledBorder("Lokal"));
         if (files.keySet().isEmpty()) {
-            add(new JLabel("Noch nichts gespeichert.", SwingConstants.CENTER));
+            emptyLabel = new JLabel("Noch nichts gespeichert.", SwingConstants.CENTER);
+            add(emptyLabel, BorderLayout.CENTER);
         } else {
+            if (emptyLabel != null) {
+                remove(emptyLabel);
+                emptyLabel = null;
+            }
             add(list, BorderLayout.CENTER);
         }
 
