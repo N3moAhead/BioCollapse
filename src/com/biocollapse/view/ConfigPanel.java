@@ -269,7 +269,7 @@ public class ConfigPanel extends JPanel {
         tabbedPane.addTab("Virusparameter", virusPanel);
 
         add(tabbedPane, BorderLayout.CENTER);
-        add(new ConfigHistoryPanel(this), BorderLayout.EAST);
+        // add(new ConfigHistoryPanel(this), BorderLayout.EAST);
 
         buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 10));
         buttonPanel.add(backButton);

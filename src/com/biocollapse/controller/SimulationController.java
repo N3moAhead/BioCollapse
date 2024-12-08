@@ -119,7 +119,7 @@ public class SimulationController {
             complete = true;
         } else if (currentStatistics.getInfected() == 0) {
             b.append("Die Simulation wurde in der Woche ").append(week).append(
-                    " beendet, da es keine infizierten Personen mehr gab. Dank dir wurde die Menschheit gerettet!");
+                    " beendet, da es keine infizierten Personen mehr gab.");
             complete = true;
         } else if (tick > (Config.SIMULATION_ONE_DAY_TICKS * Config.SIMULATION_MAX_DAYS)) {
             complete = true;

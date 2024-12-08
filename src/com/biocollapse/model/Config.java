@@ -28,7 +28,7 @@ public class Config implements Serializable {
     private boolean isolationMandate;
     private boolean maskMandate;
     private boolean schoolClosure;
-    private int maskEffect = 4; // how much the maskMandate decreases the infectionProbability
+    private int maskEffect = 5; // how much the maskMandate decreases the infectionProbability
     private int ageEffect = 3; // how much the age of a human increases mortalityRisk
     private int isolationEffect = 2; // how much the isolationMandate increases the isolationProbability
     private int lockdownEffect = 75;
@@ -329,7 +329,7 @@ public class Config implements Serializable {
         this.configuredInfectionTime = configuredInfectionTime;
     }
 
-    public String getMapName () {
+    public String getMapName() {
         return this.mapName;
     }
 
