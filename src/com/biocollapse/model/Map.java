@@ -54,7 +54,7 @@ public class Map {
                     String fileExtension = fileName.substring(fileExtensionDot, fileName.length());
 
                     // Use correct function for given file extension
-                    File mapFile = new File("maps/" + fileName);
+                    File mapFile = new File("src/com/biocollapse/ressources/maps/" + fileName);
                     switch (fileExtension.toLowerCase()) {
                         case ".txt" -> {
                             try (Scanner mapReader = new Scanner(mapFile)) {
@@ -111,7 +111,7 @@ public class Map {
         // Reset list to make sure old names are deleted
         mapList.clear();
         try {
-            final File mapFolder = new File("maps");
+            final File mapFolder = new File("src/com/biocollapse/ressources/maps");
             if (mapFolder.exists()) {
                 final File[] mapFileArray = mapFolder.listFiles();
                 if (mapFileArray.length > 0) {

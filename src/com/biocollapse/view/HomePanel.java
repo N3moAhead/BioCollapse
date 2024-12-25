@@ -20,7 +20,7 @@ public class HomePanel extends JPanel{
         Image logoImage;
         JLabel logoLabel;
         try {
-            String imageUrl = System.getProperty("user.dir") + "/images/logo.png";
+            String imageUrl = System.getProperty("user.dir") + "/src/com/biocollapse/ressources/images/logo.png";
             logoImage = new ImageIcon(imageUrl).getImage().getScaledInstance(500, 500, Image.SCALE_SMOOTH);
             logoLabel = new JLabel(new ImageIcon(logoImage), SwingConstants.CENTER);
         } catch (Exception e) {

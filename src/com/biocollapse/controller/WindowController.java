@@ -19,9 +19,9 @@ import src.com.biocollapse.view.StatisticsPanel;
 
 public class WindowController extends JFrame {
 
-    public static final String BIO_COLLAPSE_LOGO_PATH = System.getProperty("user.dir") + "/images/logo.png";
-    public static final String BIO_COLLAPSE_LOGO_TEXT_PATH = System.getProperty("user.dir") + "/images/logo_text.png";
-    public static final String BIO_COLLAPSE_LOGO_PAINTING_PATH = System.getProperty("user.dir") + "/images/logo_painting.png";
+    public static final String BIO_COLLAPSE_LOGO_PATH = System.getProperty("user.dir") + "/src/com/biocollapse/ressources/images/logo.png";
+    public static final String BIO_COLLAPSE_LOGO_TEXT_PATH = System.getProperty("user.dir") + "/src/com/biocollapse/ressources/images/logo_text.png";
+    public static final String BIO_COLLAPSE_LOGO_PAINTING_PATH = System.getProperty("user.dir") + "/src/com/biocollapse/ressources/images/logo_painting.png";
     public static final String BIO_COLLAPSE_TITLE = "BioCollapse";
     public static final String BIO_COLLAPSE_VERSION_NUM = "1.0";
     public static final String BIO_COLLAPSE_VERSION_TEXT = "Version " + BIO_COLLAPSE_VERSION_NUM;

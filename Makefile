@@ -8,22 +8,31 @@ else
     SEP = /
 endif
 
+# Variablen
+SRC_DIR = src
+BIN_DIR = bin
+JAR_FILE = app.jar
+MAIN_CLASS = src.com.biocollapse.main.Main
+MANIFEST = MANIFEST.MF
+
+# Default-Ziel
 default: run
 
+# Säubert alte Dateien
 clean:
-	find src -name "*.class" -exec $(RM) {} +
+	$(RM) $(BIN_DIR) $(JAR_FILE)
 
-build: clean
-	javac src$(SEP)com$(SEP)biocollapse$(SEP)main$(SEP)Main.java
+# Kompiliert den Code
+compile: clean
+	mkdir -p $(BIN_DIR)
+	javac -d $(BIN_DIR) $(shell find $(SRC_DIR) -name "*.java")
 
-compile:
-	$(JAVAC) -d $(BIN) $(SRC)/com/biocollapse/main/Main.java
-
-run: build
-	java src$(SEP)com$(SEP)biocollapse$(SEP)main$(SEP)Main
-
+# Erstellt die JAR-Datei
 jar: compile
-	echo "Manifest-Version: 1.0" > MANIFEST.MF
-	echo "Main-Class: $(MAIN_CLASS)" >> MANIFEST.MF
-	$(JAR) cfm $(JAR_FILE) MANIFEST.MF -C $(BIN) .
-	rm -f MANIFEST.MF
+	echo "Manifest-Version: 1.0" > $(MANIFEST)
+	echo "Main-Class: $(MAIN_CLASS)" >> $(MANIFEST)
+	jar cfm $(JAR_FILE) $(MANIFEST) -C $(BIN_DIR) . -C $(SRC_DIR) com/biocollapse/ressources
+
+# Führt die JAR-Datei aus
+run: jar
+	java -jar $(JAR_FILE)
