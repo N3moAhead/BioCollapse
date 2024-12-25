@@ -1,7 +1,12 @@
-// Authors: Inaas, Lars, Johann, Lukas
+// Authors: Inaas, Lars, Johann, Lukas, Sebastian
 package src.com.biocollapse.model;
 
-public class Config {
+import src.com.biocollapse.util.GlobalRandom;
+import java.io.Serializable;
+
+public class Config implements Serializable {
+
+    private static final long serialVersionUID = 2L; // For versioning
 
     private int infectionRadius;
     private int infectionProbability;
@@ -23,13 +28,14 @@ public class Config {
     private boolean isolationMandate;
     private boolean maskMandate;
     private boolean schoolClosure;
-    private int maskEffect = 4; // how much the maskMandate decreases the infectionProbability
+    private int maskEffect = 5; // how much the maskMandate decreases the infectionProbability
     private int ageEffect = 3; // how much the age of a human increases mortalityRisk
     private int isolationEffect = 2; // how much the isolationMandate increases the isolationProbability
     private int lockdownEffect = 75;
     private int ticksAtLocation = 100; // how many ticks does a person stay at home or at work after reaching the goal
     private int populationSize = 500;
     private String mapName;
+    private long seed;
     public static final int SIMULATION_ONE_DAY_TICKS = 250;
     public static final int SIMULATION_MAX_DAYS = 14;
 
@@ -64,11 +70,11 @@ public class Config {
             int infectionTime,
             int immunityChance, int hospitalCapacity, int isolationProbability, int hospitalProbability,
             int childrenRatio, int adultRatio, int elderlyRatio, boolean lockdown, boolean isolationMandate,
-            boolean maskMandate, boolean schoolClosure, String mapName) {
+            boolean maskMandate, boolean schoolClosure, String mapName, long seed) {
         setConfig(infectionRadius, infectionProbability, incubationTime, mortalityRisk, infectionTime, immunityChance,
                 hospitalCapacity, isolationProbability, hospitalProbability, childrenRatio, adultRatio, elderlyRatio,
                 lockdown,
-                isolationMandate, maskMandate, schoolClosure, mapName);
+                isolationMandate, maskMandate, schoolClosure, mapName, seed);
     }
 
     public Config() {
@@ -107,7 +113,7 @@ public class Config {
             int infectionTime,
             int immunityChance, int hospitalCapacity, int isolationProbability, int hospitalProbability,
             int childrenRatio, int adultRatio, int elderlyRatio, boolean lockdown, boolean isolationMandate,
-            boolean maskMandate, boolean schoolClosure, String mapName) {
+            boolean maskMandate, boolean schoolClosure, String mapName, long seed) {
         this.infectionRadius = infectionRadius;
         this.infectionProbability = infectionProbability;
         this.incubationTime = incubationTime * Config.SIMULATION_ONE_DAY_TICKS;
@@ -127,6 +133,8 @@ public class Config {
         this.maskMandate = maskMandate;
         this.schoolClosure = schoolClosure;
         this.mapName = mapName;
+        this.seed = seed;
+        GlobalRandom.setSeed(seed);
     }
 
     public int getPopulationSize() {
@@ -321,12 +329,20 @@ public class Config {
         this.configuredInfectionTime = configuredInfectionTime;
     }
 
-    public String getMapName () {
+    public String getMapName() {
         return this.mapName;
     }
 
     public void setMapName(String mapName) {
         this.mapName = mapName;
+    }
+
+    public long getSeed() {
+        return this.seed;
+    }
+
+    public void setSeed(long seed) {
+        this.seed = seed;
     }
 
     @Override
@@ -345,6 +361,7 @@ public class Config {
                 + ", adultRatio=" + adultRatio
                 + ", elderlyRatio=" + elderlyRatio
                 + ", mapName=" + mapName
+                + ", seed=" + seed
                 + '}';
     }
 }

@@ -1,45 +1,74 @@
-# BioCollapse
+![Project Logo](images/logo.png)
 
-## Program Architecture (Idea)
+# Virus Spread Simulation Tool
 
-### Programmstruktur
+A **simulation tool** that models the spread of a virus, allowing users to test and analyze the effectiveness of various countermeasures. The tool provides customizable settings, real-time statistics, and visual representations of the simulation.
 
-```
-src
-└── com
-    └── biocollapse
-        ├── controller
-        │   ├── SimulationController.java
-        │   └── WindowController.java
-        ├── main
-        │   └── Main.java
-        ├── model
-        │   ├── Hospital.java
-        │   ├── Human.java
-        │   ├── Map.java
-        │   └── Virus.java
-        ├── service
-        │   ├── InfectionService.java
-        │   ├── MovementService.java
-        │   └── SimulationService.java
-        ├── util
-        │   └── HelperUtils.java
-        └── view
-            ├── ConfigScreen.java
-            ├── Homescreen.java
-            ├── SimulationScreen.java
-            └── StatisticsScreen.java
-```
+---
 
-### Klassenbeschreibungen
+## Features
+- **Dynamic Virus Spread Simulation**: Visualize how a virus propagates across a population.
+- **Customizable Settings**: Adjust parameters like the infection radius, the mortality rate, and countermeasures.
+- **Detailed Analytics**: View real-time statistics, graphs, and insights.
 
-1. **SimulationController.java**: Diese Klasse ist für die Steuerung und Koordination der Simulationslogik verantwortlich. Sie interagiert mit den Modell-Klassen und den Service-Klassen, um die Simulation auszuführen.
-2. **WindowController.java**: Diese Klasse ist für das Management des grafischen Benutzerinterfaces (GUI) zuständig. Sie erstellt und verwaltet die Hauptfenster-Komponente und koordiniert die Interaktion zwischen den Ansichts-Klassen (View-Klassen) und dem Simulationscontroller.
-3. **Main.java**: Diese Klasse ist der Einstiegspunkt der Anwendung. Sie erstellt eine Instanz des WindowControllers, um die Simulation zu starten.
-4. **Hospital.java**, **Human.java**, **Map.java** und **Virus.java**: Diese Modell-Klassen repräsentieren die Schlüsselkomponenten der Virusausbreitungs-Simulation.
-5. **InfectionService.java**, **MovementService.java** und **SimulationService.java**: Diese Service-Klassen kapseln die Logik für die Infektionsausbreitung, die Bewegung der Menschen und die Gesamtsteuerung der Simulation.
-6. **HelperUtils.java**: Diese Hilfsklasse enthält nützliche Funktionen und Methoden, die von anderen Teilen der Anwendung verwendet werden können.
-7. **SimulationScreen.java**: Diese Ansichts-Klasse stellt die grafische Darstellung der Simulation dar, z.B. die Visualisierung der Ausbreitung des Virus auf der Karte.
-8. **ConfigScreen.java**: Diese Ansichts-Klasse stellt die Konfigurationsseite für die darauffolgende Simulation dar.
-9. **StatisticsScreen.java**: Diese Ansichts-Klasse ist für die Darstellung der Statistik-Seite zuständig.
-10. **HomeScreen.java** Diese Ansichts-Klasse ist für die Darstellung des Hauptmenüs zuständig.
+---
+
+## Installation
+
+### Prerequisites
+- **Java**: Version 21 or newer is recommended. The tool has been tested extensively with Java 21, but versions 13 and above should also work.
+
+---
+
+## Building the Application
+
+### **Option 1: Using Make**
+
+1. Ensure you have `make` installed on your system.
+2. Run the following command in the terminal to build and start the application:
+   ```bash
+   make
+   ```
+
+### **Option 2: Manual Setup**7
+
+1. **Compile the Application**:  
+   Run the following command in the terminal:  
+   ```bash
+   javac src/com/biocollapse/main/Main.java
+   ```
+   > **Note for Windows Users**: Replace `/` with `\` in paths.
+
+2. **Run the Application**:  
+   After compilation, execute:  
+   ```bash
+   java src/com/biocollapse/main/Main
+   ```
+
+---
+
+## Application Previews
+
+### **Simulation**
+Visualize the real-time spread of the virus.  
+![Simulation Preview](images/simulation_preview.png)
+
+### **Settings**
+Customize simulation parameters for precise testing.  
+![Settings Preview](images/settings_preview.png)
+
+### **Statistics**
+Analyze detailed data and graphs generated during the simulation.  
+![Statistics Preview](images/statistics_preview.png)
+
+---
+
+## Contribution
+
+We welcome contributions! If you have suggestions or find a bug, feel free to open an issue or submit a pull request.
+
+---
+
+## License
+
+This project is licensed under [MIT License](LICENSE).

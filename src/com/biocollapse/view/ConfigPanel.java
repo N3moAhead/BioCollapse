@@ -1,16 +1,23 @@
-// Authors: Lars, Lukas, Johann
+// Authors: Lars, Lukas, Johann, Sebastian
 package src.com.biocollapse.view;
 
 import java.awt.*;
+import java.text.NumberFormat;
+import java.io.FileOutputStream;
+import java.io.ObjectOutputStream;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.text.NumberFormatter;
+
 import src.com.biocollapse.controller.WindowController;
 import static src.com.biocollapse.controller.WindowController.BIO_COLLAPSE_LOGO_TEXT_PATH;
 import src.com.biocollapse.model.Map;
 import src.com.biocollapse.util.GlobalConfig;
 
-public class ConfigPanel extends JTabbedPane {
+public class ConfigPanel extends JPanel {
 
     private JPanel virusPanel;
     private JPanel populationPanel;
@@ -36,12 +43,14 @@ public class ConfigPanel extends JTabbedPane {
     private JCheckBox maskMandateCheckBox;
     private JCheckBox schoolClosureCheckBox;
 
-    private JComboBox mapNameComboBox;
+    private JComboBox<String> mapNameComboBox;
+    private JFormattedTextField seedFormattedTextField;
 
     private JButton saveButton;
     private JButton backButton;
     private final WindowController controller;
     private JPanel mainPanel;
+    private JTabbedPane tabbedPane;
 
     public ConfigPanel(WindowController controller) {
         this.controller = controller;
@@ -49,6 +58,41 @@ public class ConfigPanel extends JTabbedPane {
         initializeComponents();
         setupLayout();
         addEventListener();
+    }
+
+    /**
+     * Revalidates the values of the current config from the GlobalConfig.
+     */
+    public void revalidateConfig() {
+        infectionRadiusSlider.setValue(GlobalConfig.config.getInfectionRadius());
+        infectionProbabilitySlider.setValue(GlobalConfig.config.getInfectionProbability());
+        incubationTimeSlider.setValue(GlobalConfig.config.getConfiguredIncubationTime());
+        mortalityRateSlider.setValue(GlobalConfig.config.getMortalityRisk());
+        timeToDeathSlider.setValue(GlobalConfig.config.getConfiguredInfectionTime());
+        immunityChanceSlider.setValue(GlobalConfig.config.getImmunityChance());
+
+        // Population sliders
+        hospitalCapacitySlider.setValue(GlobalConfig.config.getHospitalCapacity());
+        homeIsolationProbabilitySlider.setValue(GlobalConfig.config.getIsolationProbability());
+        hospitalizationProbabilitySlider.setValue(GlobalConfig.config.getHospitalProbability());
+        childrenRatioSlider.setValue(GlobalConfig.config.getChildrenRatio());
+        adultRatioSlider.setValue(GlobalConfig.config.getAdultRatio());
+        elderlyRatioSlider.setValue(GlobalConfig.config.getElderlyRatio());
+
+        // Measures Checkboxes
+        lockdownCheckBox.setSelected(GlobalConfig.config.getLockdown());
+        isolationCheckBox.setSelected(GlobalConfig.config.getIsolationMandate());
+        maskMandateCheckBox.setSelected(GlobalConfig.config.getMaskMandate());
+        schoolClosureCheckBox.setSelected(GlobalConfig.config.getSchoolClosure());
+
+        // Map Name ComboBox
+        mapNameComboBox.setSelectedItem(GlobalConfig.config.getMapName());
+
+        // Seed Textfield
+        seedFormattedTextField.setValue(GlobalConfig.config.getSeed());
+
+        revalidate();
+        repaint();
     }
 
     public JPanel getMainPanel() {
@@ -115,6 +159,9 @@ public class ConfigPanel extends JTabbedPane {
     }
 
     private void initializeComponents() {
+        setLayout(new BorderLayout());
+        tabbedPane = new JTabbedPane();
+
         // Initialize Panels
         virusPanel = new JPanel(new GridLayout(10, 1, 10, 10));
         populationPanel = new JPanel(new GridLayout(10, 1, 10, 10));
@@ -130,7 +177,7 @@ public class ConfigPanel extends JTabbedPane {
         immunityChanceSlider = new JSlider(0, 100, GlobalConfig.config.getImmunityChance());
 
         // Population Sliders
-        hospitalCapacitySlider = new JSlider(100, 1000, GlobalConfig.config.getHospitalCapacity());
+        hospitalCapacitySlider = new JSlider(50, 500, GlobalConfig.config.getHospitalCapacity());
         homeIsolationProbabilitySlider = new JSlider(0, 100, GlobalConfig.config.getIsolationProbability());
         hospitalizationProbabilitySlider = new JSlider(0, 100, GlobalConfig.config.getHospitalProbability());
         childrenRatioSlider = new JSlider(0, 100, GlobalConfig.config.getChildrenRatio());
@@ -144,13 +191,23 @@ public class ConfigPanel extends JTabbedPane {
         isolationCheckBox.setSelected(GlobalConfig.config.getIsolationMandate());
         maskMandateCheckBox = new JCheckBox("Maskenpflicht");
         maskMandateCheckBox.setSelected(GlobalConfig.config.getMaskMandate());
-        schoolClosureCheckBox = new JCheckBox("Schulschließung");
+        schoolClosureCheckBox = new JCheckBox("Geschäftsschließungen");
         schoolClosureCheckBox.setSelected(GlobalConfig.config.getSchoolClosure());
 
         // Map Name ComboBox
         String[] mapNames = (String[]) Map.getMapNames().toArray(new String[0]);
         mapNameComboBox = new JComboBox<>(mapNames);
         mapNameComboBox.setSelectedItem(GlobalConfig.config.getMapName());
+
+        // Seed Textfield
+        NumberFormatter numberFormatter = new NumberFormatter(NumberFormat.getIntegerInstance());
+        numberFormatter.setValueClass(Long.class); // Allow long values
+        numberFormatter.setAllowsInvalid(false); // Prevent invalid characters
+        numberFormatter.setMinimum(Long.MIN_VALUE);
+        numberFormatter.setMaximum(Long.MAX_VALUE);
+        seedFormattedTextField = new JFormattedTextField(numberFormatter);
+        seedFormattedTextField.setValue(GlobalConfig.config.getSeed());
+        seedFormattedTextField.setColumns(15);
 
         saveButton = new JButton("Virus freisetzen");
         backButton = new JButton("Zum Startbildschirm");
@@ -179,7 +236,7 @@ public class ConfigPanel extends JTabbedPane {
         virusPanel.add(createSliderWithLabels(immunityChanceSlider, "Immunitätschance nach Genesung:    ", 0, 100));
 
         // population sliders with captions
-        populationPanel.add(createSliderWithLabels(hospitalCapacitySlider, "Krankenhauskapazität:    ", 100, 1000));
+        populationPanel.add(createSliderWithLabels(hospitalCapacitySlider, "Krankenhauskapazität:    ", 50, 500));
         populationPanel.add(createSliderWithLabels(homeIsolationProbabilitySlider,
                 "Wahrscheinlichkeit für Heimquarantäne:    ", 0, 100));
         populationPanel.add(createSliderWithLabels(hospitalizationProbabilitySlider,
@@ -188,21 +245,31 @@ public class ConfigPanel extends JTabbedPane {
         populationPanel.add(createSliderWithLabels(adultRatioSlider, "Bevölkerungsanteil Erwachsene:    ", 0, 100));
         populationPanel.add(createSliderWithLabels(elderlyRatioSlider, "Bevölkerungsanteil Alte:    ", 0, 100));
 
-        JPanel layoutPanel = new JPanel(new BorderLayout());
-        JPanel innerLayoutPanel = new JPanel();
-        innerLayoutPanel.add(new JLabel("Karte:"));
-        innerLayoutPanel.add(mapNameComboBox);
-        layoutPanel.add(innerLayoutPanel,BorderLayout.WEST);
-        populationPanel.add(layoutPanel);
+        JPanel layoutPanelMap = new JPanel(new BorderLayout());
+        JPanel innerLayoutPanelMap = new JPanel();
+        innerLayoutPanelMap.add(new JLabel("Karte:"));
+        innerLayoutPanelMap.add(mapNameComboBox);
+        layoutPanelMap.add(innerLayoutPanelMap, BorderLayout.WEST);
+        populationPanel.add(layoutPanelMap);
+
+        JPanel layoutPanelSeed = new JPanel(new BorderLayout());
+        JPanel innerLayoutPanelSeed = new JPanel();
+        innerLayoutPanelSeed.add(new JLabel("Seed:"));
+        innerLayoutPanelSeed.add(seedFormattedTextField);
+        layoutPanelSeed.add(innerLayoutPanelSeed, BorderLayout.WEST);
+        populationPanel.add(layoutPanelSeed);
 
         measuresPanel.add(lockdownCheckBox);
         measuresPanel.add(isolationCheckBox);
         measuresPanel.add(maskMandateCheckBox);
         measuresPanel.add(schoolClosureCheckBox);
 
-        addTab("Populationsdaten", populationPanel);
-        addTab("Maßnahmen", measuresPanel);
-        addTab("Virusparameter", virusPanel);
+        tabbedPane.addTab("Populationsdaten", populationPanel);
+        tabbedPane.addTab("Maßnahmen", measuresPanel);
+        tabbedPane.addTab("Virusparameter", virusPanel);
+
+        add(tabbedPane, BorderLayout.CENTER);
+        // add(new ConfigHistoryPanel(this), BorderLayout.EAST);
 
         buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 10));
         buttonPanel.add(backButton);
@@ -245,6 +312,14 @@ public class ConfigPanel extends JTabbedPane {
     }
 
     private void notifyController() {
+        setConfig();
+        controller.showSimulationScreen();
+    }
+
+    /**
+     * Sets the config in the global config.
+     */
+    public void setConfig() {
         // Save Config parameters
         int infectionRadius = infectionRadiusSlider.getValue();
         int infectionProbability = infectionProbabilitySlider.getValue();
@@ -266,12 +341,11 @@ public class ConfigPanel extends JTabbedPane {
         boolean schoolClosure = schoolClosureCheckBox.isSelected();
 
         String mapName = (String) mapNameComboBox.getSelectedItem();
+        long seed = (long) seedFormattedTextField.getValue();
 
         GlobalConfig.config.setConfig(infectionRadius, infectionProbability, incubationTime, mortalityRate, timeToDeath,
                 immunityChance,
                 hospitalCapacity, isolationProbability, hospitalProbability, childrenRatio, adultRatio, elderlyRatio,
-                lockdown, isolateMandate, maskMandate, schoolClosure, mapName);
-
-        controller.showSimulationScreen();
+                lockdown, isolateMandate, maskMandate, schoolClosure, mapName, seed);
     }
 }

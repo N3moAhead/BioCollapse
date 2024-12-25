@@ -13,6 +13,7 @@ public class LiveStatistics {
     private static final String STAT_HEALTHY = "Gesund";
     private static final String STAT_IMMUNE = "Immun";
     private static final String STAT_DEATHS = "Tod";
+    private static final String STAT_RECOVERED = "Genesen";
     private static final String STAT_HOSPITAL_CAPACITY_RATIO = "Krankenhausauslastung";
 
     private static final Color COLOR_ALIVE = Color.BLUE;
@@ -20,6 +21,7 @@ public class LiveStatistics {
     private static final Color COLOR_HEALTHY = Color.GREEN;
     private static final Color COLOR_IMMUNE = Color.ORANGE;
     private static final Color COLOR_DEATHS = Color.BLACK;
+    private static final Color COLOR_RECOVERED = Color.CYAN;
     private static final Color COLOR_HOSPITAL_CAPACITY_RATIO = Color.MAGENTA;
 
     private final int alive;
@@ -28,6 +30,7 @@ public class LiveStatistics {
     private final int immune;
     private final int deaths;
     private final int day;
+    private final int recovered;
     private final Integer hospitalCapacityRatio;
     private final long timestamp;
 
@@ -35,7 +38,8 @@ public class LiveStatistics {
      * Live statistics store the current simulation state instead of the overall
      * history.
      */
-    public LiveStatistics(int alive, int infected, int healthy, int immune, int deaths, Integer hospitalCapacityRatio, int day) {
+    public LiveStatistics(int alive, int infected, int healthy, int immune, int deaths, Integer hospitalCapacityRatio,
+            int day, int recovered) {
         this.alive = alive;
         this.infected = infected;
         this.healthy = healthy;
@@ -44,10 +48,12 @@ public class LiveStatistics {
         this.hospitalCapacityRatio = hospitalCapacityRatio;
         this.day = day;
         this.timestamp = System.currentTimeMillis();
+        this.recovered = recovered;
     }
 
     /**
      * Create a JSON entry of this object.
+     * 
      * @return JSON entry String
      */
     public String toJSON() {
@@ -57,6 +63,7 @@ public class LiveStatistics {
                 ", \"immune\": " + immune +
                 ", \"deaths\": " + deaths +
                 ", \"hospitalCapacityRatio\": " + hospitalCapacityRatio +
+                ", \"recovered\": " + recovered +
                 ", \"day\": " + day +
                 " }";
     }
@@ -64,14 +71,16 @@ public class LiveStatistics {
     /**
      * Add to graph and set visibility, color and name.
      */
-    public List<GraphItem> toGraph(){
+    public List<GraphItem> toGraph() {
         List<GraphItem> items = new ArrayList<>();
         items.add(new GraphItem(STAT_INFECTED, infected, true, false, COLOR_INFECTED));
         items.add(new GraphItem(STAT_HEALTHY, healthy, true, false, COLOR_HEALTHY));
         items.add(new GraphItem(STAT_IMMUNE, immune, true, false, COLOR_IMMUNE));
         items.add(new GraphItem(STAT_DEATHS, deaths, true, false, COLOR_DEATHS));
         items.add(new GraphItem(STAT_ALIVE, alive, true, false, COLOR_ALIVE));
-        items.add(new GraphItem(STAT_HOSPITAL_CAPACITY_RATIO, hospitalCapacityRatio, true, false, COLOR_HOSPITAL_CAPACITY_RATIO, GraphType.PERCENTAGE));
+        items.add(new GraphItem(STAT_RECOVERED, recovered, true, false, COLOR_RECOVERED));
+        items.add(new GraphItem(STAT_HOSPITAL_CAPACITY_RATIO, hospitalCapacityRatio, true, false,
+                COLOR_HOSPITAL_CAPACITY_RATIO, GraphType.PERCENTAGE));
         return items;
     }
 

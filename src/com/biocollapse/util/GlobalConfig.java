@@ -1,4 +1,4 @@
-// Authors: Lukas
+// Authors: Lukas, Sebastian
 package src.com.biocollapse.util;
 
 import src.com.biocollapse.model.Config;
@@ -25,7 +25,8 @@ public class GlobalConfig {
    * The default values of the simulation.
    */
   private static Config defaultConfig() {
-    return new Config(2, 5, 1, 20, 3, 15, 100, 10, 20, 25, 50, 25, false, false, false, false, "schwetzingen.bmp");
+    return new Config(1, 5, 1, 20, 3, 15, 100, 10, 20, 25, 50, 25, false, false, false, false, "schwetzingen.bmp",
+        1337);
   }
 
   /**
@@ -33,5 +34,14 @@ public class GlobalConfig {
    */
   public static Config getConfig() {
     return config;
+  }
+
+  /**
+   * Set the config.
+   * 
+   * @param config
+   */
+  public static void setConfig(Config config) {
+    GlobalConfig.config = config;
   }
 }

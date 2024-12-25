@@ -119,7 +119,7 @@ public class SimulationController {
             complete = true;
         } else if (currentStatistics.getInfected() == 0) {
             b.append("Die Simulation wurde in der Woche ").append(week).append(
-                    " beendet, da es keine infizierten Personen mehr gab. Dank dir wurde die Menschheit gerettet!");
+                    " beendet, da es keine infizierten Personen mehr gab.");
             complete = true;
         } else if (tick > (Config.SIMULATION_ONE_DAY_TICKS * Config.SIMULATION_MAX_DAYS)) {
             complete = true;
@@ -135,7 +135,7 @@ public class SimulationController {
                         .append(currentStatistics.getAlive())
                         .append(" Menschen ")
                         .append("(")
-                        .append((double) currentStatistics.getAlive() / humans.size() * 100)
+                        .append(String.format("%.2f", (double) currentStatistics.getAlive() / humans.size() * 100))
                         .append("%)")
                         .append(" überlebt.");
             }
@@ -144,13 +144,13 @@ public class SimulationController {
                     .append(currentStatistics.getImmune())
                     .append(" Menschen ")
                     .append("(")
-                    .append((double) currentStatistics.getImmune() / humans.size() * 100)
+                    .append(String.format("%.2f", (double) currentStatistics.getImmune() / humans.size() * 100))
                     .append("%)")
                     .append(" immun geworden und ")
                     .append(currentStatistics.getDeaths())
                     .append(" Menschen ")
                     .append("(")
-                    .append((double) currentStatistics.getDeaths() / humans.size() * 100)
+                    .append(String.format("%.2f", (double) currentStatistics.getDeaths() / humans.size() * 100))
                     .append("%)")
                     .append(" gestorben");
         }
